@@ -1,0 +1,39 @@
+<resources>
+    <string name="app_name">Eifie</string>
+
+    <string name="welcome_title">Bienvenido\n</string>
+    <string name="welcome_title_no_space">Bienvenido</string>
+    <string name="welcome_presentation_text">A partir de ahora podrás comunicarte con\nexpertos para seguir tu progreso.</string>
+    <string name="welcome_subtitle">Cómo te\nencuentras\nhoy?</string>
+
+    <string name="user">Usuario</string>
+    <string name="password">Contraseña</string>
+    <string name="login_button">Iniciar Sesión</string>
+    <string name="logout_button">Cerrar Sesión</string>
+    <string name="retry">Reintentar</string>
+    <string name="go_back_login">Volver a inicio</string>
+    <string name="register_button">Registrarse</string>
+
+    <string name="select_a">Seleccione una\n</string>
+    <string name="option">opción</string>
+    <string name="according_to">\u0020de acuerdo con su\u0020</string>
+    <string name="role">rol</string>
+
+    <string name="step">Paso %1$s de %2$s</string>
+
+
+    <string name="name">Nombres</string>
+    <string name="last_name">Apellidos</string>
+    <string name="birth_date">Fecha de Nacimiento</string>
+    <string name="hospital">Hospital</string>
+    <string name="email">Correo</string>
+    <string name="repeat_password">Repetir contraseña</string>
+
+    <string name="carry_on">Continuar</string>
+    <string name="go_back">Volver</string>
+
+    <string name="patient">Paciente</string>
+    <string name="psychologist">Psicólogo</string>
+    <string name="title_activity_register">RegisterActivity</string>
+    <string name="title_activity_home">HomeActivity</string>
+</resources>
