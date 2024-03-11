@@ -5,13 +5,10 @@ import com.mentalhealth.eifie.data.api.models.request.LoginRequest
 import com.mentalhealth.eifie.data.api.models.response.PatientResponse
 import com.mentalhealth.eifie.data.api.DataResult
 import com.mentalhealth.eifie.data.api.performApiCall
-import com.mentalhealth.eifie.data.api.prepareMultipartRequest
 import com.mentalhealth.eifie.data.api.models.request.PatientRequest
 import com.mentalhealth.eifie.data.api.models.request.PsychologistRequest
 import com.mentalhealth.eifie.data.api.models.response.LoginResponse
 import com.mentalhealth.eifie.data.api.models.response.PsychologistResponse
-import com.mentalhealth.eifie.data.api.models.response.UserResponse
-import com.mentalhealth.eifie.data.api.models.response.getErrorMessage
 import com.mentalhealth.eifie.data.preferences.EPreferences
 import com.mentalhealth.eifie.domain.repository.AuthenticationRepository
 import com.mentalhealth.eifie.util.TOKEN_KEY

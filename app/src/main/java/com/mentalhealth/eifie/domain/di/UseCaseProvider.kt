@@ -1,11 +1,13 @@
 package com.mentalhealth.eifie.domain.di
 
+import com.mentalhealth.eifie.domain.repository.AppointmentRepository
 import com.mentalhealth.eifie.domain.repository.AuthenticationRepository
 import com.mentalhealth.eifie.domain.repository.HospitalRepository
 import com.mentalhealth.eifie.domain.repository.UserRepository
 import com.mentalhealth.eifie.domain.usecases.GetMonthCalendarUseCase
 import com.mentalhealth.eifie.domain.usecases.GetUserInformationUseCase
 import com.mentalhealth.eifie.domain.usecases.GetWeekCalendarUseCase
+import com.mentalhealth.eifie.domain.usecases.ListAppointmentsUseCase
 import com.mentalhealth.eifie.domain.usecases.ListHospitalsUseCase
 import com.mentalhealth.eifie.domain.usecases.LoginUserUseCase
 import com.mentalhealth.eifie.domain.usecases.LogoutUserUseCase
@@ -78,5 +80,14 @@ object UseCaseProvider {
     @Provides
     fun providesGetWeekCalendarUseCase(): GetWeekCalendarUseCase {
         return GetWeekCalendarUseCase()
+    }
+
+    @Provides
+    fun providesListAppointmentsUseCase(
+        appointmentRepository: AppointmentRepository,
+        userRepository: UserRepository): ListAppointmentsUseCase {
+        return ListAppointmentsUseCase(
+            appointmentRepository = appointmentRepository,
+            userRepository = userRepository)
     }
 }

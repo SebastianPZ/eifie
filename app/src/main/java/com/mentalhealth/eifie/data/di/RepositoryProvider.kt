@@ -4,9 +4,11 @@ import android.content.Context
 import com.mentalhealth.eifie.data.api.ApiService
 import com.mentalhealth.eifie.data.database.EDatabase
 import com.mentalhealth.eifie.data.preferences.EPreferences
+import com.mentalhealth.eifie.data.repository.AppointmentDefaultRepository
 import com.mentalhealth.eifie.data.repository.AuthenticationDefaultRepository
 import com.mentalhealth.eifie.data.repository.HospitalDefaultRepository
 import com.mentalhealth.eifie.data.repository.UserDefaultRepository
+import com.mentalhealth.eifie.domain.repository.AppointmentRepository
 import com.mentalhealth.eifie.domain.repository.AuthenticationRepository
 import com.mentalhealth.eifie.domain.repository.HospitalRepository
 import com.mentalhealth.eifie.domain.repository.UserRepository
@@ -33,6 +35,11 @@ object RepositoryProvider {
     @Provides
     fun providesUserRepository(@ApplicationContext appContext: Context, api: ApiService, database: EDatabase, preferences: EPreferences): UserRepository {
         return UserDefaultRepository(context = appContext, api = api, database = database, preferences = preferences)
+    }
+
+    @Provides
+    fun providesAppointmentRepository(api: ApiService, preferences: EPreferences): AppointmentRepository {
+        return AppointmentDefaultRepository(api = api, preferences = preferences)
     }
 
 }

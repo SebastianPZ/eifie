@@ -7,10 +7,18 @@ data class LoginResponse(
     val hospital: HospitalResponse? = null
 )
 
-fun getErrorMessage(errorCode: Int?): String {
+fun getLoginErrorMessage(errorCode: Int?): String {
     return when(errorCode) {
         1 -> "El email ingresado no se encuentra registrado."
         2 -> "La contraseña es incorrecta."
         else -> ""
     }
 }
+
+fun getAppointmentErrorMessage(errorCode: Int?): String {
+    return when(errorCode) {
+        1 -> "No cuenta con citas programadas."
+        else -> ""
+    }
+}
+

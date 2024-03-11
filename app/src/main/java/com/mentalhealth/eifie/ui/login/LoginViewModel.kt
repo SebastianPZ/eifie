@@ -7,7 +7,7 @@ import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import com.mentalhealth.eifie.data.api.DataResult
 import com.mentalhealth.eifie.data.api.models.request.LoginRequest
-import com.mentalhealth.eifie.domain.entities.models.LoginStatus
+import com.mentalhealth.eifie.domain.entities.models.LoginState
 import com.mentalhealth.eifie.domain.entities.models.UserSession
 import com.mentalhealth.eifie.domain.usecases.LoginUserUseCase
 import com.mentalhealth.eifie.domain.usecases.SaveUserInformationUseCase
@@ -64,12 +64,12 @@ class LoginViewModel @Inject constructor(
 
             }.onEach {
                 when(it) {
-                    LoginStatus.Idle -> Unit
-                    LoginStatus.Loading -> viewState.value = LoginViewState.Loading
-                    is LoginStatus.Success -> it.run {
+                    LoginState.Idle -> Unit
+                    LoginState.Loading -> viewState.value = LoginViewState.Loading
+                    is LoginState.Success -> it.run {
                         saveUserSession(userSession).join()
                     }
-                    is LoginStatus.Error -> it.run {
+                    is LoginState.Error -> it.run {
                         viewState.value = LoginViewState.Error("$message $TRY_AGAIN")
                     }
                 }

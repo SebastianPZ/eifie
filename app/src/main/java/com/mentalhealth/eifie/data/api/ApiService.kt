@@ -3,6 +3,7 @@ package com.mentalhealth.eifie.data.api
 import com.mentalhealth.eifie.data.api.models.request.LoginRequest
 import com.mentalhealth.eifie.data.api.models.request.PatientRequest
 import com.mentalhealth.eifie.data.api.models.request.PsychologistRequest
+import com.mentalhealth.eifie.data.api.models.response.AppointmentResponse
 import com.mentalhealth.eifie.data.api.models.response.BaseResponse
 import com.mentalhealth.eifie.data.api.models.response.HospitalResponse
 import com.mentalhealth.eifie.data.api.models.response.PatientResponse
@@ -13,6 +14,7 @@ import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
@@ -39,4 +41,14 @@ interface ApiService {
     @GET("util/hospital")
     suspend fun getHospitals(): Response<BaseResponse<List<HospitalResponse>>>
 
+    @GET("/appointment/findByPatient")
+    suspend fun getAppointmentByPatient(
+        @Header("Authorization") token: String,
+        @Query("patientId") patientId: Int,
+        @Query("startDate") startDate: String,
+        @Query("endDate") endDate: String
+    ): Response<BaseResponse<List<AppointmentResponse>>>
+
+    @GET("/appointment/findByPsychologist")
+    suspend fun getAppointmentByPsychologist(): Response<BaseResponse<List<AppointmentResponse>>>
 }

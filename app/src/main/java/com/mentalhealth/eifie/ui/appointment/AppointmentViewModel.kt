@@ -1,8 +1,10 @@
 package com.mentalhealth.eifie.ui.appointment
 
 import androidx.lifecycle.viewModelScope
+import com.mentalhealth.eifie.domain.entities.models.AppointmentListState
 import com.mentalhealth.eifie.domain.usecases.GetMonthCalendarUseCase
 import com.mentalhealth.eifie.domain.usecases.GetWeekCalendarUseCase
+import com.mentalhealth.eifie.domain.usecases.ListAppointmentsUseCase
 import com.mentalhealth.eifie.ui.common.LazyViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,15 +14,18 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
 class AppointmentViewModel @Inject constructor(
     private val getMonthCalendarUseCase: GetMonthCalendarUseCase,
-    private val getWeekCalendarUseCase: GetWeekCalendarUseCase
+    private val getWeekCalendarUseCase: GetWeekCalendarUseCase,
+    private val listAppointmentsUseCase: ListAppointmentsUseCase
 ): LazyViewModel() {
 
     private val calendarViewState: MutableStateFlow<CalendarViewState> = MutableStateFlow(CalendarViewState.Idle)
+    val daysHeader = listOf("lun", "mar", "mie", "jue", "vie", "sab", "dom")
 
     val calendarState = calendarViewState.stateIn(
         scope = viewModelScope,
@@ -29,7 +34,12 @@ class AppointmentViewModel @Inject constructor(
     )
 
     init {
-        getWeekInformation()
+        initValues()
+    }
+
+    private fun initValues() = viewModelScope.launch{
+        getWeekInformation().join()
+        listAppointments().join()
     }
 
     fun updateCalendarState() {
@@ -44,7 +54,11 @@ class AppointmentViewModel @Inject constructor(
         }
     }
 
-    private fun getWeekInformation() {
+    val updateAppointmentsByDate: (date: Date) -> Unit = {
+        listAppointments(it)
+    }
+
+    private fun getWeekInformation() = viewModelScope.launch {
         getWeekCalendarUseCase.invoke().onStart {
             calendarViewState.value = CalendarViewState.Loading
         }.onEach {
@@ -60,8 +74,21 @@ class AppointmentViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    private fun getAppointmentsList() {
-
+    private fun listAppointments(date: Date? = null) = viewModelScope.launch {
+        listAppointmentsUseCase.invoke(date)
+            .onStart {
+                viewState.value = AppointmentViewState.Loading
+            }.onEach {
+                when(it) {
+                    is AppointmentListState.Success -> it.run {
+                        viewState.value = AppointmentViewState.Success(appointments)
+                    }
+                    is AppointmentListState.Error -> it.run {
+                        viewState.value = AppointmentViewState.Error(message)
+                    }
+                    else -> viewState.value = AppointmentViewState.Loading
+                }
+            }.launchIn(viewModelScope)
     }
 
 }

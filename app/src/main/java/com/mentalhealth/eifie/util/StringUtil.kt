@@ -10,6 +10,10 @@ internal fun emptyString(): String {
     return ""
 }
 
+internal fun String.formatToken(): String {
+    return "Bearer $this"
+}
+
 internal fun String?.ifBlank(value: () -> String): String {
     if(this.isNullOrBlank() || this.isEmpty()) return value.invoke()
     else return this

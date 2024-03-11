@@ -15,7 +15,7 @@ data class UserSession(
     val hospitalName: String,
     val role: Role,
     var picture: String? = null,
-    val status: PatientStatus = PatientStatus.NONE
+    val status: PatientState = PatientState.NONE
 ) {
     val age = calculateAge(birthDate)
 }
