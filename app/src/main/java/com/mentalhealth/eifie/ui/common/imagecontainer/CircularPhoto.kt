@@ -1,9 +1,9 @@
 package com.mentalhealth.eifie.ui.common.imagecontainer
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -13,19 +13,19 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.mentalhealth.eifie.ui.theme.DarkGray
+import com.mentalhealth.eifie.ui.theme.BlackGreen
 import com.mentalhealth.eifie.ui.theme.LightGray
 
 @Composable
 fun CircularEmptyPhoto(
     text: String,
-    modifier: Modifier = Modifier
+    fontSize: TextUnit,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier
-            .fillMaxSize()
             .border(
                 width = 2.dp,
                 color = Color.White,
@@ -35,7 +35,7 @@ fun CircularEmptyPhoto(
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(
-                        DarkGray,
+                        BlackGreen,
                         LightGray
                     )
                 )
@@ -43,7 +43,7 @@ fun CircularEmptyPhoto(
     ){
         Text(
             text = text,
-            fontSize = 40.sp,
+            fontSize = fontSize,
             fontWeight = FontWeight.Bold,
             color = Color.White,
             modifier = Modifier

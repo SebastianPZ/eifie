@@ -7,10 +7,14 @@ import com.mentalhealth.eifie.R
 import com.mentalhealth.eifie.data.api.DataResult
 import com.mentalhealth.eifie.data.api.models.request.RegisterRequest
 import com.mentalhealth.eifie.data.api.models.response.HospitalResponse
+import com.mentalhealth.eifie.domain.entities.models.Psychologist
 import com.mentalhealth.eifie.domain.entities.models.Role
+import com.mentalhealth.eifie.domain.entities.states.CodeState
+import com.mentalhealth.eifie.domain.usecases.AssignPsychologistUseCase
 import com.mentalhealth.eifie.domain.usecases.ListHospitalsUseCase
 import com.mentalhealth.eifie.domain.usecases.RegisterPsychologistUseCase
 import com.mentalhealth.eifie.domain.usecases.RegisterPatientUseCase
+import com.mentalhealth.eifie.domain.usecases.ValidatePsychologistCodeUseCase
 import com.mentalhealth.eifie.ui.common.LazyViewModel
 import com.mentalhealth.eifie.ui.common.dropdown.DropdownItem
 import com.mentalhealth.eifie.util.FormField
@@ -33,7 +37,9 @@ import javax.inject.Inject
 class RegisterViewModel @Inject constructor(
     private val registerPatientUseCase: RegisterPatientUseCase,
     private val registerPsychologistUseCase: RegisterPsychologistUseCase,
-    private val listHospitalsUseCase: ListHospitalsUseCase
+    private val listHospitalsUseCase: ListHospitalsUseCase,
+    private val validateCodeUseCase: ValidatePsychologistCodeUseCase,
+    private val assignPsychologist: AssignPsychologistUseCase
 ): LazyViewModel() {
 
     private val steps = listOf(Step.ROLE_DATA, Step.PERSONAL_DATA, Step.USER_DATA)
@@ -82,6 +88,13 @@ class RegisterViewModel @Inject constructor(
         initialValue = emptyList()
     )
 
+    private val accessCodeError: MutableStateFlow<String> = MutableStateFlow("")
+    val codeError = accessCodeError.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(3000, 1),
+        initialValue = ""
+    )
+
     private lateinit var navigateUp: () -> Unit
 
     val onBackPressed get() = navigateUp
@@ -102,9 +115,11 @@ class RegisterViewModel @Inject constructor(
 
     private fun initRoles() {
         roleOptions.value = listOf(
-            RoleOption(Role.PATIENT.ordinal,Role.PATIENT.text,
+            RoleOption(
+                Role.PATIENT.ordinal, Role.PATIENT.text,
                 Role.PATIENT.abb, R.drawable.ic_patient, false),
-            RoleOption(Role.PSYCHOLOGIST.ordinal,Role.PSYCHOLOGIST.text,
+            RoleOption(
+                Role.PSYCHOLOGIST.ordinal, Role.PSYCHOLOGIST.text,
                 Role.PSYCHOLOGIST.abb, R.drawable.ic_psycologyst, false)
         )
 
@@ -165,7 +180,10 @@ class RegisterViewModel @Inject constructor(
                 viewState.value = RegisterViewState.Loading
             }.onEach { result ->
                 when(result) {
-                    is DataResult.Success -> viewState.value = RegisterViewState.Success
+                    is DataResult.Success -> {
+                        if(user.psychologist != null) assignPsychologist(result.data.patientId ?: 0).join()
+                        else viewState.value = RegisterViewState.Success
+                    }
                     is DataResult.Error -> result.run {
                         viewState.value = RegisterViewState.Error(error.message ?: "")
                     }
@@ -192,6 +210,48 @@ class RegisterViewModel @Inject constructor(
             }.catch {
 
             }.launchIn(viewModelScope)
+    }
+
+
+    fun validateCode(code: String, onSuccess: (psychologist: Psychologist) -> Unit) = viewModelScope.launch {
+        validateCodeUseCase.invoke(code)
+            .retry(3L) { error -> (error is IOException).also { if(it) delay(1000) }
+            }.onStart {
+                Log.e("RegisterViewModel", "Start Access Code validation")
+                viewState.value = RegisterViewState.Loading
+            }.onEach {
+                when(it) {
+                    is CodeState.Error -> {
+                        accessCodeError.value = it.error
+                        viewState.value = RegisterViewState.Idle
+                    }
+                    is CodeState.Success -> {
+                        user.psychologist = it.psychologist.id
+                        onSuccess(it.psychologist)
+                        viewState.value = RegisterViewState.Idle
+                    }
+                    else -> viewState.value = RegisterViewState.Loading
+                }
+            }.catch {
+                Log.e("RegisterViewModel", "Error", it)
+            }.launchIn(viewModelScope)
+    }
+
+    private fun assignPsychologist(patientId: Long) = viewModelScope.launch {
+        assignPsychologist.invoke(patientId, user.psychologist ?: 0)
+            .retry(3L) { error -> (error is IOException).also { if(it) delay(1000) }}
+            .onStart { viewState.value = RegisterViewState.Loading }
+            .onEach { result ->
+                when(result) {
+                    is DataResult.Success -> viewState.value = RegisterViewState.Success
+                    is DataResult.Error -> result.run {
+                        viewState.value = RegisterViewState.Success
+                    }
+                    else -> Unit
+                }
+            }
+            .catch {  }
+            .launchIn(viewModelScope)
     }
 
     fun setFormValue(text: String, field: FormField) {

@@ -1,7 +1,5 @@
 package com.mentalhealth.eifie.ui.register.view
 
-import androidx.activity.OnBackPressedDispatcherOwner
-import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -27,7 +25,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -40,7 +37,6 @@ import com.mentalhealth.eifie.ui.register.RegisterViewModel
 import com.mentalhealth.eifie.ui.register.RegisterViewState
 import com.mentalhealth.eifie.ui.theme.White95
 import com.mentalhealth.eifie.ui.theme.cutiveFontFamily
-import com.mentalhealth.eifie.util.ERR_LOGIN
 import com.mentalhealth.eifie.util.ERR_REGISTER
 import com.mentalhealth.eifie.util.getActivity
 
@@ -92,7 +88,8 @@ fun RegisterHeader(viewModel: RegisterViewModel) {
     return with(step) {
         Text(
             modifier = Modifier.padding(start = 24.dp, top = 45.dp),
-            text = stringResource(id = com.mentalhealth.eifie.R.string.step, ordinal, viewModel.stepsSize),
+            text = if(required) stringResource(id = R.string.step, ordinal, viewModel.stepsSize)
+                else stringResource(id = R.string.optional_step),
             fontSize = 12.sp,
             fontFamily = cutiveFontFamily
         )

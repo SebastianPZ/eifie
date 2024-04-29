@@ -4,6 +4,7 @@ import com.mentalhealth.eifie.domain.repository.AppointmentRepository
 import com.mentalhealth.eifie.domain.repository.AuthenticationRepository
 import com.mentalhealth.eifie.domain.repository.HospitalRepository
 import com.mentalhealth.eifie.domain.repository.UserRepository
+import com.mentalhealth.eifie.domain.usecases.AssignPsychologistUseCase
 import com.mentalhealth.eifie.domain.usecases.GetMonthCalendarUseCase
 import com.mentalhealth.eifie.domain.usecases.GetUserInformationUseCase
 import com.mentalhealth.eifie.domain.usecases.GetWeekCalendarUseCase
@@ -14,8 +15,10 @@ import com.mentalhealth.eifie.domain.usecases.LogoutUserUseCase
 import com.mentalhealth.eifie.domain.usecases.RegisterPsychologistUseCase
 import com.mentalhealth.eifie.domain.usecases.RegisterPatientUseCase
 import com.mentalhealth.eifie.domain.usecases.SaveUserInformationUseCase
+import com.mentalhealth.eifie.domain.usecases.ScheduleAppointmentUseCase
 import com.mentalhealth.eifie.domain.usecases.UpdateUserInformationUseCase
 import com.mentalhealth.eifie.domain.usecases.UpdateUserPhotoUseCase
+import com.mentalhealth.eifie.domain.usecases.ValidatePsychologistCodeUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -89,5 +92,23 @@ object UseCaseProvider {
         return ListAppointmentsUseCase(
             appointmentRepository = appointmentRepository,
             userRepository = userRepository)
+    }
+
+    @Provides
+    fun providesScheduleAppointmentUseCase(
+        appointmentRepository: AppointmentRepository): ScheduleAppointmentUseCase {
+        return ScheduleAppointmentUseCase( appointmentRepository = appointmentRepository )
+    }
+
+    @Provides
+    fun providesValidatePsychologistCodeUseCase(
+        repository: AuthenticationRepository): ValidatePsychologistCodeUseCase {
+        return ValidatePsychologistCodeUseCase(repository = repository)
+    }
+
+    @Provides
+    fun providesAssignPsychologistUseCase(
+        repository: AuthenticationRepository): AssignPsychologistUseCase {
+        return AssignPsychologistUseCase(repository = repository )
     }
 }

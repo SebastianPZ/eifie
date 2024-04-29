@@ -2,6 +2,8 @@ package com.mentalhealth.eifie.data.repository
 
 import com.mentalhealth.eifie.data.api.ApiService
 import com.mentalhealth.eifie.data.api.DataResult
+import com.mentalhealth.eifie.data.api.models.request.AppointmentRequest
+import com.mentalhealth.eifie.data.api.models.response.AppointmentRegisterResponse
 import com.mentalhealth.eifie.data.api.models.response.AppointmentResponse
 import com.mentalhealth.eifie.data.api.performApiCall
 import com.mentalhealth.eifie.data.database.EDatabase
@@ -35,7 +37,29 @@ class AppointmentDefaultRepository @Inject constructor(
         )
     }
 
-    override suspend fun getAppointmentsByPsychologist(): DataResult<List<AppointmentResponse>, Exception> {
-        TODO("Not yet implemented")
+    override suspend fun getAppointmentsByPsychologist(
+        psychologist: Int,
+        startDate: String,
+        endDate: String
+    ): DataResult<List<AppointmentResponse>, Exception> = withContext(dispatcher) {
+        performApiCall(
+            {
+                val token = preferences.readPreference(tokenPreferences) ?: emptyString()
+                api.getAppointmentByPsychologist(token.formatToken(), psychologist, startDate, endDate)
+            },
+            { response -> response?.data }
+        )
+    }
+
+    override suspend fun saveAppointment(
+        appointment: AppointmentRequest
+    ): DataResult<AppointmentRegisterResponse, Exception> = withContext(dispatcher){
+        performApiCall(
+            {
+                val token = preferences.readPreference(tokenPreferences) ?: emptyString()
+                api.saveAppointment(token.formatToken(), appointment)
+            },
+            { response -> response?.data }
+        )
     }
 }

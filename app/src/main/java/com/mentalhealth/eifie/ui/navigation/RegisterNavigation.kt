@@ -7,9 +7,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.mentalhealth.eifie.ui.register.RegisterViewModel
-import com.mentalhealth.eifie.ui.register.view.RegisterPersonalData
-import com.mentalhealth.eifie.ui.register.view.RegisterRole
-import com.mentalhealth.eifie.ui.register.view.RegisterUserData
 import com.mentalhealth.eifie.ui.register.view.Register
 import com.mentalhealth.eifie.ui.register.view.RegisterSuccess
 

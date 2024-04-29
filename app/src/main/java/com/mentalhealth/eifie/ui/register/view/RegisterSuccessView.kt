@@ -5,10 +5,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
@@ -29,7 +27,7 @@ import androidx.compose.ui.unit.sp
 import com.mentalhealth.eifie.R
 import com.mentalhealth.eifie.ui.common.animation.EAnimation
 import com.mentalhealth.eifie.ui.register.RegisterViewModel
-import com.mentalhealth.eifie.ui.theme.DarkGray
+import com.mentalhealth.eifie.ui.theme.BlackGreen
 import com.mentalhealth.eifie.ui.theme.Purple
 
 @Composable
@@ -114,7 +112,7 @@ fun RegisterSuccess(
             ) {
                 Text(
                     text = stringResource(id = R.string.login_button),
-                    color = DarkGray,
+                    color = BlackGreen,
                     fontSize = 14.sp,
                     modifier = Modifier
                         .padding(10.dp)

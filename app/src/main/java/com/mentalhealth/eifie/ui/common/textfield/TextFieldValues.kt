@@ -4,10 +4,11 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.input.TextFieldValue
 import com.mentalhealth.eifie.ui.common.dropdown.DropdownItem
-import com.mentalhealth.eifie.ui.theme.DarkGray
+import com.mentalhealth.eifie.ui.theme.BlackGreen
 import com.mentalhealth.eifie.util.emptyString
 
 data class TextFieldValues(
@@ -32,15 +33,16 @@ data class DropdownFieldValues(
     val initialValue: Int? = null,
     val label: String? = null,
     val radius: Double? = null,
-    val color: Color = DarkGray,
-    val borderColor: Color = DarkGray,
+    val color: Color = BlackGreen,
+    val borderColor: Color = BlackGreen,
     val onValueChange: (it: Int) -> Unit = { },
     @SuppressLint("ModifierParameter") val modifier: Modifier = Modifier,
     @SuppressLint("ModifierParameter") val dropdownModifier: Modifier = Modifier
 )
 
 data class EIcon(
-    val icon: ImageVector,
+    val icon: ImageVector? = null,
+    val painter: Painter? = null,
     val description: String = "icon"
 )
 

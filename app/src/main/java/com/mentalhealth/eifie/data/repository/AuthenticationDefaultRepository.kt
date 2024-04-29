@@ -51,4 +51,21 @@ class AuthenticationDefaultRepository @Inject constructor(
         )
     }
 
+    override suspend fun validatePsychologistCode(accessCode: String): DataResult<PsychologistResponse, Exception> = withContext(dispatcher) {
+        performApiCall(
+            { api.validatePsychologistCode(accessCode) },
+            { response -> response?.data }
+        )
+    }
+
+    override suspend fun assignPsychologist(
+        patientId: Long,
+        psychologistId: Long
+    ): DataResult<PatientResponse, Exception> = withContext(dispatcher) {
+        performApiCall(
+            { api.assignPsychologist(patientId, psychologistId) },
+            { response -> response?.data }
+        )
+    }
+
 }

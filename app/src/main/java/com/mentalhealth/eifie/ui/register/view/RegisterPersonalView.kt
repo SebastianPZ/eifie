@@ -28,7 +28,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.mentalhealth.eifie.R
 import com.mentalhealth.eifie.domain.entities.models.Role
-import com.mentalhealth.eifie.ui.common.datepicker.EDateField
+import com.mentalhealth.eifie.ui.common.datetimepicker.EDateField
 import com.mentalhealth.eifie.ui.common.dropdown.EDropdownField
 import com.mentalhealth.eifie.ui.common.textfield.DropdownFieldValues
 import com.mentalhealth.eifie.ui.common.textfield.EIcon
@@ -37,7 +37,7 @@ import com.mentalhealth.eifie.ui.common.textfield.TextFieldValues
 import com.mentalhealth.eifie.ui.common.textfield.TextFieldType
 import com.mentalhealth.eifie.ui.register.RegisterViewModel
 import com.mentalhealth.eifie.ui.register.Step
-import com.mentalhealth.eifie.ui.theme.DarkGray
+import com.mentalhealth.eifie.ui.theme.BlackGreen
 import com.mentalhealth.eifie.util.FormField
 import com.mentalhealth.eifie.util.ValidateText
 import com.mentalhealth.eifie.util.defaultRules
@@ -66,7 +66,7 @@ fun RegisterPersonalData(
                     label = stringResource(id = R.string.name),
                     icon = EIcon(icon = Icons.Default.Lock),
                     type = TextFieldType.LABELED,
-                    borderColor = DarkGray,
+                    borderColor = BlackGreen,
                     onValueChange =  { viewModel.setFormValue(it.text, FormField.FIRSTNAME) },
                     isValid = {
                         (ValidateText(it.text) checkWith defaultRules).let { result ->
@@ -83,7 +83,7 @@ fun RegisterPersonalData(
                     label = stringResource(id = R.string.last_name),
                     icon = EIcon(icon = Icons.Default.Lock),
                     type = TextFieldType.LABELED,
-                    borderColor = DarkGray,
+                    borderColor = BlackGreen,
                     onValueChange = { viewModel.setFormValue(it.text, FormField.LASTNAME) },
                     isValid = {
                         (ValidateText(it.text) checkWith defaultRules).let { result ->
@@ -100,7 +100,7 @@ fun RegisterPersonalData(
                     initialValue = viewModel.user.birthDate,
                     label = stringResource(id = R.string.birth_date),
                     icon = EIcon(icon = Icons.Default.DateRange),
-                    color = DarkGray,
+                    color = BlackGreen,
                     onValueChange = { viewModel.setFormValue(it.text, FormField.BIRTHDATE) },
                     isValid = {
                         (ValidateText(it.text) checkWith defaultRules).let { result ->
@@ -126,7 +126,7 @@ fun RegisterPersonalData(
                 },
                 border = BorderStroke(
                     width = 1.dp,
-                    color = DarkGray
+                    color = BlackGreen
                 ),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent
@@ -135,11 +135,11 @@ fun RegisterPersonalData(
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                     contentDescription = "",
-                    tint = DarkGray
+                    tint = BlackGreen
                 )
                 Text(
                     text = stringResource(id = R.string.go_back),
-                    color = DarkGray,
+                    color = BlackGreen,
                     modifier = Modifier
                         .padding(8.dp))
             }
@@ -189,7 +189,7 @@ fun NextStepButton(
             viewModel.updateStep(navController, Step.USER_DATA)
         },
         colors = ButtonDefaults.buttonColors(
-            containerColor = DarkGray
+            containerColor = BlackGreen
         ),
         enabled = validForm
     ) {

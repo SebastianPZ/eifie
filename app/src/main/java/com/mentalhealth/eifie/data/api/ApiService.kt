@@ -1,8 +1,10 @@
 package com.mentalhealth.eifie.data.api
 
+import com.mentalhealth.eifie.data.api.models.request.AppointmentRequest
 import com.mentalhealth.eifie.data.api.models.request.LoginRequest
 import com.mentalhealth.eifie.data.api.models.request.PatientRequest
 import com.mentalhealth.eifie.data.api.models.request.PsychologistRequest
+import com.mentalhealth.eifie.data.api.models.response.AppointmentRegisterResponse
 import com.mentalhealth.eifie.data.api.models.response.AppointmentResponse
 import com.mentalhealth.eifie.data.api.models.response.BaseResponse
 import com.mentalhealth.eifie.data.api.models.response.HospitalResponse
@@ -50,5 +52,25 @@ interface ApiService {
     ): Response<BaseResponse<List<AppointmentResponse>>>
 
     @GET("/appointment/findByPsychologist")
-    suspend fun getAppointmentByPsychologist(): Response<BaseResponse<List<AppointmentResponse>>>
+    suspend fun getAppointmentByPsychologist(
+        @Header("Authorization") token: String,
+        @Query("psychologistId") psychologistId: Int,
+        @Query("startDate") startDate: String,
+        @Query("endDate") endDate: String
+    ): Response<BaseResponse<List<AppointmentResponse>>>
+
+    @POST("/appointment/saveAppointment")
+    suspend fun saveAppointment(
+        @Header("Authorization") token: String,
+        @Body generateAppointmentRequestDTO: AppointmentRequest): Response<BaseResponse<AppointmentRegisterResponse>>
+
+    @GET("/patient/validateAccessCode")
+    suspend fun validatePsychologistCode(
+        @Query("accessCode") code: String): Response<BaseResponse<PsychologistResponse>>
+
+    @GET("/patient/psychologist")
+    suspend fun assignPsychologist(
+        @Query("patientId") patientId: Long,
+        @Query("psychologistId") psychologistId: Long
+    ): Response<BaseResponse<PatientResponse>>
 }

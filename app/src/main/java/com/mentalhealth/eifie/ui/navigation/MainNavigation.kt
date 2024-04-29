@@ -5,6 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import com.mentalhealth.eifie.ui.appointment.register.AppointmentRegisterView
 import com.mentalhealth.eifie.ui.main.MainHome
 import com.mentalhealth.eifie.ui.profile.ProfileDetail
 
@@ -19,6 +20,12 @@ fun MainNavigation() {
                 route = Router.MAIN_HOME.route,
             ) {
                 MainHome(mainNavController = navController)
+            }
+
+            composable(
+                route = Router.APPOINTMENT_REGISTER.route,
+            ) {
+                AppointmentRegisterView(navController = navController)
             }
 
             composable(

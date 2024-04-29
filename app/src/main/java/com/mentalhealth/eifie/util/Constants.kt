@@ -18,6 +18,8 @@ const val ERR_EMAIL = "Ingrese un correo válido"
 const val ERR_EMPTY = "Este campo no puede estar vacio"
 const val ERR_SAME_TEXT = "Las contraseñas deben ser iguales"
 
+const val ERR_ACCESS_CODE = "Error en validación de código."
+
 const val NO_INFO = "Sin información"
 const val PENDANT = "Pendiente"
 

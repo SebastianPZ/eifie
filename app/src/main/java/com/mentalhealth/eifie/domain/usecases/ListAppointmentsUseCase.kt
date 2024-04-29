@@ -1,14 +1,22 @@
 package com.mentalhealth.eifie.domain.usecases
 
+import androidx.compose.ui.graphics.Color
 import com.mentalhealth.eifie.data.api.ApiException
 import com.mentalhealth.eifie.data.api.DataResult
 import com.mentalhealth.eifie.data.api.models.response.AppointmentResponse
 import com.mentalhealth.eifie.data.api.models.response.getAppointmentErrorMessage
-import com.mentalhealth.eifie.domain.entities.models.AppointmentListState
+import com.mentalhealth.eifie.domain.entities.models.AppointmentList
+import com.mentalhealth.eifie.domain.entities.models.AppointmentStyle
+import com.mentalhealth.eifie.domain.entities.states.AppointmentListState
 import com.mentalhealth.eifie.domain.entities.models.Role
 import com.mentalhealth.eifie.domain.entities.models.UserAppointment
+import com.mentalhealth.eifie.domain.entities.models.toDomain
 import com.mentalhealth.eifie.domain.repository.AppointmentRepository
 import com.mentalhealth.eifie.domain.repository.UserRepository
+import com.mentalhealth.eifie.ui.theme.BlackGreen
+import com.mentalhealth.eifie.ui.theme.LightSkyGray
+import com.mentalhealth.eifie.ui.theme.Purple
+import com.mentalhealth.eifie.ui.theme.SkyBlue
 import com.mentalhealth.eifie.util.ERR_EMPTY
 import com.mentalhealth.eifie.util.manager.CalendarManager
 import kotlinx.coroutines.flow.flow
@@ -34,9 +42,13 @@ class ListAppointmentsUseCase @Inject constructor(
                         calendarManager.getFormattedDate(startDate),
                         endDate
                     )
-                    else -> appointmentRepository.getAppointmentsByPsychologist()
+                    else -> appointmentRepository.getAppointmentsByPsychologist(
+                        uid,
+                        calendarManager.getFormattedDate(startDate),
+                        endDate
+                    )
                 }
-                handleAppointmentResponse(result)
+                handleAppointmentResponse(result, role ?: Role.PATIENT.ordinal)
             }
             is DataResult.Error -> userResponse.run {
                 AppointmentListState.Error(error.message ?: ERR_EMPTY)
@@ -46,11 +58,12 @@ class ListAppointmentsUseCase @Inject constructor(
     }
 
     private fun handleAppointmentResponse(
-        result: DataResult<List<AppointmentResponse>, Exception>): AppointmentListState {
+        result: DataResult<List<AppointmentResponse>, Exception>,
+        role: Int): AppointmentListState {
         return when(result) {
             DataResult.Loading -> AppointmentListState.Loading
             is DataResult.Success -> result.run {
-                AppointmentListState.Success(handleAppointmentByDateResponse(data))
+                AppointmentListState.Success(handleAppointmentByDateResponse(data, role))
             }
             is DataResult.Error -> result.run{
                 when(error) {
@@ -61,7 +74,7 @@ class ListAppointmentsUseCase @Inject constructor(
         }
     }
 
-    private fun handleAppointmentByDateResponse(list: List<AppointmentResponse>): UserAppointment {
+    private fun handleAppointmentByDateResponse(list: List<AppointmentResponse>, role: Int): UserAppointment {
         val today = calendarManager.getFormattedDate()
         val (todayList, rest) = list
             .partition { it.date == today }
@@ -71,6 +84,24 @@ class ListAppointmentsUseCase @Inject constructor(
             .filter { it !in todayList }
             .partition { it.date in datesOfWeek }
 
-        return UserAppointment(todayList = todayList, weekList = weekList, soonList = soonList)
+        return UserAppointment(
+            appointments = listOf(
+                AppointmentList(
+                    type = AppointmentList.TODAY,
+                    list = todayList.map { it.toDomain(role) },
+                    style = AppointmentStyle("Citas de hoy", Color.White, Purple)
+                ),
+                AppointmentList(
+                    type = AppointmentList.WEEK,
+                    list = weekList.map { it.toDomain(role) },
+                    style = AppointmentStyle("Citas de la semana", BlackGreen, SkyBlue)
+                ),
+                AppointmentList(
+                    type = AppointmentList.SOON,
+                    list = soonList.map { it.toDomain(role) },
+                    style = AppointmentStyle("Próximas citas", BlackGreen, LightSkyGray)
+                )
+            )
+        )
     }
 }

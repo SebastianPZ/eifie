@@ -19,7 +19,7 @@ suspend inline fun <I, O> performApiCall(
     val response = call()
     return if (response.isSuccessful && response.body() != null) {
         when(val result = deserialize(response.body())) {
-            null -> DataResult.Error(ApiException((response.body() as BaseResponse<*>).errorCode))
+            null -> DataResult.Error(ApiException((response.body() as BaseResponse<*>).errorCode, (response.body() as BaseResponse<*>).errorMessage))
             else -> {
                 DataResult.Success(result)
             }

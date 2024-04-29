@@ -13,6 +13,8 @@ enum class Router(val route: String) {
     REGISTER_ROLE("register/role"),
     REGISTER_PERSONAL("register/personal"),
     REGISTER_USER("register/user"),
+    REGISTER_PSYCHOLOGIST("register/psychologist"),
+    REGISTER_PSYCHOLOGIST_DETAIL("register/psychologist_detail"),
 
     MAIN_GRAPH("Main"),
     MAIN_HOME("main/home"),
@@ -21,5 +23,6 @@ enum class Router(val route: String) {
     HOME_GRAPH("Home"),
     HOME("home"),
     APPOINTMENT("appointment"),
+    APPOINTMENT_REGISTER("appointment/register"),
     PROFILE("profile")
 }

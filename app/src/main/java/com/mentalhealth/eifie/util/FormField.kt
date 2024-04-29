@@ -7,5 +7,8 @@ enum class FormField {
     FIRSTNAME,
     LASTNAME,
     BIRTHDATE,
-    HOSPITAL
+    HOSPITAL,
+    DATE,
+    TIME,
+    PATIENT,
 }

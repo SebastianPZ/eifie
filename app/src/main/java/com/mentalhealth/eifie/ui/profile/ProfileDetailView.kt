@@ -26,7 +26,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -46,7 +45,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.mentalhealth.eifie.R
-import com.mentalhealth.eifie.ui.theme.DarkGray
+import com.mentalhealth.eifie.ui.common.photo.UserPhotoView
+import com.mentalhealth.eifie.ui.theme.BlackGreen
 import com.mentalhealth.eifie.ui.theme.LightGray
 import com.mentalhealth.eifie.ui.theme.Pink
 import com.mentalhealth.eifie.ui.theme.Purple
@@ -100,34 +100,38 @@ fun ProfileDetail(
                 .fillMaxWidth()
         ) {
             Spacer(modifier = Modifier.height(40.dp))
-            Box(
-                modifier = Modifier
-                    .size(125.dp)
-            ) {
-                ProfilePhoto(state)
-                IconButton(
-                    onClick = { galleryLauncher.launch("image/*") },
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.CameraAlt,
-                        tint = Color.White,
-                        contentDescription = "",
-                        modifier = Modifier
-                            .size(25.dp)
-                            .drawBehind {
-                                drawCircle(
-                                    color = Purple,
-                                    radius = this.size.maxDimension
-                                )
-                            },
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.height(50.dp))
             when(state) {
                 is ProfileViewState.Success -> (state as ProfileViewState.Success).run {
+                    Box(
+                        modifier = Modifier
+                            .size(125.dp)
+                    ) {
+                        UserPhotoView(
+                            uri = profile.uri,
+                            username = profile.username,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                        IconButton(
+                            onClick = { galleryLauncher.launch("image/*") },
+                            modifier = Modifier
+                                .align(Alignment.BottomEnd)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.CameraAlt,
+                                tint = Color.White,
+                                contentDescription = "",
+                                modifier = Modifier
+                                    .size(25.dp)
+                                    .drawBehind {
+                                        drawCircle(
+                                            color = Purple,
+                                            radius = this.size.maxDimension
+                                        )
+                                    },
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(50.dp))
                     LazyColumn(
                         modifier = Modifier
                             .wrapContentSize()
@@ -210,7 +214,7 @@ fun FieldValue(
         Text(
             text = value,
             fontSize = 14.sp,
-            color = DarkGray
+            color = BlackGreen
         )
     }
 }

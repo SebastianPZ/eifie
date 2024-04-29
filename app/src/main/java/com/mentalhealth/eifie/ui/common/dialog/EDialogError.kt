@@ -2,7 +2,6 @@ package com.mentalhealth.eifie.ui.common.dialog
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -26,9 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.mentalhealth.eifie.R
 import com.mentalhealth.eifie.ui.common.animation.EAnimation
-import com.mentalhealth.eifie.ui.register.Step
-import com.mentalhealth.eifie.ui.theme.DarkGray
-import com.mentalhealth.eifie.ui.theme.White75
+import com.mentalhealth.eifie.ui.theme.BlackGreen
 import com.mentalhealth.eifie.ui.theme.White85
 
 @Composable
@@ -80,7 +77,7 @@ fun EDialogError(
                 Button(
                     onClick = onDismissRequest,
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = DarkGray
+                        containerColor = BlackGreen
                     ),
                     modifier = Modifier
                         .padding(top = 20.dp, start = 20.dp, end = 20.dp, bottom = 20.dp)
@@ -154,7 +151,7 @@ fun EDialogError(
                     },
                     border = BorderStroke(
                         width = 1.dp,
-                        color = DarkGray
+                        color = BlackGreen
                     ),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.Transparent
@@ -165,7 +162,7 @@ fun EDialogError(
                 ) {
                     Text(
                         text = onSuccessText,
-                        color = DarkGray,
+                        color = BlackGreen,
                         modifier = Modifier
                             .padding(5.dp)
                     )
@@ -176,7 +173,7 @@ fun EDialogError(
                         onDismissRequest.invoke()
                     },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = DarkGray
+                        containerColor = BlackGreen
                     ),
                     modifier = Modifier
                         .padding(top = 5.dp, start = 20.dp, end = 20.dp, bottom = 20.dp)

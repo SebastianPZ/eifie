@@ -8,6 +8,7 @@ class RegisterRequest {
     var password: String = ""
     var checkPassword: String = ""
     var hospital: Int? = null
+    var psychologist: Long? = null
 
     fun toPsychologistRequest(): PsychologistRequest {
         return PsychologistRequest(

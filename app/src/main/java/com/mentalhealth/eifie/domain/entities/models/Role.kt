@@ -9,7 +9,7 @@ enum class Role(val text: String, val abb: String) {
 }
 
 fun User.getRole(): Role {
-    return when(this.uid) {
+    return when(this.role) {
         1 -> Role.PSYCHOLOGIST
         else -> Role.PATIENT
     }

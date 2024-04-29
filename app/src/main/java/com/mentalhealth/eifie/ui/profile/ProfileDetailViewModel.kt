@@ -14,14 +14,11 @@ import com.mentalhealth.eifie.domain.usecases.UpdateUserInformationUseCase
 import com.mentalhealth.eifie.domain.usecases.UpdateUserPhotoUseCase
 import com.mentalhealth.eifie.ui.MainActivity
 import com.mentalhealth.eifie.ui.common.LazyViewModel
-import com.mentalhealth.eifie.util.AGE_TITLE
 import com.mentalhealth.eifie.util.BIRTHDATE_TITLE
 import com.mentalhealth.eifie.util.EMAIL_TITLE
 import com.mentalhealth.eifie.util.FIRSTNAME_TITLE
-import com.mentalhealth.eifie.util.HOSPITAL_TITLE
 import com.mentalhealth.eifie.util.LASTNAME_TITLE
 import com.mentalhealth.eifie.util.NO_INFO
-import com.mentalhealth.eifie.util.STATUS_TITLE
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.catch

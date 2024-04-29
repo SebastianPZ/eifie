@@ -4,7 +4,7 @@ import com.mentalhealth.eifie.data.api.ApiException
 import com.mentalhealth.eifie.data.api.DataResult
 import com.mentalhealth.eifie.data.api.models.request.LoginRequest
 import com.mentalhealth.eifie.data.api.models.response.getLoginErrorMessage
-import com.mentalhealth.eifie.domain.entities.models.LoginState
+import com.mentalhealth.eifie.domain.entities.states.LoginState
 import com.mentalhealth.eifie.domain.entities.models.UserSession
 import com.mentalhealth.eifie.domain.entities.models.getRole
 import com.mentalhealth.eifie.domain.entities.models.getUserName

@@ -6,4 +6,4 @@ sealed class DataResult<out T, out E> {
     object Loading : DataResult<Nothing, Nothing>()
 }
 
-data class ApiException(val errorCode: Int? = null): Exception()
+data class ApiException(val errorCode: Int? = null, override val message: String? = null): Exception()

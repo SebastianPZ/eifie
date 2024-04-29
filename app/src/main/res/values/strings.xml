@@ -19,7 +19,17 @@
     <string name="according_to">\u0020de acuerdo con su\u0020</string>
     <string name="role">rol</string>
 
+    <string name="have_code">Si cuenta con el\u0020</string>
+    <string name="code">código</string>
+    <string name="from">\u0020de\u0020</string>
+    <string name="doctor">psicólogo\n</string>
+    <string name="insert_it">\npuede ingresarlo a continuación</string>
+    <string name="psychologist_advice">El psicólogo se puede actualizar desde la configuración de la aplicación.</string>
+
     <string name="step">Paso %1$s de %2$s</string>
+    <string name="optional_step">Paso opcional</string>
+    <string name="accept">Aceptar</string>
+    <string name="cancel">Cancelar</string>
 
 
     <string name="name">Nombres</string>
@@ -30,10 +40,18 @@
     <string name="repeat_password">Repetir contraseña</string>
 
     <string name="carry_on">Continuar</string>
+    <string name="omit">Omitir</string>
     <string name="go_back">Volver</string>
 
     <string name="patient">Paciente</string>
     <string name="psychologist">Psicólogo</string>
     <string name="title_activity_register">RegisterActivity</string>
     <string name="title_activity_home">HomeActivity</string>
+
+    <string name="new_appointment">Nueva cita</string>
+    <string name="create_appointment">Agendar cita</string>
+    <string name="appointment_date">Fecha de cita</string>
+    <string name="init_hour">Hora inicio</string>
+
+    <string name="save_appointment">Agendar</string>
 </resources>

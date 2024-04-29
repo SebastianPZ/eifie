@@ -1,5 +1,6 @@
 package com.mentalhealth.eifie.ui.main
 
+import android.content.Context
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -7,13 +8,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -25,11 +25,13 @@ import com.mentalhealth.eifie.ui.navigation.HomeNavigation
 import com.mentalhealth.eifie.ui.theme.LightGray
 import com.mentalhealth.eifie.ui.theme.Purple
 import com.mentalhealth.eifie.ui.theme.WhitePink
+import com.mentalhealth.eifie.util.getActivity
 
 @Composable
 fun MainHome(
+    context: Context = LocalContext.current,
     mainNavController: NavHostController,
-    viewModel: MainViewModel = hiltViewModel<MainViewModel>()
+    viewModel: ConfigViewModel = hiltViewModel<ConfigViewModel>( viewModelStoreOwner = context.getActivity()!! )
 ) {
 
     val navController = rememberNavController()

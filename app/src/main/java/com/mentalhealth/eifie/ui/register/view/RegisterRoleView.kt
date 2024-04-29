@@ -42,8 +42,9 @@ import androidx.navigation.NavHostController
 import com.mentalhealth.eifie.R
 import com.mentalhealth.eifie.ui.register.RegisterViewModel
 import com.mentalhealth.eifie.ui.register.Step
-import com.mentalhealth.eifie.ui.theme.DarkGray
-import com.mentalhealth.eifie.ui.theme.LightGray
+import com.mentalhealth.eifie.ui.theme.BlackGreen
+import com.mentalhealth.eifie.ui.theme.LightGreen
+import com.mentalhealth.eifie.ui.theme.LightSkyGray
 import com.mentalhealth.eifie.ui.theme.Purple
 
 @Composable
@@ -112,7 +113,7 @@ fun RegisterRole(
                 },
                 border = BorderStroke(
                     width = 1.dp,
-                    color = DarkGray
+                    color = BlackGreen
                 ),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent
@@ -123,10 +124,10 @@ fun RegisterRole(
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                     contentDescription = "",
-                    tint = DarkGray)
+                    tint = BlackGreen)
                 Text(
                     text = stringResource(id = R.string.go_back),
-                    color = DarkGray,
+                    color = BlackGreen,
                     modifier = Modifier
                         .padding(8.dp))
             }
@@ -135,7 +136,7 @@ fun RegisterRole(
                     viewModel.updateStep(navController, Step.PERSONAL_DATA)
                 },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = DarkGray
+                    containerColor = BlackGreen
                 ),
                 modifier = Modifier
                     .padding(vertical = 45.dp, horizontal = 24.dp)
@@ -191,7 +192,7 @@ fun RoleOption(
     ) {
         Card(
             colors = CardDefaults.cardColors(
-                containerColor = if(selected) Purple else LightGray,
+                containerColor = if(selected) LightGreen else LightSkyGray,
             ),
             shape = RoundedCornerShape(15.dp),
             modifier = Modifier

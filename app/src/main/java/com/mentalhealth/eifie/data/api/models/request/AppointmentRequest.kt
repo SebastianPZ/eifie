@@ -1,8 +1,12 @@
 package com.mentalhealth.eifie.data.api.models.request
 
-data class AppointmentRequest(
-    val patientId: Int,
-    val psychologistId: Int,
-    val date: String,
-    val time: String
-)
+class AppointmentRequest(
+    var patientId: Int? = null,
+    var psychologistId: Int? = null,
+    var date: String = "",
+    var time: String = ""
+) {
+    fun isValidRequest(): Boolean {
+        return date.isNotBlank() && time.isNotBlank() && patientId != null
+    }
+}

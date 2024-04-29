@@ -1,14 +1,12 @@
 package com.mentalhealth.eifie.ui.register.view
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
@@ -30,20 +28,15 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.mentalhealth.eifie.R
-import com.mentalhealth.eifie.ui.common.animation.EAnimation
-import com.mentalhealth.eifie.ui.common.dialog.EDialogError
+import com.mentalhealth.eifie.domain.entities.models.Role
 import com.mentalhealth.eifie.ui.common.textfield.EIcon
 import com.mentalhealth.eifie.ui.common.textfield.ETextField
 import com.mentalhealth.eifie.ui.common.textfield.InputType
 import com.mentalhealth.eifie.ui.common.textfield.TextFieldValues
 import com.mentalhealth.eifie.ui.common.textfield.TextFieldType
-import com.mentalhealth.eifie.ui.login.LoginViewState
 import com.mentalhealth.eifie.ui.register.RegisterViewModel
-import com.mentalhealth.eifie.ui.register.RegisterViewState
 import com.mentalhealth.eifie.ui.register.Step
-import com.mentalhealth.eifie.ui.theme.DarkGray
-import com.mentalhealth.eifie.ui.theme.White85
-import com.mentalhealth.eifie.util.ERR_LOGIN
+import com.mentalhealth.eifie.ui.theme.BlackGreen
 import com.mentalhealth.eifie.util.ERR_SAME_TEXT
 import com.mentalhealth.eifie.util.FormField
 import com.mentalhealth.eifie.util.ValidateText
@@ -79,7 +72,7 @@ fun RegisterUserData(
                         }
                     },
                     type = TextFieldType.LABELED,
-                    borderColor = DarkGray,
+                    borderColor = BlackGreen,
                     modifier = Modifier
                         .fillMaxWidth()
                 )
@@ -98,7 +91,7 @@ fun RegisterUserData(
                     type = TextFieldType.LABELED,
                     inputType = InputType.PASSWORD,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                    borderColor = DarkGray,
+                    borderColor = BlackGreen,
                     modifier = Modifier
                         .padding(top = 20.dp)
                         .fillMaxWidth()
@@ -117,7 +110,7 @@ fun RegisterUserData(
                     type = TextFieldType.LABELED,
                     inputType = InputType.PASSWORD,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                    borderColor = DarkGray,
+                    borderColor = BlackGreen,
                     modifier = Modifier
                         .padding(top = 20.dp)
                         .fillMaxWidth()
@@ -135,7 +128,7 @@ fun RegisterUserData(
                 },
                 border = BorderStroke(
                     width = 1.dp,
-                    color = DarkGray
+                    color = BlackGreen
                 ),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent
@@ -146,31 +139,41 @@ fun RegisterUserData(
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                     contentDescription = "",
-                    tint = DarkGray
+                    tint = BlackGreen
                 )
                 Text(
                     text = stringResource(id = R.string.go_back),
-                    color = DarkGray,
+                    color = BlackGreen,
                     modifier = Modifier
                         .padding(8.dp))
             }
-            RegisterButton(viewModel = viewModel)
+            RegisterButton(viewModel = viewModel, navController = navController)
         }
     }
 }
 
 @Composable
 fun RegisterButton(
-    viewModel: RegisterViewModel
+    viewModel: RegisterViewModel,
+    navController: NavHostController,
 ) {
     val validForm by viewModel.validUser.collectAsStateWithLifecycle()
+    val role by viewModel.role.collectAsStateWithLifecycle()
 
     Button(
         onClick = {
-            viewModel.registerUser()
+            when(role?.id) {
+                Role.PATIENT.ordinal -> {
+                    viewModel.updateStep(navController, Step.PSYCHOLOGIST)
+                }
+                Role.PSYCHOLOGIST.ordinal -> {
+                    viewModel.registerUser()
+                }
+                else -> Unit
+            }
         },
         colors = ButtonDefaults.buttonColors(
-            containerColor = DarkGray
+            containerColor = BlackGreen
         ),
         enabled = validForm,
         modifier = Modifier

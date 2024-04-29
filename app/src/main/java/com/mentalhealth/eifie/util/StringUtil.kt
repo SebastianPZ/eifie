@@ -19,8 +19,8 @@ internal fun String?.ifBlank(value: () -> String): String {
     else return this
 }
 
-internal fun String.getInitials(divider: String? = emptyString()): String {
-    if(this.isEmpty()) return emptyString()
+internal fun String?.getInitials(divider: String? = emptyString()): String {
+    if(this.isNullOrEmpty()) return "--"
     val words = this.split(" ")
     var initials = emptyString()
     words.forEachIndexed { index, word ->

@@ -2,6 +2,7 @@ package com.mentalhealth.eifie.ui.common.textfield
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
@@ -22,8 +23,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.mentalhealth.eifie.ui.theme.BlackGreen
 
 @Composable
 fun ETextField(
@@ -150,7 +152,7 @@ fun ETextFieldLabeledIcon(
             text = values.placeholder,
             fontWeight = FontWeight.Light
         ) },
-        leadingIcon = { values.icon?.let { Icon(imageVector = values.icon.icon, contentDescription = it.description) } },
+        leadingIcon = { values.icon?.let{ IconField(icon = it) }},
         onValueChange = {
             text = it
             values.onValueChange(it) },
@@ -202,7 +204,7 @@ fun ETextFieldNoLabeledIcon(
             text = values.placeholder,
             fontWeight = FontWeight.Light
         ) },
-        leadingIcon = { values.icon?.let { Icon(imageVector = values.icon.icon, contentDescription = it.description) } },
+        leadingIcon = { values.icon?.let{ IconField(icon = it) }},
         onValueChange = {
             text = it
             values.isValid?.let { validate -> validate(it) }?.let { error ->
@@ -245,7 +247,7 @@ fun ETextFieldPasswordNoLabeledIcon(
             text = values.placeholder,
             fontWeight = FontWeight.Light
         ) },
-        leadingIcon = { values.icon?.let { Icon(imageVector = values.icon.icon, contentDescription = it.description) } },
+        leadingIcon = { values.icon?.let{ IconField(icon = it) }},
         onValueChange = {
             text = it
             values.isValid?.let { validate -> validate(it) }?.let { error ->
@@ -278,4 +280,33 @@ fun ETextFieldPasswordNoLabeledIcon(
                 .fillMaxWidth()
         )
     }
+}
+
+@Composable
+fun IconField(icon: EIcon) {
+    if(icon.icon != null) {
+        Icon(
+            imageVector = icon.icon,
+            contentDescription = icon.description,
+            modifier = Modifier.size(18.dp)
+        )
+    } else if(icon.painter != null) {
+        Icon(
+            painter = icon.painter,
+            contentDescription = icon.description,
+            modifier = Modifier.size(18.dp)
+        )
+    }
+}
+
+@Preview
+@Composable
+fun SimpleComposablePreview() {
+    ETextField(
+        values = TextFieldValues(
+            initialValue = "Prueba",
+            type = TextFieldType.LABELED,
+            borderColor = BlackGreen,
+        )
+    )
 }

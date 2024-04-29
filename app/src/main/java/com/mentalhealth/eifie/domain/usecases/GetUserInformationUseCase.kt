@@ -2,10 +2,8 @@ package com.mentalhealth.eifie.domain.usecases
 
 import com.mentalhealth.eifie.data.api.DataResult
 import com.mentalhealth.eifie.domain.entities.models.UserSession
-import com.mentalhealth.eifie.domain.entities.models.calculateAge
 import com.mentalhealth.eifie.domain.entities.models.getRole
 import com.mentalhealth.eifie.domain.repository.UserRepository
-import com.mentalhealth.eifie.util.NO_INFO
 import com.mentalhealth.eifie.util.PENDANT
 import com.mentalhealth.eifie.util.ifBlank
 import kotlinx.coroutines.flow.flow

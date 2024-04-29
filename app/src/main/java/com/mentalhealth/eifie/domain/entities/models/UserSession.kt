@@ -1,5 +1,6 @@
 package com.mentalhealth.eifie.domain.entities.models
 
+import com.mentalhealth.eifie.domain.entities.states.PatientState
 import com.mentalhealth.eifie.util.emptyString
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
