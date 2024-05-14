@@ -35,7 +35,7 @@ class UserDefaultRepository @Inject constructor(
     override suspend fun saveUser(user: User): DataResult<Boolean, Exception> = withContext(dispatcher) {
         try {
             userDao.insertAll(user)
-            preferences.savePreference(userPreferences, user.uid)
+            preferences.savePreference(userPreferences, user.profileId)
             DataResult.Success(true)
         } catch (e: Exception) {
             Log.e("UserRepository", "Error-SaveUser", e)

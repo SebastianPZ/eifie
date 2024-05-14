@@ -8,7 +8,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.mentalhealth.eifie.ui.navigation.RegisterNavigation
-import com.mentalhealth.eifie.ui.register.view.Register
 import com.mentalhealth.eifie.ui.theme.EifieTheme
 import dagger.hilt.android.AndroidEntryPoint
 

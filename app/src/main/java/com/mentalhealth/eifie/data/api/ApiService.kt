@@ -64,8 +64,14 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Body generateAppointmentRequestDTO: AppointmentRequest): Response<BaseResponse<AppointmentRegisterResponse>>
 
+    @GET("/psychologist/generateAccessCode")
+    suspend fun generatePsychologistCode(
+        @Header("Authorization") token: String,
+        @Query("psychologistId") psychologistId: Long): Response<BaseResponse<String>>
+
     @GET("/patient/validateAccessCode")
     suspend fun validatePsychologistCode(
+        @Header("Authorization") token: String,
         @Query("accessCode") code: String): Response<BaseResponse<PsychologistResponse>>
 
     @GET("/patient/psychologist")

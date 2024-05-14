@@ -6,22 +6,22 @@ enum class Router(val route: String) {
 
     REGISTER_GRAPH("Register"),
     REGISTER("register"),
-    REGISTER_SUCCESS("register/success"),
-    REGISTER_ERROR("register/error"),
-
-    REGISTER_STEP_GRAPH("RegisterStep"),
-    REGISTER_ROLE("register/role"),
-    REGISTER_PERSONAL("register/personal"),
-    REGISTER_USER("register/user"),
+    REGISTER_CONFIGURATION("register/configuration"),
     REGISTER_PSYCHOLOGIST("register/psychologist"),
-    REGISTER_PSYCHOLOGIST_DETAIL("register/psychologist_detail"),
+    REGISTER_SUCCESS("register/success"),
 
     MAIN_GRAPH("Main"),
     MAIN_HOME("main/home"),
     MAIN_PROFILE("main/profile"),
+    PROFILE_EDIT_PHOTO("main/profile/edit-photo"),
+    PSYCHOLOGIST_CODE("main/profile/psychologist-code"),
+    PSYCHOLOGIST_DETAIL("main/profile/psychologist-detail"),
+    PSYCHOLOGIST_UPDATE("main/profile/psychologist-update"),
 
     HOME_GRAPH("Home"),
     HOME("home"),
+    CHAT("chat"),
+    FORM("form/"),
     APPOINTMENT("appointment"),
     APPOINTMENT_REGISTER("appointment/register"),
     PROFILE("profile")

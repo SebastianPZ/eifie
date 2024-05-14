@@ -1,14 +1,13 @@
 package com.mentalhealth.eifie.data.api.models.request
 
-class RegisterRequest {
-    var firstName: String = ""
-    var lastName: String = ""
-    var birthDate: String = ""
-    var email: String = ""
-    var password: String = ""
-    var checkPassword: String = ""
-    var hospital: Int? = null
-    var psychologist: Long? = null
+data class RegisterRequest(
+    val firstName: String = "",
+    val lastName: String = "",
+    val birthDate: String = "",
+    val email: String = "",
+    val password: String = "",
+    val hospital: Int? = null
+) {
 
     fun toPsychologistRequest(): PsychologistRequest {
         return PsychologistRequest(

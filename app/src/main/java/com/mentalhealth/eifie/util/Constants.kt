@@ -30,6 +30,8 @@ const val FIRSTNAME_TITLE = "Nombres"
 const val LASTNAME_TITLE = "Apellidos"
 const val BIRTHDATE_TITLE = "Fecha de nacimiento"
 const val EMAIL_TITLE = "Correo"
+const val PSYCHOLOGIST_CODE = "Código de psicólogo"
+const val PSYCHOLOGIST_ASSIGN = "Asignación de psicólogo"
 
 
 const val TOKEN_KEY = "token"

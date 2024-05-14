@@ -18,7 +18,7 @@ class ValidatePsychologistCodeUseCase @Inject constructor(
                 DataResult.Loading -> CodeState.Loading
                 is DataResult.Success -> result.run {
                     CodeState.Success(Psychologist(
-                        id = data.psychologistId?.toLong() ?: 0L,
+                        id = data.psychologistId ?: 0L,
                         firstName = data.user?.firstName ?: "",
                         lastName = data.user?.lastName ?: "",
                         picture = data.user?.picture?.url ?: ""

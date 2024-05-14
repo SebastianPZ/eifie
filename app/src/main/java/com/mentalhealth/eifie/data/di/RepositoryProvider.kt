@@ -6,11 +6,15 @@ import com.mentalhealth.eifie.data.database.EDatabase
 import com.mentalhealth.eifie.data.preferences.EPreferences
 import com.mentalhealth.eifie.data.repository.AppointmentDefaultRepository
 import com.mentalhealth.eifie.data.repository.AuthenticationDefaultRepository
+import com.mentalhealth.eifie.data.repository.ChatDefaultRepository
 import com.mentalhealth.eifie.data.repository.HospitalDefaultRepository
+import com.mentalhealth.eifie.data.repository.MessageDefaultRepository
 import com.mentalhealth.eifie.data.repository.UserDefaultRepository
 import com.mentalhealth.eifie.domain.repository.AppointmentRepository
 import com.mentalhealth.eifie.domain.repository.AuthenticationRepository
+import com.mentalhealth.eifie.domain.repository.ChatRepository
 import com.mentalhealth.eifie.domain.repository.HospitalRepository
+import com.mentalhealth.eifie.domain.repository.MessageRepository
 import com.mentalhealth.eifie.domain.repository.UserRepository
 import dagger.Module
 import dagger.Provides
@@ -40,6 +44,16 @@ object RepositoryProvider {
     @Provides
     fun providesAppointmentRepository(api: ApiService, preferences: EPreferences): AppointmentRepository {
         return AppointmentDefaultRepository(api = api, preferences = preferences)
+    }
+
+    @Provides
+    fun providesChatRepository(database: EDatabase, preferences: EPreferences): ChatRepository {
+        return ChatDefaultRepository(database = database, preferences = preferences)
+    }
+
+    @Provides
+    fun providesMessageRepository(database: EDatabase): MessageRepository {
+        return MessageDefaultRepository(database = database)
     }
 
 }

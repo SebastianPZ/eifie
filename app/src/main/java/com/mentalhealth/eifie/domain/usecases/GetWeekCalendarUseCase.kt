@@ -6,8 +6,8 @@ import kotlinx.coroutines.flow.flow
 class GetWeekCalendarUseCase {
 
     fun invoke() = flow {
-        val info = CalendarManager().getWeekInfoOfDate()
-        emit(info)
+        val weekInfo = CalendarManager().getWeekInfoOfDate()
+        emit(weekInfo)
     }
 
 }

@@ -19,6 +19,10 @@
     <string name="according_to">\u0020de acuerdo con su\u0020</string>
     <string name="role">rol</string>
 
+    <string name="share_the">Comparta el\u0020</string>
+    <string name="with_your">\u0020con su\n</string>
+    <string name="link_patient">\u0020para su vinculación</string>
+
     <string name="have_code">Si cuenta con el\u0020</string>
     <string name="code">código</string>
     <string name="from">\u0020de\u0020</string>
@@ -39,19 +43,30 @@
     <string name="email">Correo</string>
     <string name="repeat_password">Repetir contraseña</string>
 
+    <string name="start">Comenzar</string>
     <string name="carry_on">Continuar</string>
+    <string name="send">Enviar</string>
     <string name="omit">Omitir</string>
     <string name="go_back">Volver</string>
+    <string name="ready">Listo</string>
 
     <string name="patient">Paciente</string>
     <string name="psychologist">Psicólogo</string>
     <string name="title_activity_register">RegisterActivity</string>
     <string name="title_activity_home">HomeActivity</string>
 
-    <string name="new_appointment">Nueva cita</string>
+    <string name="chats">Chats</string>
+    <string name="appointment">Cita</string>
+    <string name="book_appointment">Agendamiento</string>
     <string name="create_appointment">Agendar cita</string>
     <string name="appointment_date">Fecha de cita</string>
     <string name="init_hour">Hora inicio</string>
 
     <string name="save_appointment">Agendar</string>
+    <string name="form">Formulario</string>
+    <string name="configuration">Configuración</string>
+    <string name="register_configuration_title">¿Desea realizar alguna\nconfiguración adicional?</string>
+
+    <string name="expire_in">Expira en %1$s</string>
+    <string name="assign_code">Código de asignación</string>
 </resources>

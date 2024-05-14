@@ -13,6 +13,7 @@ import com.mentalhealth.eifie.data.preferences.EPreferences
 import com.mentalhealth.eifie.domain.repository.AuthenticationRepository
 import com.mentalhealth.eifie.util.TOKEN_KEY
 import com.mentalhealth.eifie.util.emptyString
+import com.mentalhealth.eifie.util.formatToken
 import com.mentalhealth.eifie.util.tokenPreferences
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -51,9 +52,22 @@ class AuthenticationDefaultRepository @Inject constructor(
         )
     }
 
+    override suspend fun generatePsychologistCode(psychologistId: Long): DataResult<String, Exception> = withContext(dispatcher) {
+        performApiCall(
+            {
+                val token = preferences.readPreference(tokenPreferences) ?: emptyString()
+                api.generatePsychologistCode(token.formatToken(), psychologistId)
+            },
+            { response -> response?.data }
+        )
+    }
+
     override suspend fun validatePsychologistCode(accessCode: String): DataResult<PsychologistResponse, Exception> = withContext(dispatcher) {
         performApiCall(
-            { api.validatePsychologistCode(accessCode) },
+            {
+                val token = preferences.readPreference(tokenPreferences) ?: emptyString()
+                api.validatePsychologistCode(token.formatToken(), accessCode)
+            },
             { response -> response?.data }
         )
     }

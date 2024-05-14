@@ -18,6 +18,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -87,58 +90,55 @@ fun Login(
                     .padding(top = 75.dp, bottom = 90.dp)
             )
             Column {
-                Card(
-                    colors = CardDefaults.cardColors(
-                        containerColor = CustomWhite60,
-                    ),
+                Surface(
+                    color = CustomWhite60,
                     shape = RoundedCornerShape(20.dp),
+                    tonalElevation = 4.dp,
                     modifier = Modifier
                         .fillMaxWidth()
                         .wrapContentHeight()
-                        .shadow(
-                            elevation = 8.dp,
-                            spotColor = Black10,
-                            shape = RoundedCornerShape(20.dp)
-                        )
+
                 ) {
-                    ETextField(
-                        values = TextFieldValues(
-                            placeholder = stringResource(id = R.string.email),
-                            icon = EIcon(painter = painterResource(id = R.drawable.ic_user)),
-                            type = TextFieldType.NO_LABELED_ICON,
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                            borderColor = White50,
-                            onValueChange =  { viewModel.setFormValue(it.text, FormField.EMAIL) },
-                            isValid = {
-                                (ValidateText(it.text) checkWith emailRules).let { result ->
-                                    (result.exceptionOrNull()?.message ?: "") to result.isFailure
-                                }
-                            },
-                            modifier = Modifier
-                                .padding(top = 20.dp, start = 20.dp, end = 20.dp)
-                                .fillMaxWidth()
+                    Column {
+                        ETextField(
+                            values = TextFieldValues(
+                                placeholder = stringResource(id = R.string.email),
+                                icon = EIcon(painter = painterResource(id = R.drawable.ic_user)),
+                                type = TextFieldType.NO_LABELED_ICON,
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                                borderColor = White50,
+                                onValueChange =  { viewModel.setFormValue(it.text, FormField.EMAIL) },
+                                isValid = {
+                                    (ValidateText(it.text) checkWith emailRules).let { result ->
+                                        (result.exceptionOrNull()?.message ?: "") to result.isFailure
+                                    }
+                                },
+                                modifier = Modifier
+                                    .padding(top = 20.dp, start = 20.dp, end = 20.dp)
+                                    .fillMaxWidth()
+                            )
                         )
-                    )
-                    ETextField(
-                        values = TextFieldValues(
-                            placeholder = stringResource(id = R.string.password),
-                            icon = EIcon(painter = painterResource(id = R.drawable.ic_lock)),
-                            type = TextFieldType.NO_LABELED_ICON,
-                            inputType = InputType.PASSWORD,
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                            borderColor = White50,
-                            onValueChange =  { viewModel.setFormValue(it.text, FormField.PASSWORD) },
-                            isValid = {
-                                (ValidateText(it.text) checkWith defaultRules).let { result ->
-                                    (result.exceptionOrNull()?.message ?: "") to result.isFailure
-                                }
-                            },
-                            modifier = Modifier
-                                .padding(top = 20.dp, start = 20.dp, end = 20.dp)
-                                .fillMaxWidth()
+                        ETextField(
+                            values = TextFieldValues(
+                                placeholder = stringResource(id = R.string.password),
+                                icon = EIcon(painter = painterResource(id = R.drawable.ic_lock)),
+                                type = TextFieldType.NO_LABELED_ICON,
+                                inputType = InputType.PASSWORD,
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                                borderColor = White50,
+                                onValueChange =  { viewModel.setFormValue(it.text, FormField.PASSWORD) },
+                                isValid = {
+                                    (ValidateText(it.text) checkWith defaultRules).let { result ->
+                                        (result.exceptionOrNull()?.message ?: "") to result.isFailure
+                                    }
+                                },
+                                modifier = Modifier
+                                    .padding(top = 20.dp, start = 20.dp, end = 20.dp)
+                                    .fillMaxWidth()
+                            )
                         )
-                    )
-                    LoginButton(viewModel = viewModel)
+                        LoginButton(viewModel = viewModel)
+                    }
                 }
                 Button(
                     onClick = {

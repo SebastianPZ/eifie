@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -37,18 +38,21 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.mentalhealth.eifie.R
+import com.mentalhealth.eifie.ui.common.ViewState
 import com.mentalhealth.eifie.ui.common.animation.EAnimation
 import com.mentalhealth.eifie.ui.common.button.AcceptButtonView
 import com.mentalhealth.eifie.ui.common.button.CancelButtonView
 import com.mentalhealth.eifie.ui.common.datetimepicker.EDateField
 import com.mentalhealth.eifie.ui.common.datetimepicker.ETimeField
 import com.mentalhealth.eifie.ui.common.dialog.EDialogError
+import com.mentalhealth.eifie.ui.common.layout.HeaderComponent
 import com.mentalhealth.eifie.ui.common.textfield.EIcon
 import com.mentalhealth.eifie.ui.common.textfield.ETextField
 import com.mentalhealth.eifie.ui.common.textfield.TextFieldType
 import com.mentalhealth.eifie.ui.common.textfield.TextFieldValues
 import com.mentalhealth.eifie.ui.navigation.Router
 import com.mentalhealth.eifie.ui.theme.BlackGreen
+import com.mentalhealth.eifie.ui.theme.CustomWhite
 import com.mentalhealth.eifie.ui.theme.White95
 import com.mentalhealth.eifie.util.ERR_REGISTER
 import com.mentalhealth.eifie.util.FormField
@@ -60,146 +64,112 @@ fun AppointmentRegisterView(
     navController: NavHostController,
     viewModel: AppointmentRegisterViewModel = hiltViewModel<AppointmentRegisterViewModel>()
 ) {
-    return Box {
-        Image(
-            modifier = Modifier.fillMaxWidth(),
-            painter = painterResource(id = R.drawable.eifi_background),
-            contentDescription = "",
-            contentScale = ContentScale.Crop
-        )
+
+    val validForm by viewModel.validForm.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    Box (
+        modifier = Modifier.background(color = CustomWhite)
+    ) {
         Column(
             modifier = Modifier
-                .fillMaxHeight(),
-            verticalArrangement = Arrangement.SpaceBetween
+                .fillMaxSize()
+                .padding(vertical = 45.dp, horizontal = 24.dp)
         ) {
-            Text(
-                modifier = Modifier.padding(start = 24.dp, top = 50.dp),
-                text = stringResource(id = R.string.new_appointment),
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold
+            HeaderComponent(
+                title = stringResource(id = R.string.appointment),
+                subtitle = stringResource(id = R.string.book_appointment),
+                onBack = { navController.popBackStack() }
             )
-            Card(
-                colors = CardDefaults.cardColors(
-                    containerColor = White95,
-                ),
-                shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
+            Column(
+                verticalArrangement = Arrangement.SpaceBetween,
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
-                    .padding(top = 20.dp)
-                    .fillMaxWidth()
-                    .wrapContentHeight()
+                    .fillMaxSize()
             ) {
-
-                RegisterAppointmentForm(
-                    navController = navController,
-                    viewModel = viewModel
-                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    EDateField(
+                        TextFieldValues(
+                            label = stringResource(id = R.string.appointment_date),
+                            icon = EIcon(icon = Icons.Default.DateRange),
+                            color = BlackGreen,
+                            onValueChange = { viewModel.setFormValue(it.text, FormField.DATE) },
+                            isValid = {
+                                (ValidateText(it.text) checkWith defaultRules).let { result ->
+                                    (result.exceptionOrNull()?.message ?: "") to result.isFailure
+                                }
+                            },
+                            modifier = Modifier
+                                .padding(top = 20.dp)
+                                .fillMaxWidth()
+                        )
+                    )
+                    ETimeField(
+                        TextFieldValues(
+                            label = stringResource(id = R.string.init_hour),
+                            icon = EIcon(icon = Icons.Filled.AccessTime),
+                            color = BlackGreen,
+                            onValueChange = { viewModel.setFormValue(it.text, FormField.TIME) },
+                            isValid = {
+                                (ValidateText(it.text) checkWith defaultRules).let { result ->
+                                    (result.exceptionOrNull()?.message ?: "") to result.isFailure
+                                }
+                            },
+                            modifier = Modifier
+                                .padding(top = 20.dp)
+                                .fillMaxWidth()
+                        )
+                    )
+                    ETextField(
+                        values = TextFieldValues(
+                            label = stringResource(id = R.string.patient),
+                            icon = EIcon(icon = Icons.Default.Lock),
+                            type = TextFieldType.LABELED,
+                            borderColor = BlackGreen,
+                            onValueChange = { viewModel.setFormValue(it.text, FormField.PATIENT) },
+                            isValid = {
+                                (ValidateText(it.text) checkWith defaultRules).let { result ->
+                                    (result.exceptionOrNull()?.message ?: "") to result.isFailure
+                                }
+                            },
+                            modifier = Modifier
+                                .padding(top = 25.dp)
+                                .fillMaxWidth()
+                        )
+                    )
+                }
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    CancelButtonView(
+                        onClick = { navController.popBackStack() }
+                    )
+                    AcceptButtonView(
+                        enabled = validForm,
+                        onClick = { viewModel.submitForm() }
+                    )
+                }
             }
         }
 
         HandleViewState(
             navController = navController,
-            viewModel = viewModel
+            state = state
         )
     }
 }
 
-@Composable
-fun RegisterAppointmentForm(
-    navController: NavHostController,
-    viewModel: AppointmentRegisterViewModel
-) {
-
-    val validForm by viewModel.validForm.collectAsStateWithLifecycle()
-
-    Column(
-        verticalArrangement = Arrangement.SpaceBetween,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .fillMaxHeight()
-            .fillMaxWidth()
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(vertical = 25.dp, horizontal = 24.dp)
-                .fillMaxWidth()
-        ) {
-            EDateField(
-                TextFieldValues(
-                    label = stringResource(id = R.string.appointment_date),
-                    icon = EIcon(icon = Icons.Default.DateRange),
-                    color = BlackGreen,
-                    onValueChange = { viewModel.setFormValue(it.text, FormField.DATE) },
-                    isValid = {
-                        (ValidateText(it.text) checkWith defaultRules).let { result ->
-                            (result.exceptionOrNull()?.message ?: "") to result.isFailure
-                        }
-                    },
-                    modifier = Modifier
-                        .padding(top = 20.dp)
-                        .fillMaxWidth()
-                )
-            )
-            ETimeField(
-                TextFieldValues(
-                    label = stringResource(id = R.string.init_hour),
-                    icon = EIcon(icon = Icons.Filled.AccessTime),
-                    color = BlackGreen,
-                    onValueChange = { viewModel.setFormValue(it.text, FormField.TIME) },
-                    isValid = {
-                        (ValidateText(it.text) checkWith defaultRules).let { result ->
-                            (result.exceptionOrNull()?.message ?: "") to result.isFailure
-                        }
-                    },
-                    modifier = Modifier
-                        .padding(top = 20.dp)
-                        .fillMaxWidth()
-                )
-            )
-            ETextField(
-                values = TextFieldValues(
-                    label = stringResource(id = R.string.patient),
-                    icon = EIcon(icon = Icons.Default.Lock),
-                    type = TextFieldType.LABELED,
-                    borderColor = BlackGreen,
-                    onValueChange = { viewModel.setFormValue(it.text, FormField.PATIENT) },
-                    isValid = {
-                        (ValidateText(it.text) checkWith defaultRules).let { result ->
-                            (result.exceptionOrNull()?.message ?: "") to result.isFailure
-                        }
-                    },
-                    modifier = Modifier
-                        .padding(top = 25.dp)
-                        .fillMaxWidth()
-                )
-            )
-        }
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .padding(vertical = 45.dp, horizontal = 24.dp)
-                .fillMaxWidth()
-        ) {
-            CancelButtonView(
-                onClick = { navController.popBackStack() }
-            )
-            AcceptButtonView(
-                isValidForm = validForm,
-                onClick = { viewModel.submitForm() }
-            )
-        }
-    }
-}
-
-
 
 @Composable
 fun HandleViewState(
-    viewModel: AppointmentRegisterViewModel,
+    state: ViewState,
     navController: NavHostController
 ) {
-
-    val state by viewModel.state.collectAsStateWithLifecycle()
-
     when(state) {
         AppointmentRegisterViewState.Loading -> {
             EAnimation(
@@ -245,12 +215,4 @@ fun HandleViewState(
         else -> Unit
     }
 
-
-}
-
-
-@Preview
-@Composable
-fun AppointmentRegisterPreview() {
-    AppointmentRegisterView(rememberNavController())
 }

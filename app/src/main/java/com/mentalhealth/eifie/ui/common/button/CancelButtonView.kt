@@ -23,6 +23,7 @@ import com.mentalhealth.eifie.ui.theme.BlackGreen
 
 @Composable
 fun CancelButtonView(
+    text: String = stringResource(id = R.string.go_back),
     onClick: () -> Unit
 ) {
     OutlinedButton(
@@ -44,7 +45,7 @@ fun CancelButtonView(
             modifier = Modifier.size(35.dp)
         )
         Text(
-            text = stringResource(id = R.string.go_back),
+            text = text,
             color = BlackGreen,
             fontSize = 14.sp,
             modifier = Modifier

@@ -5,9 +5,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import com.mentalhealth.eifie.ui.appointment.list.AppointmentView
+import com.mentalhealth.eifie.ui.appointment.main.AppointmentView
+import com.mentalhealth.eifie.ui.chat.main.ChatView
 import com.mentalhealth.eifie.ui.home.HomeView
-import com.mentalhealth.eifie.ui.profile.Profile
+import com.mentalhealth.eifie.ui.profile.main.Profile
 
 @Composable
 fun HomeNavigation(
@@ -20,7 +21,13 @@ fun HomeNavigation(
             composable(
                 route = Router.HOME.route,
             ) {
-                HomeView()
+                HomeView(navController = mainNavController)
+            }
+
+            composable(
+                route = Router.CHAT.route,
+            ) {
+                ChatView()
             }
 
             composable(

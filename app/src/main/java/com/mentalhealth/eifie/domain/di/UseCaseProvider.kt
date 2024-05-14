@@ -2,10 +2,18 @@ package com.mentalhealth.eifie.domain.di
 
 import com.mentalhealth.eifie.domain.repository.AppointmentRepository
 import com.mentalhealth.eifie.domain.repository.AuthenticationRepository
+import com.mentalhealth.eifie.domain.repository.ChatRepository
 import com.mentalhealth.eifie.domain.repository.HospitalRepository
+import com.mentalhealth.eifie.domain.repository.MessageRepository
 import com.mentalhealth.eifie.domain.repository.UserRepository
 import com.mentalhealth.eifie.domain.usecases.AssignPsychologistUseCase
+import com.mentalhealth.eifie.domain.usecases.GeneratePsychologistCodeUseCase
+import com.mentalhealth.eifie.domain.usecases.GetChatMessagesUseCase
+import com.mentalhealth.eifie.domain.usecases.GetFormDataUseCase
+import com.mentalhealth.eifie.domain.usecases.GetFormListUseCase
+import com.mentalhealth.eifie.domain.usecases.GetFormQuestionsUseCase
 import com.mentalhealth.eifie.domain.usecases.GetMonthCalendarUseCase
+import com.mentalhealth.eifie.domain.usecases.GetUserChatsUseCase
 import com.mentalhealth.eifie.domain.usecases.GetUserInformationUseCase
 import com.mentalhealth.eifie.domain.usecases.GetWeekCalendarUseCase
 import com.mentalhealth.eifie.domain.usecases.ListAppointmentsUseCase
@@ -109,6 +117,39 @@ object UseCaseProvider {
     @Provides
     fun providesAssignPsychologistUseCase(
         repository: AuthenticationRepository): AssignPsychologistUseCase {
-        return AssignPsychologistUseCase(repository = repository )
+        return AssignPsychologistUseCase(repository = repository)
+    }
+
+    @Provides
+    fun providesGetFormListUseCase(): GetFormListUseCase {
+        return GetFormListUseCase()
+    }
+
+    @Provides
+    fun providesGetFormQuestionsUseCase(): GetFormQuestionsUseCase {
+        return GetFormQuestionsUseCase()
+    }
+
+    @Provides
+    fun providesGetFormDataUseCase(): GetFormDataUseCase {
+        return GetFormDataUseCase()
+    }
+
+    @Provides
+    fun providesGeneratePsychologistCodeUseCase(
+        repository: AuthenticationRepository): GeneratePsychologistCodeUseCase {
+        return GeneratePsychologistCodeUseCase(repository = repository)
+    }
+
+    @Provides
+    fun providesGetUserChatsUseCase(
+        repository: ChatRepository): GetUserChatsUseCase {
+        return GetUserChatsUseCase(chatRepository = repository)
+    }
+
+    @Provides
+    fun providesGetChatMessagesUseCase(
+        repository: MessageRepository): GetChatMessagesUseCase {
+        return GetChatMessagesUseCase(messageRepository = repository)
     }
 }

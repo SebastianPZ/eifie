@@ -29,10 +29,12 @@ val LightSkyGray = Color(0xFFD8DFE9)
 
 val Black10 = Color(0xFF000000).copy(alpha = 0.1f)
 val LightGray = Color(0xFF9DA5B8)
+val DarkGray = Color(0xFF5A6171)
 val Black = Color(0xFF33363D)
 
-val CustomWhite = Color(0xFFF8F8F8)
-val CustomWhite60 = Color(0xFFF8F8F8).copy(alpha = 0.6f)
+val CustomWhite = Color(0xFFF7F7F7)
+val CustomWhite60 = Color(0xFFF7F7F7).copy(alpha = 0.5f)
 
 val Purple = Color(0xFF2999A7)
 val Pink = Color(0xFFE985C3)
+val CustomRed = Color(0xFFFF0431)

@@ -1,5 +1,6 @@
 package com.mentalhealth.eifie.util.manager
 
+import com.mentalhealth.eifie.util.compareWith
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -7,15 +8,18 @@ import java.util.Locale
 import java.util.TimeZone
 
 data class DateInfo(
+    val id: Int,
     val day: String,
     val date: Date,
     val inCurrentMonth: Boolean = false,
-    val isToday: Boolean = false
+    val isToday: Boolean = false,
+    var isSelected: Boolean = false,
 )
 
 
 data class WeekInfo(
     val weekId: Int,
+    val month: String,
     val days: List<DateInfo>
 )
 
@@ -64,7 +68,7 @@ class CalendarManager(private val date: Date = Date()) {
         }
     }
 
-    fun getMonthInfoOfMonth(month: Int = calendar[Calendar.MONTH]): MonthInfo {
+    fun getMonthInfoOfMonth(month: Int = calendar[Calendar.MONTH], date: Date = this.date): MonthInfo {
         val calendarInitial = Calendar.getInstance(timeZone, locale)
         calendarInitial[Calendar.MONTH] = month
         calendarInitial[Calendar.DAY_OF_MONTH] = 1
@@ -74,10 +78,11 @@ class CalendarManager(private val date: Date = Date()) {
 
         val daysOfMonth = mutableListOf<DateInfo>()
         for (week: Int in startWeek..endWeek) {
-            daysOfMonth.addAll(getWeekInfoOfMonthWeek(week, calendarInitial[Calendar.YEAR]).days)
+            daysOfMonth.addAll(getWeekInfoOfMonthWeek(week, calendarInitial[Calendar.YEAR], date).days)
         }
 
-        return MonthInfo(calendar[Calendar.MONTH], "", daysOfMonth)
+        val monthFormatter = SimpleDateFormat("MMMM", locale)
+        return MonthInfo(calendar[Calendar.MONTH], monthFormatter.format(date), daysOfMonth)
     }
 
     fun getWeekInfoOfDate(date: Date = this.date): WeekInfo {
@@ -103,19 +108,21 @@ class CalendarManager(private val date: Date = Date()) {
         while(calendarHelper.time.before(endDate)) {
             daysOfWeek.add(
                 DateInfo(
+                    id = calendarHelper[Calendar.DAY_OF_MONTH],
                     day = dayFormatter.format(calendarHelper.time),
                     date = calendarHelper.time,
                     inCurrentMonth = calendarHelper[Calendar.MONTH] == calendar[Calendar.MONTH],
                     isToday = calendarHelper.time.compareWith(calendar.time)
-                )
+                ).apply { isSelected = isToday }
             )
             calendarHelper.add(Calendar.DATE, 1)
         }
 
-        return WeekInfo(calendarWeek[Calendar.WEEK_OF_MONTH], daysOfWeek)
+        val monthFormatter = SimpleDateFormat("MMMM", locale)
+        return WeekInfo(calendarWeek[Calendar.WEEK_OF_MONTH], monthFormatter.format(date), daysOfWeek)
     }
 
-    private fun getWeekInfoOfMonthWeek(week: Int, year: Int): WeekInfo {
+    private fun getWeekInfoOfMonthWeek(week: Int, year: Int, date: Date = this.date): WeekInfo {
         val calendarWeek = Calendar.getInstance(timeZone, locale)
         calendarWeek[Calendar.MONTH] = 0
         calendarWeek[Calendar.DAY_OF_MONTH] = 1
@@ -136,22 +143,19 @@ class CalendarManager(private val date: Date = Date()) {
         while(calendarHelper.time.before(endDate)) {
             daysOfWeek.add(
                 DateInfo(
+                    id = calendarHelper[Calendar.DAY_OF_MONTH],
                     day = dayFormatter.format(calendarHelper.time),
                     date = calendarHelper.time,
                     inCurrentMonth = calendarHelper[Calendar.MONTH] == calendar[Calendar.MONTH],
-                    isToday = calendarHelper.time.compareWith(calendar.time)
-                )
+                    isToday = calendarHelper.time.compareWith(date)
+                ).apply {
+                    isSelected = isToday && inCurrentMonth
+                }
             )
             calendarHelper.add(Calendar.DATE, 1)
         }
 
-        return WeekInfo(calendarWeek[Calendar.WEEK_OF_MONTH], daysOfWeek)
+        return WeekInfo(calendarWeek[Calendar.WEEK_OF_MONTH], "", daysOfWeek)
     }
-
-    private fun Date.compareWith(dateToCompare: Date): Boolean {
-        val dateFormatter = SimpleDateFormat("yyyy-MM-dd", locale)
-        return dateFormatter.format(this) == dateFormatter.format(dateToCompare)
-    }
-
 
 }

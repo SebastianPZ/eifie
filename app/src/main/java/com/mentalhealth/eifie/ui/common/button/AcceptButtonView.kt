@@ -22,7 +22,8 @@ import com.mentalhealth.eifie.ui.theme.BlackGreen
 
 @Composable
 fun AcceptButtonView(
-    isValidForm: Boolean = false,
+    text: String = stringResource(id = R.string.carry_on),
+    enabled: Boolean = true,
     onClick: () -> Unit
 ) {
     Button(
@@ -30,12 +31,12 @@ fun AcceptButtonView(
         colors = ButtonDefaults.buttonColors(
             containerColor = BlackGreen
         ),
-        enabled = isValidForm,
+        enabled = enabled,
         contentPadding = PaddingValues(start = 21.dp,  end = 10.dp, top = 5.dp, bottom = 5.dp),
         modifier = Modifier.defaultMinSize(minWidth = 1.dp, minHeight = 1.dp)
     ) {
         Text(
-            text = stringResource(id = R.string.save_appointment),
+            text = text,
             color = Color.White,
             fontSize = 14.sp,
             modifier = Modifier

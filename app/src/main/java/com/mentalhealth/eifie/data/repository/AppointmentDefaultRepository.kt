@@ -6,13 +6,11 @@ import com.mentalhealth.eifie.data.api.models.request.AppointmentRequest
 import com.mentalhealth.eifie.data.api.models.response.AppointmentRegisterResponse
 import com.mentalhealth.eifie.data.api.models.response.AppointmentResponse
 import com.mentalhealth.eifie.data.api.performApiCall
-import com.mentalhealth.eifie.data.database.EDatabase
 import com.mentalhealth.eifie.data.preferences.EPreferences
 import com.mentalhealth.eifie.domain.repository.AppointmentRepository
 import com.mentalhealth.eifie.util.emptyString
 import com.mentalhealth.eifie.util.formatToken
 import com.mentalhealth.eifie.util.tokenPreferences
-import com.mentalhealth.eifie.util.userPreferences
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
