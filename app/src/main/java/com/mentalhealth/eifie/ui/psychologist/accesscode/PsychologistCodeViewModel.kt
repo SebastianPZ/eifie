@@ -2,7 +2,7 @@ package com.mentalhealth.eifie.ui.psychologist.accesscode
 
 import android.os.CountDownTimer
 import androidx.lifecycle.viewModelScope
-import com.mentalhealth.eifie.data.api.DataResult
+import com.mentalhealth.eifie.data.network.DataResult
 import com.mentalhealth.eifie.domain.usecases.GeneratePsychologistCodeUseCase
 import com.mentalhealth.eifie.ui.common.LazyViewModel
 import com.mentalhealth.eifie.util.TimeUtil

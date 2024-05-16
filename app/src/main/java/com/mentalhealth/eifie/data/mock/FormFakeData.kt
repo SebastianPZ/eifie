@@ -1,6 +1,6 @@
 package com.mentalhealth.eifie.data.mock
 
-import com.mentalhealth.eifie.data.api.models.response.Question
+import com.mentalhealth.eifie.data.network.models.response.Question
 import com.mentalhealth.eifie.domain.entities.models.Form
 
 object FormFakeData {

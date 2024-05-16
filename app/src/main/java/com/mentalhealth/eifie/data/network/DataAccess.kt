@@ -1,7 +1,7 @@
-package com.mentalhealth.eifie.data.api
+package com.mentalhealth.eifie.data.network
 
 import com.google.gson.Gson
-import com.mentalhealth.eifie.data.api.models.response.BaseResponse
+import com.mentalhealth.eifie.data.network.models.response.BaseResponse
 import okhttp3.Headers
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody

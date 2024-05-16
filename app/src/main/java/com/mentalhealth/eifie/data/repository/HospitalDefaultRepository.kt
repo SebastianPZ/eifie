@@ -1,9 +1,9 @@
 package com.mentalhealth.eifie.data.repository
 
-import com.mentalhealth.eifie.data.api.ApiService
-import com.mentalhealth.eifie.data.api.DataResult
-import com.mentalhealth.eifie.data.api.performApiCall
-import com.mentalhealth.eifie.data.api.models.response.HospitalResponse
+import com.mentalhealth.eifie.data.network.apidi.ApiService
+import com.mentalhealth.eifie.data.network.DataResult
+import com.mentalhealth.eifie.data.network.performApiCall
+import com.mentalhealth.eifie.data.network.models.response.HospitalResponse
 import com.mentalhealth.eifie.domain.repository.HospitalRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

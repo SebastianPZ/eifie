@@ -1,4 +1,4 @@
-package com.mentalhealth.eifie.data.api.models.response
+package com.mentalhealth.eifie.data.network.models.response
 
 data class BaseResponse<T>(
     val httpCode: Int? = null,

@@ -1,4 +1,4 @@
-package com.mentalhealth.eifie.data.api.models.request
+package com.mentalhealth.eifie.data.network.models.request
 
 data class LoginRequest(
     var email: String = "",

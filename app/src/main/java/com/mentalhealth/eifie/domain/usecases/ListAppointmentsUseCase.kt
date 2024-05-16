@@ -1,10 +1,10 @@
 package com.mentalhealth.eifie.domain.usecases
 
 import androidx.compose.ui.graphics.Color
-import com.mentalhealth.eifie.data.api.ApiException
-import com.mentalhealth.eifie.data.api.DataResult
-import com.mentalhealth.eifie.data.api.models.response.AppointmentResponse
-import com.mentalhealth.eifie.data.api.models.response.getAppointmentErrorMessage
+import com.mentalhealth.eifie.data.network.ApiException
+import com.mentalhealth.eifie.data.network.DataResult
+import com.mentalhealth.eifie.data.network.models.response.AppointmentResponse
+import com.mentalhealth.eifie.data.network.models.response.getAppointmentErrorMessage
 import com.mentalhealth.eifie.domain.entities.models.AppointmentList
 import com.mentalhealth.eifie.domain.entities.models.AppointmentStyle
 import com.mentalhealth.eifie.domain.entities.states.AppointmentListState

@@ -27,7 +27,7 @@ fun HomeNavigation(
             composable(
                 route = Router.CHAT.route,
             ) {
-                ChatView()
+                ChatView(navController = mainNavController)
             }
 
             composable(

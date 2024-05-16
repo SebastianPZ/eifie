@@ -1,8 +1,7 @@
 package com.mentalhealth.eifie.ui.appointment.main
 
-import androidx.compose.ui.text.capitalize
 import androidx.lifecycle.viewModelScope
-import com.mentalhealth.eifie.data.api.DataResult
+import com.mentalhealth.eifie.data.network.DataResult
 import com.mentalhealth.eifie.domain.entities.models.Role
 import com.mentalhealth.eifie.domain.entities.models.UserSession
 import com.mentalhealth.eifie.domain.entities.states.AppointmentListState

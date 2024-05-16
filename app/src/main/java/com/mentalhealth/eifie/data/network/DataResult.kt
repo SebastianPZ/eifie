@@ -1,4 +1,4 @@
-package com.mentalhealth.eifie.data.api
+package com.mentalhealth.eifie.data.network
 
 sealed class DataResult<out T, out E> {
     data class Success<out T>(val data: T) : DataResult<T, Nothing>()

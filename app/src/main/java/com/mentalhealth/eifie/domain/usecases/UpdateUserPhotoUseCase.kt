@@ -1,7 +1,7 @@
 package com.mentalhealth.eifie.domain.usecases
 
 import android.net.Uri
-import com.mentalhealth.eifie.data.api.DataResult
+import com.mentalhealth.eifie.data.network.DataResult
 import com.mentalhealth.eifie.domain.entities.models.UserSession
 import com.mentalhealth.eifie.domain.repository.UserRepository
 import kotlinx.coroutines.flow.flow

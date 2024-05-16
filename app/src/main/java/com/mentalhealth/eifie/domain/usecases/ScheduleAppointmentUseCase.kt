@@ -1,7 +1,7 @@
 package com.mentalhealth.eifie.domain.usecases
 
-import com.mentalhealth.eifie.data.api.DataResult
-import com.mentalhealth.eifie.data.api.models.request.AppointmentRequest
+import com.mentalhealth.eifie.data.network.DataResult
+import com.mentalhealth.eifie.data.network.models.request.AppointmentRequest
 import com.mentalhealth.eifie.domain.entities.states.RegisterResult
 import com.mentalhealth.eifie.domain.repository.AppointmentRepository
 import com.mentalhealth.eifie.util.ERR_REGISTER

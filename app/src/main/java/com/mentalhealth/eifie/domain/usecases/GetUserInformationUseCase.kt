@@ -1,6 +1,6 @@
 package com.mentalhealth.eifie.domain.usecases
 
-import com.mentalhealth.eifie.data.api.DataResult
+import com.mentalhealth.eifie.data.network.DataResult
 import com.mentalhealth.eifie.domain.entities.models.UserSession
 import com.mentalhealth.eifie.domain.entities.models.getRole
 import com.mentalhealth.eifie.domain.repository.UserRepository

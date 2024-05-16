@@ -1,10 +1,10 @@
-package com.mentalhealth.eifie.data.api.models.request
+package com.mentalhealth.eifie.data.network.models.request
 
-data class PatientRequest(
+data class PsychologistRequest(
     val birthDate: String = "",
     val email: String = "",
     val firstName: String = "",
     val lastName: String = "",
     val password: String = "",
-    val psychologistId: Int = 0
+    val hospitalId: Int = 0
 )

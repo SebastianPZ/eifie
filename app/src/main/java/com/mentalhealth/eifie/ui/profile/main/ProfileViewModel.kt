@@ -2,7 +2,7 @@ package com.mentalhealth.eifie.ui.profile.main
 
 import androidx.lifecycle.viewModelScope
 import com.mentalhealth.eifie.R
-import com.mentalhealth.eifie.data.api.DataResult
+import com.mentalhealth.eifie.data.network.DataResult
 import com.mentalhealth.eifie.domain.entities.models.UserSession
 import com.mentalhealth.eifie.domain.usecases.GetUserInformationUseCase
 import com.mentalhealth.eifie.ui.common.LazyViewModel

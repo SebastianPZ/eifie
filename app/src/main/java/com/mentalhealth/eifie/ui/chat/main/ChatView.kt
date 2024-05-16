@@ -19,12 +19,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import com.mentalhealth.eifie.R
 import com.mentalhealth.eifie.ui.chat.list.ChatListView
+import com.mentalhealth.eifie.ui.navigation.Router
 import com.mentalhealth.eifie.ui.theme.DarkGreen
 
 @Composable
-fun ChatView() {
+fun ChatView(
+    navController: NavHostController
+) {
 
     val viewModel = hiltViewModel<ChatViewModel>()
 
@@ -65,7 +69,8 @@ fun ChatView() {
             when(state) {
                 is ChatViewState.Success -> (state as ChatViewState.Success).run {
                     ChatListView(
-                        chats = chats
+                        chats = chats,
+                        onItemClick = { chatId -> navController.navigate("${Router.CHAT_BOX.route}$chatId") }
                     )
                 }
                 else -> Unit

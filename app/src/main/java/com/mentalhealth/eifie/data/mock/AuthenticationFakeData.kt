@@ -1,7 +1,7 @@
 package com.mentalhealth.eifie.data.mock
 
-import com.mentalhealth.eifie.data.api.models.response.PatientResponse
-import com.mentalhealth.eifie.data.api.models.response.UserResponse
+import com.mentalhealth.eifie.data.network.models.response.PatientResponse
+import com.mentalhealth.eifie.data.network.models.response.UserResponse
 
 object AuthenticationFakeData {
 

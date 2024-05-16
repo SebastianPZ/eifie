@@ -15,6 +15,7 @@ import com.mentalhealth.eifie.domain.entities.models.Chat
 @Composable
 fun ChatListView(
     chats: List<Chat>,
+    onItemClick: (Long) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -23,7 +24,10 @@ fun ChatListView(
         modifier = modifier.fillMaxSize()
     ) {
         items(chats.size) { index ->
-            ChatItemView(chat = chats[index])
+            ChatItemView(
+                chat = chats[index],
+                onClick = onItemClick
+            )
             Spacer(modifier = Modifier.size(15.dp))
         }
     }

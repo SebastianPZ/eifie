@@ -12,6 +12,7 @@ import com.mentalhealth.eifie.domain.entities.models.Psychologist
 import com.mentalhealth.eifie.domain.entities.models.UserSession
 import com.mentalhealth.eifie.ui.appointment.register.AppointmentRegisterView
 import com.mentalhealth.eifie.ui.base.BaseView
+import com.mentalhealth.eifie.ui.chat.chatbox.ChatBoxView
 import com.mentalhealth.eifie.ui.form.main.FormView
 import com.mentalhealth.eifie.ui.profile.detail.ProfileDetail
 import com.mentalhealth.eifie.ui.profile.edit.EditProfilePhoto
@@ -39,6 +40,16 @@ fun MainNavigation() {
                 val arguments = requireNotNull(it.arguments)
                 FormView(
                     id = arguments.getInt("form"),
+                    navController = navController
+                )
+            }
+
+            composable(
+                route = "${Router.CHAT_BOX.route}{chat}"
+            ) {
+                val arguments = requireNotNull(it.arguments)
+                ChatBoxView(
+                    chatId = arguments.getLong("chat"),
                     navController = navController
                 )
             }

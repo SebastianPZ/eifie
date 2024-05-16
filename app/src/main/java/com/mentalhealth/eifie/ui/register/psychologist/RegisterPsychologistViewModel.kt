@@ -2,8 +2,8 @@ package com.mentalhealth.eifie.ui.register.psychologist
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.mentalhealth.eifie.data.api.DataResult
-import com.mentalhealth.eifie.data.api.models.response.PatientResponse
+import com.mentalhealth.eifie.data.network.DataResult
+import com.mentalhealth.eifie.data.network.models.response.PatientResponse
 import com.mentalhealth.eifie.domain.entities.models.Psychologist
 import com.mentalhealth.eifie.domain.entities.states.CodeState
 import com.mentalhealth.eifie.domain.usecases.AssignPsychologistUseCase
@@ -25,7 +25,6 @@ import kotlinx.coroutines.flow.retry
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.io.IOException
-import javax.inject.Inject
 
 @HiltViewModel(assistedFactory = RegisterPsychologistViewModel.RegisterPsychologistViewModelFactory::class)
 class RegisterPsychologistViewModel @AssistedInject constructor(

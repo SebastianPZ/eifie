@@ -1,5 +1,6 @@
 package com.mentalhealth.eifie.ui.chat.list
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,11 +25,15 @@ import com.mentalhealth.eifie.ui.theme.LightGray
 
 @Composable
 fun ChatItemView(
-    chat: Chat
+    chat: Chat,
+    onClick: (Long) -> Unit = {}
 ) {
     Surface(
         shape = RoundedCornerShape(12.dp),
-        color = Color.White
+        color = Color.White,
+        modifier = Modifier.clickable {
+            onClick(chat.id)
+        }
     ) {
         Row(
             verticalAlignment = Alignment.Top,

@@ -5,7 +5,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.viewModelScope
 import com.mentalhealth.eifie.R
-import com.mentalhealth.eifie.data.api.DataResult
+import com.mentalhealth.eifie.data.network.DataResult
 import com.mentalhealth.eifie.domain.entities.models.Role
 import com.mentalhealth.eifie.domain.entities.models.UserSession
 import com.mentalhealth.eifie.domain.usecases.GetUserInformationUseCase

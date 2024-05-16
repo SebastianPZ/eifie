@@ -1,14 +1,14 @@
 package com.mentalhealth.eifie.data.repository
 
-import com.mentalhealth.eifie.data.api.ApiService
-import com.mentalhealth.eifie.data.api.models.request.LoginRequest
-import com.mentalhealth.eifie.data.api.models.response.PatientResponse
-import com.mentalhealth.eifie.data.api.DataResult
-import com.mentalhealth.eifie.data.api.performApiCall
-import com.mentalhealth.eifie.data.api.models.request.PatientRequest
-import com.mentalhealth.eifie.data.api.models.request.PsychologistRequest
-import com.mentalhealth.eifie.data.api.models.response.LoginResponse
-import com.mentalhealth.eifie.data.api.models.response.PsychologistResponse
+import com.mentalhealth.eifie.data.network.apidi.ApiService
+import com.mentalhealth.eifie.data.network.models.request.LoginRequest
+import com.mentalhealth.eifie.data.network.models.response.PatientResponse
+import com.mentalhealth.eifie.data.network.DataResult
+import com.mentalhealth.eifie.data.network.performApiCall
+import com.mentalhealth.eifie.data.network.models.request.PatientRequest
+import com.mentalhealth.eifie.data.network.models.request.PsychologistRequest
+import com.mentalhealth.eifie.data.network.models.response.LoginResponse
+import com.mentalhealth.eifie.data.network.models.response.PsychologistResponse
 import com.mentalhealth.eifie.data.preferences.EPreferences
 import com.mentalhealth.eifie.domain.repository.AuthenticationRepository
 import com.mentalhealth.eifie.util.TOKEN_KEY

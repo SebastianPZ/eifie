@@ -1,11 +1,11 @@
 package com.mentalhealth.eifie.data.repository
 
-import com.mentalhealth.eifie.data.api.ApiService
-import com.mentalhealth.eifie.data.api.DataResult
-import com.mentalhealth.eifie.data.api.models.request.AppointmentRequest
-import com.mentalhealth.eifie.data.api.models.response.AppointmentRegisterResponse
-import com.mentalhealth.eifie.data.api.models.response.AppointmentResponse
-import com.mentalhealth.eifie.data.api.performApiCall
+import com.mentalhealth.eifie.data.network.apidi.ApiService
+import com.mentalhealth.eifie.data.network.DataResult
+import com.mentalhealth.eifie.data.network.models.request.AppointmentRequest
+import com.mentalhealth.eifie.data.network.models.response.AppointmentRegisterResponse
+import com.mentalhealth.eifie.data.network.models.response.AppointmentResponse
+import com.mentalhealth.eifie.data.network.performApiCall
 import com.mentalhealth.eifie.data.preferences.EPreferences
 import com.mentalhealth.eifie.domain.repository.AppointmentRepository
 import com.mentalhealth.eifie.util.emptyString

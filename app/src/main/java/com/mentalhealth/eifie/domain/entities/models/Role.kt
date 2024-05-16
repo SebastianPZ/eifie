@@ -1,6 +1,6 @@
 package com.mentalhealth.eifie.domain.entities.models
 
-import com.mentalhealth.eifie.data.api.models.response.LoginResponse
+import com.mentalhealth.eifie.data.network.models.response.LoginResponse
 import com.mentalhealth.eifie.data.database.entities.User
 
 enum class Role(val text: String, val abb: String) {

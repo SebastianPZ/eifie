@@ -2,7 +2,7 @@ package com.mentalhealth.eifie.ui.profile.edit
 
 import android.net.Uri
 import androidx.lifecycle.viewModelScope
-import com.mentalhealth.eifie.data.api.DataResult
+import com.mentalhealth.eifie.data.network.DataResult
 import com.mentalhealth.eifie.domain.entities.models.UserSession
 import com.mentalhealth.eifie.domain.usecases.UpdateUserInformationUseCase
 import com.mentalhealth.eifie.domain.usecases.UpdateUserPhotoUseCase

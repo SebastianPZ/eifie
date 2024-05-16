@@ -5,6 +5,7 @@ import com.mentalhealth.eifie.domain.repository.AuthenticationRepository
 import com.mentalhealth.eifie.domain.repository.ChatRepository
 import com.mentalhealth.eifie.domain.repository.HospitalRepository
 import com.mentalhealth.eifie.domain.repository.MessageRepository
+import com.mentalhealth.eifie.domain.repository.OpenAIRepository
 import com.mentalhealth.eifie.domain.repository.UserRepository
 import com.mentalhealth.eifie.domain.usecases.AssignPsychologistUseCase
 import com.mentalhealth.eifie.domain.usecases.GeneratePsychologistCodeUseCase
@@ -22,6 +23,7 @@ import com.mentalhealth.eifie.domain.usecases.LoginUserUseCase
 import com.mentalhealth.eifie.domain.usecases.LogoutUserUseCase
 import com.mentalhealth.eifie.domain.usecases.RegisterPsychologistUseCase
 import com.mentalhealth.eifie.domain.usecases.RegisterPatientUseCase
+import com.mentalhealth.eifie.domain.usecases.SendMessageUseCase
 import com.mentalhealth.eifie.domain.usecases.SaveUserInformationUseCase
 import com.mentalhealth.eifie.domain.usecases.ScheduleAppointmentUseCase
 import com.mentalhealth.eifie.domain.usecases.UpdateUserInformationUseCase
@@ -151,5 +153,13 @@ object UseCaseProvider {
     fun providesGetChatMessagesUseCase(
         repository: MessageRepository): GetChatMessagesUseCase {
         return GetChatMessagesUseCase(messageRepository = repository)
+    }
+
+    @Provides
+    fun providesSendMessagesUseCase(
+        openAIRepository: OpenAIRepository,
+        repository: MessageRepository
+    ): SendMessageUseCase {
+        return SendMessageUseCase(openAIRepository = openAIRepository, messageRepository = repository)
     }
 }

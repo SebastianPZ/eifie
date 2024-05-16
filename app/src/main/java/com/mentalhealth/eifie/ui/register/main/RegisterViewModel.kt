@@ -2,10 +2,10 @@ package com.mentalhealth.eifie.ui.register.main
 
 import androidx.lifecycle.viewModelScope
 import com.mentalhealth.eifie.R
-import com.mentalhealth.eifie.data.api.DataResult
-import com.mentalhealth.eifie.data.api.models.request.RegisterRequest
-import com.mentalhealth.eifie.data.api.models.response.HospitalResponse
-import com.mentalhealth.eifie.data.api.models.response.PatientResponse
+import com.mentalhealth.eifie.data.network.DataResult
+import com.mentalhealth.eifie.data.network.models.request.RegisterRequest
+import com.mentalhealth.eifie.data.network.models.response.HospitalResponse
+import com.mentalhealth.eifie.data.network.models.response.PatientResponse
 import com.mentalhealth.eifie.domain.entities.models.PersonalData
 import com.mentalhealth.eifie.domain.entities.models.Role
 import com.mentalhealth.eifie.domain.entities.models.UserData

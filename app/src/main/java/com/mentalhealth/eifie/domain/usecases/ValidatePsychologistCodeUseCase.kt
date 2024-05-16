@@ -1,6 +1,6 @@
 package com.mentalhealth.eifie.domain.usecases
 
-import com.mentalhealth.eifie.data.api.DataResult
+import com.mentalhealth.eifie.data.network.DataResult
 import com.mentalhealth.eifie.domain.entities.models.Psychologist
 import com.mentalhealth.eifie.domain.entities.states.CodeState
 import com.mentalhealth.eifie.domain.repository.AuthenticationRepository

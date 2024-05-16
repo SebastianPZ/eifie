@@ -3,11 +3,11 @@ package com.mentalhealth.eifie.data.repository
 import android.content.Context
 import android.net.Uri
 import android.util.Log
-import com.mentalhealth.eifie.data.api.ApiService
-import com.mentalhealth.eifie.data.api.DataResult
-import com.mentalhealth.eifie.data.api.models.response.UserResponse
-import com.mentalhealth.eifie.data.api.performApiCall
-import com.mentalhealth.eifie.data.api.prepareMultipartRequest
+import com.mentalhealth.eifie.data.network.apidi.ApiService
+import com.mentalhealth.eifie.data.network.DataResult
+import com.mentalhealth.eifie.data.network.models.response.UserResponse
+import com.mentalhealth.eifie.data.network.performApiCall
+import com.mentalhealth.eifie.data.network.prepareMultipartRequest
 import com.mentalhealth.eifie.data.database.EDatabase
 import com.mentalhealth.eifie.data.database.entities.User
 import com.mentalhealth.eifie.data.preferences.EPreferences
@@ -18,8 +18,6 @@ import com.mentalhealth.eifie.util.userPreferences
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.io.ByteArrayInputStream
-import java.io.File
 import javax.inject.Inject
 import kotlin.io.path.outputStream
 

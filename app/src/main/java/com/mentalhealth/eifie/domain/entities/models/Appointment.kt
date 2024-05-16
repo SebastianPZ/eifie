@@ -1,6 +1,6 @@
 package com.mentalhealth.eifie.domain.entities.models
 
-import com.mentalhealth.eifie.data.api.models.response.AppointmentResponse
+import com.mentalhealth.eifie.data.network.models.response.AppointmentResponse
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale

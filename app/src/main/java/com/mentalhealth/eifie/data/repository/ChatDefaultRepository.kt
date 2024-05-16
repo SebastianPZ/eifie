@@ -1,7 +1,7 @@
 package com.mentalhealth.eifie.data.repository
 
 import android.util.Log
-import com.mentalhealth.eifie.data.api.DataResult
+import com.mentalhealth.eifie.data.network.DataResult
 import com.mentalhealth.eifie.data.database.EDatabase
 import com.mentalhealth.eifie.data.database.entities.Chat
 import com.mentalhealth.eifie.data.preferences.EPreferences

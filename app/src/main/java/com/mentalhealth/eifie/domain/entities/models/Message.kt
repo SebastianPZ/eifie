@@ -1,10 +1,10 @@
 package com.mentalhealth.eifie.domain.entities.models
 
-import java.util.Date
+import java.time.LocalDateTime
 
 data class Message(
-    val id: Long,
     val text: String,
-    val sendDate: Date,
-    val sender: Boolean = false
+    val chat: Long,
+    val sendDate: LocalDateTime = LocalDateTime.now(),
+    val fromMe: Boolean = false
 )

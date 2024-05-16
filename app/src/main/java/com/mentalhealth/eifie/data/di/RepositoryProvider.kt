@@ -1,20 +1,23 @@
 package com.mentalhealth.eifie.data.di
 
 import android.content.Context
-import com.mentalhealth.eifie.data.api.ApiService
+import com.mentalhealth.eifie.data.network.apidi.ApiService
 import com.mentalhealth.eifie.data.database.EDatabase
+import com.mentalhealth.eifie.data.network.apiopenai.OpenAIService
 import com.mentalhealth.eifie.data.preferences.EPreferences
 import com.mentalhealth.eifie.data.repository.AppointmentDefaultRepository
 import com.mentalhealth.eifie.data.repository.AuthenticationDefaultRepository
 import com.mentalhealth.eifie.data.repository.ChatDefaultRepository
 import com.mentalhealth.eifie.data.repository.HospitalDefaultRepository
 import com.mentalhealth.eifie.data.repository.MessageDefaultRepository
+import com.mentalhealth.eifie.data.repository.OpenAIDefaultRepository
 import com.mentalhealth.eifie.data.repository.UserDefaultRepository
 import com.mentalhealth.eifie.domain.repository.AppointmentRepository
 import com.mentalhealth.eifie.domain.repository.AuthenticationRepository
 import com.mentalhealth.eifie.domain.repository.ChatRepository
 import com.mentalhealth.eifie.domain.repository.HospitalRepository
 import com.mentalhealth.eifie.domain.repository.MessageRepository
+import com.mentalhealth.eifie.domain.repository.OpenAIRepository
 import com.mentalhealth.eifie.domain.repository.UserRepository
 import dagger.Module
 import dagger.Provides
@@ -54,6 +57,11 @@ object RepositoryProvider {
     @Provides
     fun providesMessageRepository(database: EDatabase): MessageRepository {
         return MessageDefaultRepository(database = database)
+    }
+
+    @Provides
+    fun providesOpenAIRepository(api: OpenAIService): OpenAIRepository {
+        return OpenAIDefaultRepository(api = api)
     }
 
 }
