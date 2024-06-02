@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import com.mentalhealth.eifie.domain.entities.models.Psychologist
+import com.mentalhealth.eifie.domain.entities.Psychologist
 import com.mentalhealth.eifie.ui.common.layout.HeaderComponent
 import com.mentalhealth.eifie.ui.register.Step
 import com.mentalhealth.eifie.ui.theme.CustomWhite
@@ -34,6 +34,7 @@ fun RegisterPsychologistView(
 
     val state by viewModel.state.collectAsStateWithLifecycle()
     val step by viewModel.actualStep.collectAsStateWithLifecycle()
+    val psychologist by viewModel.psychologist.collectAsStateWithLifecycle()
     val error by viewModel.codeError.collectAsStateWithLifecycle()
 
     val coroutineScope = rememberCoroutineScope()
@@ -66,8 +67,16 @@ fun RegisterPsychologistView(
                         } }
                     )
                     Step.SECOND -> PsychologistValidationComponent(
-                        psychologist = Psychologist(),
-                        onSuccess = {}
+                        psychologist = psychologist,
+                        onSuccess = { viewModel.assignPsychologist {
+                            navController.popBackStack() }
+                        },
+                        onCancel = {
+                            coroutineScope.launch {
+                                viewModel.updateStep(Step.FIRST)
+                                pagerState.animateScrollToPage(Step.FIRST)
+                            }
+                        }
                     )
                 }
             }

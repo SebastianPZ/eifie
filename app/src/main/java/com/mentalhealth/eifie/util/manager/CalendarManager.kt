@@ -54,17 +54,14 @@ class CalendarManager(private val date: Date = Date()) {
         return getFormattedDate(calendarHelper.time)
     }
 
-    fun getWeekDatesOfDate(date: String): List<String> {
+    fun getWeekDatesOfDate(date: Date): List<Date> {
         val calendarHelper = Calendar.getInstance(timeZone, locale)
-        val dateFormatter = SimpleDateFormat("yyyy-MM-dd", locale)
-        dateFormatter.parse(date)?.let {
-            calendarHelper.time = it
-        }
+        calendarHelper.time = date
 
         val weekInfo = getWeekInfoOfDate(calendar.time)
 
         return weekInfo.days.map {
-            dateFormatter.format(it.date)
+            it.date
         }
     }
 

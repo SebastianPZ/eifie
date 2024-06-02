@@ -1,8 +1,8 @@
 package com.mentalhealth.eifie.domain.usecases
 
 import com.mentalhealth.eifie.data.mock.FormFakeData
-import com.mentalhealth.eifie.domain.entities.models.Question
-import com.mentalhealth.eifie.domain.entities.models.QuestionOption
+import com.mentalhealth.eifie.domain.entities.Question
+import com.mentalhealth.eifie.domain.entities.QuestionOption
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 

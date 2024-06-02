@@ -1,12 +1,11 @@
 package com.mentalhealth.eifie.domain.repository
 
-import com.mentalhealth.eifie.data.network.DataResult
-import com.mentalhealth.eifie.data.network.models.request.AppointmentRequest
-import com.mentalhealth.eifie.data.network.models.response.AppointmentRegisterResponse
-import com.mentalhealth.eifie.data.network.models.response.AppointmentResponse
+import com.mentalhealth.eifie.domain.entities.EResult
+import com.mentalhealth.eifie.domain.entities.Appointment
+import com.mentalhealth.eifie.domain.entities.AppointmentParams
 
 interface AppointmentRepository {
-    suspend fun getAppointmentsByPatient(patient: Int, startDate: String, endDate: String): DataResult<List<AppointmentResponse>, Exception>
-    suspend fun getAppointmentsByPsychologist(psychologist: Int, startDate: String, endDate: String): DataResult<List<AppointmentResponse>, Exception>
-    suspend fun saveAppointment(appointment: AppointmentRequest): DataResult<AppointmentRegisterResponse, Exception>
+    suspend fun getAppointmentsByPatient(patient: Long, startDate: String, endDate: String): EResult<List<Appointment>, Exception>
+    suspend fun getAppointmentsByPsychologist(psychologist: Long, startDate: String, endDate: String): EResult<List<Appointment>, Exception>
+    suspend fun saveAppointment(appointment: AppointmentParams): EResult<Appointment, Exception>
 }

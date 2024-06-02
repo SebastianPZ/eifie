@@ -1,7 +1,7 @@
 package com.mentalhealth.eifie.data.mock
 
-import com.mentalhealth.eifie.data.network.models.response.PatientResponse
-import com.mentalhealth.eifie.data.network.models.response.UserResponse
+import com.mentalhealth.eifie.data.models.response.UserPatientResponse
+import com.mentalhealth.eifie.data.models.response.UserResponse
 
 object AuthenticationFakeData {
 
@@ -15,8 +15,8 @@ object AuthenticationFakeData {
     }
 
     /** Mock return user when register with values **/
-    fun registerUser(): PatientResponse {
-        return PatientResponse(
+    fun registerUser(): UserPatientResponse {
+        return UserPatientResponse(
 
         )
     }

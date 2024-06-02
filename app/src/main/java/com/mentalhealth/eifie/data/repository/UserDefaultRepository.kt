@@ -2,15 +2,15 @@ package com.mentalhealth.eifie.data.repository
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import com.mentalhealth.eifie.data.network.apidi.ApiService
-import com.mentalhealth.eifie.data.network.DataResult
-import com.mentalhealth.eifie.data.network.models.response.UserResponse
+import com.mentalhealth.eifie.domain.entities.EResult
 import com.mentalhealth.eifie.data.network.performApiCall
 import com.mentalhealth.eifie.data.network.prepareMultipartRequest
-import com.mentalhealth.eifie.data.database.EDatabase
-import com.mentalhealth.eifie.data.database.entities.User
-import com.mentalhealth.eifie.data.preferences.EPreferences
+import com.mentalhealth.eifie.data.local.database.EDatabase
+import com.mentalhealth.eifie.data.local.preferences.EPreferences
+import com.mentalhealth.eifie.data.mappers.impl.LocalUserMapper
+import com.mentalhealth.eifie.data.mappers.impl.UserMapper
+import com.mentalhealth.eifie.domain.entities.User
 import com.mentalhealth.eifie.domain.repository.UserRepository
 import com.mentalhealth.eifie.util.emptyString
 import com.mentalhealth.eifie.util.tokenPreferences
@@ -30,49 +30,48 @@ class UserDefaultRepository @Inject constructor(
 ) : UserRepository {
 
     private val userDao = database.userDao()
-    override suspend fun saveUser(user: User): DataResult<Boolean, Exception> = withContext(dispatcher) {
+    override suspend fun saveUser(user: User): EResult<Boolean, Exception> = withContext(dispatcher) {
         try {
-            userDao.insertAll(user)
+            userDao.insertAll(LocalUserMapper.mapFromEntity(user))
             preferences.savePreference(userPreferences, user.profileId)
-            DataResult.Success(true)
+            EResult.Success(true)
         } catch (e: Exception) {
-            Log.e("UserRepository", "Error-SaveUser", e)
-            DataResult.Error(e)
+            EResult.Error(e)
         }
     }
 
-    override suspend fun updateUser(user: User): DataResult<Boolean, Exception> = withContext(dispatcher) {
+    override suspend fun updateUser(user: User): EResult<Boolean, Exception> = withContext(dispatcher) {
         try {
-            userDao.updateUser(user)
-            DataResult.Success(true)
+            userDao.updateUser(LocalUserMapper.mapFromEntity(user))
+            EResult.Success(true)
         } catch (e: Exception) {
-            Log.e("UserRepository", "Error-SaveUser", e)
-            DataResult.Error(e)
+            EResult.Error(e)
         }
     }
 
-    override suspend fun getUser(): DataResult<User, Exception> = withContext(dispatcher) {
+    override suspend fun getUser(): EResult<User, Exception> = withContext(dispatcher) {
         try {
             val uId = preferences.readPreference(userPreferences) ?: 0
-            DataResult.Success(userDao.findById(uId))
+            userDao.findById(uId).let {
+                EResult.Success(LocalUserMapper.mapToEntity(it))
+            }
         } catch (e: Exception) {
-            DataResult.Error(e)
+            EResult.Error(e)
         }
     }
 
-    override suspend fun logoutUser(): DataResult<Boolean, Exception> = withContext(dispatcher) {
+    override suspend fun logoutUser(): EResult<Boolean, Exception> = withContext(dispatcher) {
         try {
             preferences.savePreference(tokenPreferences, emptyString())
-            DataResult.Success(true)
+            EResult.Success(true)
         } catch (e: Exception) {
-            DataResult.Error(e)
+            EResult.Error(e)
         }
     }
 
-    override suspend fun updateUserPicture(userId: Int, photo: Uri): DataResult<UserResponse, Exception> = withContext(dispatcher) {
+    override suspend fun updateUserPicture(userId: Long, photo: Uri): EResult<User, Exception> = withContext(dispatcher) {
         performApiCall(
             {
-
                 val file = kotlin.io.path.createTempFile()
                 val inputStream = context.contentResolver.openInputStream(photo)
 
@@ -85,7 +84,7 @@ class UserDefaultRepository @Inject constructor(
                 val partRequest = prepareMultipartRequest(file = file.toFile())
                 api.registerProfilePicture(userId, profilePic = partRequest.second)
             },
-            { response -> response?.data }
+            { response -> response?.data?.let { UserMapper.mapToEntity(it) } }
         )
     }
 }

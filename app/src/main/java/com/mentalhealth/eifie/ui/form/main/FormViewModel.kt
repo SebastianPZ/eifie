@@ -2,7 +2,7 @@ package com.mentalhealth.eifie.ui.form.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mentalhealth.eifie.domain.entities.models.Question
+import com.mentalhealth.eifie.domain.entities.Question
 import com.mentalhealth.eifie.domain.usecases.GetFormDataUseCase
 import com.mentalhealth.eifie.domain.usecases.GetFormQuestionsUseCase
 import dagger.assisted.Assisted

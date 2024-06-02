@@ -9,9 +9,9 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,7 +25,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.mentalhealth.eifie.ui.theme.BlackGreen
+import com.mentalhealth.eifie.ui.theme.CustomLightGray
+import com.mentalhealth.eifie.ui.theme.DarkGreen
 
 @Composable
 fun ETextField(
@@ -53,7 +54,7 @@ fun ETextFieldLabeled(
     var isError by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
 
-    OutlinedTextField(
+    TextField(
         value = text,
         label = { values.label?.let { Text(text = it) } },
         placeholder = { Text(
@@ -69,9 +70,13 @@ fun ETextFieldLabeled(
             values.onValueChange(it) },
         shape = RoundedCornerShape((values.radius ?: 50.0).dp),
         isError = isError,
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = values.borderColor,
-            unfocusedBorderColor = values.borderColor),
+        colors = TextFieldDefaults.colors(
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            errorIndicatorColor = Color.Transparent,
+            focusedContainerColor = CustomLightGray,
+            unfocusedContainerColor = CustomLightGray
+        ),
         modifier = values.modifier
     )
 
@@ -96,7 +101,7 @@ fun ETextFieldPasswordLabeled(
     var isError by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
 
-    OutlinedTextField(
+    TextField(
         value = text,
         label = { values.label?.let { Text(text = it) } },
         placeholder = { Text(
@@ -120,9 +125,13 @@ fun ETextFieldPasswordLabeled(
             }
         },
         isError = isError,
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = values.borderColor,
-            unfocusedBorderColor = values.borderColor),
+        colors = TextFieldDefaults.colors(
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            errorIndicatorColor = Color.Transparent,
+            focusedContainerColor = CustomLightGray,
+            unfocusedContainerColor = CustomLightGray
+        ),
         modifier = values.modifier
     )
 
@@ -145,7 +154,7 @@ fun ETextFieldLabeledIcon(
 
     var text by remember { mutableStateOf(TextFieldValue("")) }
 
-    OutlinedTextField(
+    TextField(
         value = text,
         label = { values.label?.let { Text(text = it) } },
         placeholder = { Text(
@@ -157,9 +166,13 @@ fun ETextFieldLabeledIcon(
             text = it
             values.onValueChange(it) },
         shape = RoundedCornerShape((values.radius ?: 50.0).dp),
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = values.borderColor,
-            unfocusedBorderColor = values.borderColor),
+        colors = TextFieldDefaults.colors(
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            errorIndicatorColor = Color.Transparent,
+            focusedContainerColor = CustomLightGray,
+            unfocusedContainerColor = CustomLightGray
+        ),
         modifier = values.modifier
     )
 }
@@ -171,7 +184,7 @@ fun ETextFieldNoLabeled(
 
     var text by remember { mutableStateOf(TextFieldValue("")) }
 
-    OutlinedTextField(
+    TextField(
         value = text,
         placeholder = { Text(
             text = values.placeholder,
@@ -182,9 +195,13 @@ fun ETextFieldNoLabeled(
             values.onValueChange(it) },
         keyboardOptions = values.keyboardOptions,
         shape = RoundedCornerShape((values.radius ?: 50.0).dp),
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = values.borderColor,
-            unfocusedBorderColor = values.borderColor),
+        colors = TextFieldDefaults.colors(
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            errorIndicatorColor = Color.Transparent,
+            focusedContainerColor = CustomLightGray,
+            unfocusedContainerColor = CustomLightGray
+        ),
         modifier = values.modifier
     )
 }
@@ -198,7 +215,7 @@ fun ETextFieldNoLabeledIcon(
     var isError by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
 
-    OutlinedTextField(
+    TextField(
         value = text,
         placeholder = { Text(
             text = values.placeholder,
@@ -214,9 +231,13 @@ fun ETextFieldNoLabeledIcon(
             values.onValueChange(it) },
         isError = isError,
         shape = RoundedCornerShape((values.radius ?: 50.0).dp),
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = values.borderColor,
-            unfocusedBorderColor = values.borderColor),
+        colors = TextFieldDefaults.colors(
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            errorIndicatorColor = Color.Transparent,
+            focusedContainerColor = CustomLightGray,
+            unfocusedContainerColor = CustomLightGray
+        ),
         modifier = values.modifier
     )
 
@@ -241,7 +262,7 @@ fun ETextFieldPasswordNoLabeledIcon(
     var isError by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
 
-    OutlinedTextField(
+    TextField(
         value = text,
         placeholder = { Text(
             text = values.placeholder,
@@ -265,9 +286,13 @@ fun ETextFieldPasswordNoLabeledIcon(
             }
         },
         isError = isError,
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = values.borderColor,
-            unfocusedBorderColor = values.borderColor),
+        colors = TextFieldDefaults.colors(
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            errorIndicatorColor = Color.Transparent,
+            focusedContainerColor = CustomLightGray,
+            unfocusedContainerColor = CustomLightGray
+        ),
         modifier = values.modifier
     )
 
@@ -305,8 +330,8 @@ fun SimpleComposablePreview() {
     ETextField(
         values = TextFieldValues(
             initialValue = "Prueba",
-            type = TextFieldType.LABELED,
-            borderColor = BlackGreen,
+            type = TextFieldType.NO_LABELED_ICON,
+            borderColor = DarkGreen,
         )
     )
 }

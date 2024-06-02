@@ -1,6 +1,7 @@
 package com.mentalhealth.eifie.util
 
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import java.util.regex.Pattern
 
@@ -37,4 +38,4 @@ const val PSYCHOLOGIST_ASSIGN = "Asignación de psicólogo"
 const val TOKEN_KEY = "token"
 const val USER_KEY = "user"
 val tokenPreferences = stringPreferencesKey(TOKEN_KEY)
-val userPreferences = intPreferencesKey(USER_KEY)
+val userPreferences = longPreferencesKey(USER_KEY)

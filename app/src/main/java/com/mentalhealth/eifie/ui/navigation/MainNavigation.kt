@@ -1,24 +1,30 @@
 package com.mentalhealth.eifie.ui.navigation
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.mentalhealth.eifie.domain.entities.models.Psychologist
-import com.mentalhealth.eifie.domain.entities.models.UserSession
-import com.mentalhealth.eifie.ui.appointment.register.AppointmentRegisterView
-import com.mentalhealth.eifie.ui.base.BaseView
-import com.mentalhealth.eifie.ui.chat.chatbox.ChatBoxView
+import com.mentalhealth.eifie.domain.entities.User
+import com.mentalhealth.eifie.ui.view.appointment.register.AppointmentRegisterView
+import com.mentalhealth.eifie.ui.view.ParkScreen
+import com.mentalhealth.eifie.ui.view.chat.chatbox.ChatScreen
 import com.mentalhealth.eifie.ui.form.main.FormView
 import com.mentalhealth.eifie.ui.profile.detail.ProfileDetail
+import com.mentalhealth.eifie.ui.profile.detail.ProfileDetailViewModel
 import com.mentalhealth.eifie.ui.profile.edit.EditProfilePhoto
 import com.mentalhealth.eifie.ui.psychologist.PsychologistDetailView
+import com.mentalhealth.eifie.ui.psychologist.PsychologistDetailViewModel
 import com.mentalhealth.eifie.ui.psychologist.accesscode.PsychologistCodeView
+import com.mentalhealth.eifie.ui.register.configuration.RegisterConfigurationViewModel
 import com.mentalhealth.eifie.ui.register.psychologist.RegisterPsychologistView
+import com.mentalhealth.eifie.ui.view.patient.PatientDetailView
+import com.mentalhealth.eifie.ui.viewmodel.ParkViewModel
+import com.mentalhealth.eifie.ui.viewmodel.ChatViewModel
+import com.mentalhealth.eifie.ui.viewmodel.PatientDetailViewModel
 
 @Composable
 fun MainNavigation() {
@@ -30,7 +36,7 @@ fun MainNavigation() {
             composable(
                 route = Router.MAIN_HOME.route,
             ) {
-                BaseView(mainNavController = navController)
+                ParkScreen(mainNavController = navController, viewModel = hiltViewModel<ParkViewModel>())
             }
 
             composable(
@@ -45,14 +51,29 @@ fun MainNavigation() {
             }
 
             composable(
-                route = "${Router.CHAT_BOX.route}{chat}"
+                route = "${Router.CHAT_BOX.route}{chat}",
+                arguments = listOf(navArgument("chat") { type = NavType.LongType })
             ) {
                 val arguments = requireNotNull(it.arguments)
-                ChatBoxView(
-                    chatId = arguments.getLong("chat"),
-                    navController = navController
+                ChatScreen(
+                    navController = navController,
+                    viewModel = hiltViewModel<ChatViewModel, ChatViewModel.ChatBoxViewModelFactory> (
+                        creationCallback = { factory -> factory.create(chatId = arguments.getLong("chat")) })
                 )
             }
+
+            composable(
+                route = "${Router.PATIENT_DETAIL.route}{patient}",
+                arguments = listOf(navArgument("patient") { type = NavType.LongType })
+            ) {
+                val arguments = requireNotNull(it.arguments)
+                PatientDetailView(
+                    navController = navController,
+                    viewModel = hiltViewModel<PatientDetailViewModel, PatientDetailViewModel.PatientDetailViewModelFactory>(
+                        creationCallback = { factory -> factory.create(patientId = arguments.getLong("patient")) })
+                )
+            }
+
 
             composable(
                 route = Router.APPOINTMENT_REGISTER.route,
@@ -63,7 +84,7 @@ fun MainNavigation() {
             composable(
                 route = Router.MAIN_PROFILE.route,
             ) {
-                ProfileDetail(navController = navController)
+                ProfileDetail(navController = navController, viewModel =  hiltViewModel<ProfileDetailViewModel>())
             }
 
             composable(
@@ -74,9 +95,16 @@ fun MainNavigation() {
             }
 
             composable(
-                route = Router.PSYCHOLOGIST_DETAIL.route,
+                route = "${Router.PSYCHOLOGIST_DETAIL.route}{psychologist}",
+                arguments = listOf(navArgument("psychologist") { type = NavType.LongType })
             ) {
-                PsychologistDetailView(psychologist = -1, navController = navController)
+                val arguments = requireNotNull(it.arguments)
+                PsychologistDetailView(
+                    psychologistId = arguments.getLong("psychologist"),
+                    navController = navController,
+                    viewModel = hiltViewModel<PsychologistDetailViewModel, PsychologistDetailViewModel.PsychologistDetailViewModelFactory>(
+                        creationCallback = { factory -> factory.create(psychologistId = arguments.getLong("psychologist")) })
+                )
             }
 
             composable(
@@ -89,7 +117,7 @@ fun MainNavigation() {
             composable(
                 route = Router.PROFILE_EDIT_PHOTO.route,
             ) {
-                val user = navController.previousBackStackEntry?.savedStateHandle?.get<UserSession>("user") ?: UserSession()
+                val user = navController.previousBackStackEntry?.savedStateHandle?.get<User>("user") ?: User()
                 EditProfilePhoto(user = user, navController = navController)
             }
         }

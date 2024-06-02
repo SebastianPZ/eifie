@@ -1,19 +1,23 @@
 package com.mentalhealth.eifie.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import com.mentalhealth.eifie.ui.appointment.main.AppointmentView
-import com.mentalhealth.eifie.ui.chat.main.ChatView
-import com.mentalhealth.eifie.ui.home.HomeView
+import com.mentalhealth.eifie.ui.view.appointment.main.AppointmentView
+import com.mentalhealth.eifie.ui.view.HomeScreen
 import com.mentalhealth.eifie.ui.profile.main.Profile
+import com.mentalhealth.eifie.ui.view.chat.main.ChatParkScreen
+import com.mentalhealth.eifie.ui.view.patient.PatientsScreen
+import com.mentalhealth.eifie.ui.viewmodel.ChatParkViewModel
+import com.mentalhealth.eifie.ui.viewmodel.PatientsViewModel
 
 @Composable
 fun HomeNavigation(
     navController: NavHostController,
-    mainNavController: NavHostController
+    mainNavController: NavHostController?
 ) {
 
     NavHost(navController = navController, startDestination = Router.HOME_GRAPH.route) {
@@ -21,13 +25,19 @@ fun HomeNavigation(
             composable(
                 route = Router.HOME.route,
             ) {
-                HomeView(navController = mainNavController)
+                HomeScreen(navController = mainNavController)
             }
 
             composable(
                 route = Router.CHAT.route,
             ) {
-                ChatView(navController = mainNavController)
+                ChatParkScreen(navController = mainNavController, viewModel = hiltViewModel<ChatParkViewModel>())
+            }
+
+            composable(
+                route = Router.PATIENTS.route,
+            ) {
+                PatientsScreen(navController = mainNavController, viewModel = hiltViewModel<PatientsViewModel>())
             }
 
             composable(

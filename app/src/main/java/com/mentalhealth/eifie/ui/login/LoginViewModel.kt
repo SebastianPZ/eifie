@@ -5,11 +5,10 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.lifecycle.viewModelScope
-import com.mentalhealth.eifie.data.network.DataResult
-import com.mentalhealth.eifie.data.network.models.request.LoginRequest
-import com.mentalhealth.eifie.domain.entities.states.LoginState
-import com.mentalhealth.eifie.domain.entities.models.UserSession
-import com.mentalhealth.eifie.domain.usecases.LoginUserUseCase
+import com.mentalhealth.eifie.domain.entities.EResult
+import com.mentalhealth.eifie.data.models.request.LoginRequest
+import com.mentalhealth.eifie.domain.entities.User
+import com.mentalhealth.eifie.domain.usecases.LoginUseCase
 import com.mentalhealth.eifie.domain.usecases.SaveUserInformationUseCase
 import com.mentalhealth.eifie.ui.common.LazyViewModel
 import com.mentalhealth.eifie.util.ERR_SAVE_USER_SESSION
@@ -28,7 +27,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val loginUserUseCase: LoginUserUseCase,
+    private val loginUseCase: LoginUseCase,
     private val saveUserUseCase: SaveUserInformationUseCase
 ): LazyViewModel() {
 
@@ -59,18 +58,16 @@ class LoginViewModel @Inject constructor(
     }
 
     fun loginUser() = viewModelScope.launch {
-        loginUserUseCase.invoke(user)
+        loginUseCase.invoke(user.email, user.password)
             .onStart {
-
+                viewState.value = LoginViewState.Loading
             }.onEach {
                 when(it) {
-                    LoginState.Idle -> Unit
-                    LoginState.Loading -> viewState.value = LoginViewState.Loading
-                    is LoginState.Success -> it.run {
-                        saveUserSession(userSession).join()
+                    is EResult.Success -> it.run {
+                        saveUserSession(data).join()
                     }
-                    is LoginState.Error -> it.run {
-                        viewState.value = LoginViewState.Error("$message $TRY_AGAIN")
+                    is EResult.Error -> it.run {
+                        viewState.value = LoginViewState.Error("${error.message} $TRY_AGAIN")
                     }
                 }
             }.catch {
@@ -78,14 +75,13 @@ class LoginViewModel @Inject constructor(
             }.launchIn(viewModelScope)
     }
 
-    private fun saveUserSession(userSession: UserSession) = viewModelScope.launch {
-        saveUserUseCase.invoke(userSession).onEach {
+    private fun saveUserSession(user: User) = viewModelScope.launch {
+        saveUserUseCase.invoke(user).onEach {
             when(it) {
-                DataResult.Loading -> Unit
-                is DataResult.Success -> {
+                is EResult.Success -> {
                     viewState.value = LoginViewState.Success
                 }
-                is DataResult.Error -> {
+                is EResult.Error -> {
                     viewState.value = LoginViewState.Error("$ERR_SAVE_USER_SESSION $TRY_AGAIN")
                 }
             }

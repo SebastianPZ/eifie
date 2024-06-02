@@ -1,14 +1,13 @@
 package com.mentalhealth.eifie.domain.repository
 
 import android.net.Uri
-import com.mentalhealth.eifie.data.network.DataResult
-import com.mentalhealth.eifie.data.network.models.response.UserResponse
-import com.mentalhealth.eifie.data.database.entities.User
+import com.mentalhealth.eifie.domain.entities.EResult
+import com.mentalhealth.eifie.domain.entities.User
 
 interface UserRepository {
-    suspend fun saveUser(user: User): DataResult<Boolean, Exception>
-    suspend fun updateUser(user: User): DataResult<Boolean, Exception>
-    suspend fun getUser(): DataResult<User, Exception>
-    suspend fun logoutUser(): DataResult<Boolean, Exception>
-    suspend fun updateUserPicture(userId: Int, photo: Uri): DataResult<UserResponse, Exception>
+    suspend fun saveUser(user: User): EResult<Boolean, Exception>
+    suspend fun updateUser(user: User): EResult<Boolean, Exception>
+    suspend fun getUser(): EResult<User, Exception>
+    suspend fun logoutUser(): EResult<Boolean, Exception>
+    suspend fun updateUserPicture(userId: Long, photo: Uri): EResult<User, Exception>
 }

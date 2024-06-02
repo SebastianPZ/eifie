@@ -1,9 +1,10 @@
 package com.mentalhealth.eifie.domain.repository
 
-import com.mentalhealth.eifie.data.network.DataResult
-import com.mentalhealth.eifie.data.database.entities.Chat
+import com.mentalhealth.eifie.domain.entities.Chat
+import com.mentalhealth.eifie.domain.entities.EResult
 
 interface ChatRepository {
-    suspend fun getChatByUser(): DataResult<List<Chat>, Exception>
-    suspend fun getChatById(chatId: Long): DataResult<Chat, Exception>
+    suspend fun saveChat(chat: Chat): EResult<Boolean, Exception>
+    suspend fun getChatByUser(): EResult<List<Chat>, Exception>
+    suspend fun getChatById(chatId: Long): EResult<Chat, Exception>
 }

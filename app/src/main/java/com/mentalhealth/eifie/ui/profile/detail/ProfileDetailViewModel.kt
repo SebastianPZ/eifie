@@ -5,9 +5,9 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.viewModelScope
 import com.mentalhealth.eifie.R
-import com.mentalhealth.eifie.data.network.DataResult
-import com.mentalhealth.eifie.domain.entities.models.Role
-import com.mentalhealth.eifie.domain.entities.models.UserSession
+import com.mentalhealth.eifie.domain.entities.EResult
+import com.mentalhealth.eifie.domain.entities.Role
+import com.mentalhealth.eifie.domain.entities.User
 import com.mentalhealth.eifie.domain.usecases.GetUserInformationUseCase
 import com.mentalhealth.eifie.domain.usecases.LogoutUserUseCase
 import com.mentalhealth.eifie.ui.MainActivity
@@ -46,7 +46,7 @@ class ProfileDetailViewModel @Inject constructor(
         initialValue = null
     )
 
-    lateinit var user: UserSession
+    lateinit var user: User
 
     /*init {
         initUserInformation()
@@ -58,11 +58,10 @@ class ProfileDetailViewModel @Inject constructor(
                 viewState.value = ProfileDetailViewState.Loading
             }.onEach {
                 when(it) {
-                    DataResult.Loading -> viewState.value = ProfileDetailViewState.Loading
-                    is DataResult.Success -> it.run {
+                    is EResult.Success -> it.run {
                         viewState.value = ProfileDetailViewState.Success(handleUserData(data))
                     }
-                    is DataResult.Error -> it.run {
+                    is EResult.Error -> it.run {
                         viewState.value = ProfileDetailViewState.Error
                     }
                 }
@@ -71,7 +70,7 @@ class ProfileDetailViewModel @Inject constructor(
             }.launchIn(viewModelScope)
     }
 
-    private fun handleUserData(user: UserSession): ProfileDetailData {
+    private fun handleUserData(user: User): ProfileDetailData {
         this.user = user
         handleUserPhoto(user) //init photo values
         return ProfileDetailData(
@@ -81,21 +80,22 @@ class ProfileDetailViewModel @Inject constructor(
                 ProfileItem(R.drawable.ic_profile_birthday, BIRTHDATE_TITLE, user.birthDate),
                 ProfileItem(R.drawable.ic_profile_email, EMAIL_TITLE, user.email),
             ),
-            options = handleUserOptions(user.role)
+            options = handleUserOptions(user)
         )
     }
 
-    private fun handleUserPhoto(user: UserSession) {
+    private fun handleUserPhoto(user: User) {
         _userPhoto.value = UserPhoto(
             username = user.userName,
             photoUri = if(user.picture.isNullOrEmpty()) null else user.picture,
         )
     }
 
-    private fun handleUserOptions(role: Role): List<ProfileItem> {
-        return when(role) {
+    private fun handleUserOptions(user: User): List<ProfileItem> {
+        return when(user.role) {
             Role.PATIENT -> listOf(
-                ProfileItem(R.drawable.ic_profile_doctor_code, PSYCHOLOGIST_ASSIGN, Router.PSYCHOLOGIST_DETAIL.route)
+                ProfileItem(R.drawable.ic_profile_doctor_code, PSYCHOLOGIST_ASSIGN,
+                    "${Router.PSYCHOLOGIST_DETAIL.route}${user.psychologistAssigned}")
             )
             Role.PSYCHOLOGIST -> listOf(
                 ProfileItem(R.drawable.ic_profile_doctor_code, PSYCHOLOGIST_CODE, Router.PSYCHOLOGIST_CODE.route)
@@ -107,12 +107,11 @@ class ProfileDetailViewModel @Inject constructor(
         logoutUserUseCase.invoke()
             .onEach {
                 when(it) {
-                    DataResult.Loading -> Unit
-                    is DataResult.Success -> {
+                    is EResult.Success -> {
                         context.startActivity(Intent(context, MainActivity::class.java))
                         context.finish()
                     }
-                    is DataResult.Error -> {
+                    is EResult.Error -> {
                         Log.e("Logout", "Error", it.error)
                     }
                 }

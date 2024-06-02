@@ -1,17 +1,18 @@
 package com.mentalhealth.eifie.data.network.apidi
 
-import com.mentalhealth.eifie.data.network.models.request.AppointmentRequest
-import com.mentalhealth.eifie.data.network.models.request.LoginRequest
-import com.mentalhealth.eifie.data.network.models.request.PatientRequest
-import com.mentalhealth.eifie.data.network.models.request.PsychologistRequest
-import com.mentalhealth.eifie.data.network.models.response.AppointmentRegisterResponse
-import com.mentalhealth.eifie.data.network.models.response.AppointmentResponse
-import com.mentalhealth.eifie.data.network.models.response.BaseResponse
-import com.mentalhealth.eifie.data.network.models.response.HospitalResponse
-import com.mentalhealth.eifie.data.network.models.response.PatientResponse
-import com.mentalhealth.eifie.data.network.models.response.ProfileResponse
-import com.mentalhealth.eifie.data.network.models.response.PsychologistResponse
-import com.mentalhealth.eifie.data.network.models.response.UserResponse
+import com.mentalhealth.eifie.data.models.request.AppointmentRequest
+import com.mentalhealth.eifie.data.models.request.LoginRequest
+import com.mentalhealth.eifie.data.models.request.PatientRequest
+import com.mentalhealth.eifie.data.models.request.PsychologistRequest
+import com.mentalhealth.eifie.data.models.response.AppointmentRegisterResponse
+import com.mentalhealth.eifie.data.models.response.AppointmentResponse
+import com.mentalhealth.eifie.data.models.response.BaseResponse
+import com.mentalhealth.eifie.data.models.response.HospitalResponse
+import com.mentalhealth.eifie.data.models.response.PatientResponse
+import com.mentalhealth.eifie.data.models.response.UserPatientResponse
+import com.mentalhealth.eifie.data.models.response.ProfileResponse
+import com.mentalhealth.eifie.data.models.response.UserPsychologistResponse
+import com.mentalhealth.eifie.data.models.response.UserResponse
 import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.Body
@@ -29,15 +30,16 @@ interface ApiService {
 
     @POST("user/patient")
     suspend fun registerPatient(
-        @Body request: PatientRequest): Response<BaseResponse<PatientResponse>>
+        @Body request: PatientRequest
+    ): Response<BaseResponse<UserPatientResponse>>
 
     @POST("user/psychologist")
-    suspend fun registerPsychologist(@Body request: PsychologistRequest): Response<BaseResponse<PsychologistResponse>>
+    suspend fun registerPsychologist(@Body request: PsychologistRequest): Response<BaseResponse<UserPsychologistResponse>>
 
     @Multipart
     @POST("user/profilePic")
     suspend fun registerProfilePicture(
-        @Query("userId") userId: Int,
+        @Query("userId") userId: Long,
         @Part profilePic: MultipartBody.Part ?= null): Response<BaseResponse<UserResponse>>
 
     @GET("util/hospital")
@@ -46,7 +48,7 @@ interface ApiService {
     @GET("/appointment/findByPatient")
     suspend fun getAppointmentByPatient(
         @Header("Authorization") token: String,
-        @Query("patientId") patientId: Int,
+        @Query("patientId") patientId: Long,
         @Query("startDate") startDate: String,
         @Query("endDate") endDate: String
     ): Response<BaseResponse<List<AppointmentResponse>>>
@@ -54,7 +56,7 @@ interface ApiService {
     @GET("/appointment/findByPsychologist")
     suspend fun getAppointmentByPsychologist(
         @Header("Authorization") token: String,
-        @Query("psychologistId") psychologistId: Int,
+        @Query("psychologistId") psychologistId: Long,
         @Query("startDate") startDate: String,
         @Query("endDate") endDate: String
     ): Response<BaseResponse<List<AppointmentResponse>>>
@@ -62,7 +64,8 @@ interface ApiService {
     @POST("/appointment/saveAppointment")
     suspend fun saveAppointment(
         @Header("Authorization") token: String,
-        @Body generateAppointmentRequestDTO: AppointmentRequest): Response<BaseResponse<AppointmentRegisterResponse>>
+        @Body generateAppointmentRequestDTO: AppointmentRequest
+    ): Response<BaseResponse<AppointmentRegisterResponse>>
 
     @GET("/psychologist/generateAccessCode")
     suspend fun generatePsychologistCode(
@@ -72,11 +75,29 @@ interface ApiService {
     @GET("/patient/validateAccessCode")
     suspend fun validatePsychologistCode(
         @Header("Authorization") token: String,
-        @Query("accessCode") code: String): Response<BaseResponse<PsychologistResponse>>
+        @Query("accessCode") code: String): Response<BaseResponse<UserPsychologistResponse>>
 
-    @GET("/patient/psychologist")
+    @POST("/patient/psychologist")
     suspend fun assignPsychologist(
         @Query("patientId") patientId: Long,
         @Query("psychologistId") psychologistId: Long
-    ): Response<BaseResponse<PatientResponse>>
+    ): Response<BaseResponse<UserPatientResponse>>
+
+    @GET("/psychologist/patients")
+    suspend fun listPatientByPsychologist(
+        @Header("Authorization") token: String,
+        @Query("psychologistId") psychologistId: Long
+    ): Response<BaseResponse<List<PatientResponse>>>
+
+    @GET("/psychologist")
+    suspend fun getPsychologistById(
+        @Header("Authorization") token: String,
+        @Query("psychologistId") psychologistId: Long
+    ): Response<BaseResponse<UserPsychologistResponse>>
+
+    @GET("/patient")
+    suspend fun getPatientById(
+        @Header("Authorization") token: String,
+        @Query("patientId") patientId: Long
+    ): Response<BaseResponse<UserPatientResponse>>
 }

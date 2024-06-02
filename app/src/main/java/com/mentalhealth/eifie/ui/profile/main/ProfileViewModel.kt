@@ -2,8 +2,8 @@ package com.mentalhealth.eifie.ui.profile.main
 
 import androidx.lifecycle.viewModelScope
 import com.mentalhealth.eifie.R
-import com.mentalhealth.eifie.data.network.DataResult
-import com.mentalhealth.eifie.domain.entities.models.UserSession
+import com.mentalhealth.eifie.domain.entities.EResult
+import com.mentalhealth.eifie.domain.entities.User
 import com.mentalhealth.eifie.domain.usecases.GetUserInformationUseCase
 import com.mentalhealth.eifie.ui.common.LazyViewModel
 import com.mentalhealth.eifie.ui.profile.ProfileItem
@@ -27,7 +27,7 @@ class ProfileViewModel @Inject constructor(
     private val getUserUseCase: GetUserInformationUseCase
 ) : LazyViewModel() {
 
-    private lateinit var userSession: UserSession
+    private lateinit var user: User
 
     private val _userPhoto: MutableStateFlow<UserPhoto?> = MutableStateFlow(null)
 
@@ -43,11 +43,10 @@ class ProfileViewModel @Inject constructor(
                 viewState.value = ProfileViewState.Loading
             }.onEach {
                 when(it) {
-                    DataResult.Loading -> viewState.value = ProfileViewState.Loading
-                    is DataResult.Success -> it.run {
+                    is EResult.Success -> it.run {
                         viewState.value = ProfileViewState.Success(handleProfileData(data))
                     }
-                    is DataResult.Error -> it.run {
+                    is EResult.Error -> it.run {
                         viewState.value = ProfileViewState.Error
                     }
                 }
@@ -56,15 +55,15 @@ class ProfileViewModel @Inject constructor(
             }.launchIn(viewModelScope)
     }
 
-    private fun handleUserPhoto(user: UserSession) {
+    private fun handleUserPhoto(user: User) {
         _userPhoto.value = UserPhoto(
             username = user.userName,
             photoUri = if(user.picture.isNullOrEmpty()) null else user.picture,
         )
     }
 
-    private fun handleProfileData(user: UserSession): List<ProfileItem> {
-        userSession = user
+    private fun handleProfileData(user: User): List<ProfileItem> {
+        this.user = user
         handleUserPhoto(user)
         return listOf(
             ProfileItem(R.drawable.ic_age, AGE_TITLE, user.age.toString()),

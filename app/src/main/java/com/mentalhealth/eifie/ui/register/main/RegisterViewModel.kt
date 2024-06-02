@@ -2,13 +2,13 @@ package com.mentalhealth.eifie.ui.register.main
 
 import androidx.lifecycle.viewModelScope
 import com.mentalhealth.eifie.R
-import com.mentalhealth.eifie.data.network.DataResult
-import com.mentalhealth.eifie.data.network.models.request.RegisterRequest
-import com.mentalhealth.eifie.data.network.models.response.HospitalResponse
-import com.mentalhealth.eifie.data.network.models.response.PatientResponse
-import com.mentalhealth.eifie.domain.entities.models.PersonalData
-import com.mentalhealth.eifie.domain.entities.models.Role
-import com.mentalhealth.eifie.domain.entities.models.UserData
+import com.mentalhealth.eifie.domain.entities.EResult
+import com.mentalhealth.eifie.data.models.request.RegisterRequest
+import com.mentalhealth.eifie.data.models.response.HospitalResponse
+import com.mentalhealth.eifie.domain.entities.Patient
+import com.mentalhealth.eifie.domain.entities.PersonalData
+import com.mentalhealth.eifie.domain.entities.Role
+import com.mentalhealth.eifie.domain.entities.UserData
 import com.mentalhealth.eifie.domain.usecases.ListHospitalsUseCase
 import com.mentalhealth.eifie.domain.usecases.RegisterPsychologistUseCase
 import com.mentalhealth.eifie.domain.usecases.RegisterPatientUseCase
@@ -133,7 +133,7 @@ class RegisterViewModel @Inject constructor(
 
             }.onEach { result ->
                 when(result) {
-                    is DataResult.Success -> handleDropdownHospitals(result.data)
+                    is EResult.Success -> handleDropdownHospitals(result.data)
                     else -> handleDropdownHospitals()
                 }
             }.catch {
@@ -164,10 +164,10 @@ class RegisterViewModel @Inject constructor(
             .onStart { viewState.value = RegisterViewState.Loading }
             .onEach { result ->
                 when(result) {
-                    is DataResult.Success -> result.data.run {
-                        viewState.value = RegisterViewState.Success(user = patientId ?: 0)
+                    is EResult.Success -> result.data.run {
+                        viewState.value = RegisterViewState.Success(user = id)
                     }
-                    is DataResult.Error -> result.run {
+                    is EResult.Error -> result.run {
                         viewState.value = RegisterViewState.Error(error.message ?: "")
                     }
                     else -> Unit
@@ -177,10 +177,10 @@ class RegisterViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
-    fun handleDataResultAfterAssign(result: DataResult<PatientResponse, Exception>) {
+    fun handleDataResultAfterAssign(result: EResult<Patient, Exception>) {
         when(result) {
-            is DataResult.Success -> viewState.value = RegisterPsychologistViewState.Success
-            is DataResult.Error -> result.run {
+            is EResult.Success -> viewState.value = RegisterPsychologistViewState.Success
+            is EResult.Error -> result.run {
                 viewState.value = RegisterPsychologistViewState.Success
             }
             else -> Unit
@@ -194,10 +194,10 @@ class RegisterViewModel @Inject constructor(
                 viewState.value = RegisterViewState.Loading
             }.onEach { result ->
                 when(result) {
-                    is DataResult.Success -> result.data.run {
-                        viewState.value = RegisterViewState.Success(user = psychologistId ?: 0)
+                    is EResult.Success -> result.data.run {
+                        viewState.value = RegisterViewState.Success(user = id)
                     }
-                    is DataResult.Error -> result.run {
+                    is EResult.Error -> result.run {
                         viewState.value = RegisterViewState.Error(error.message ?: "")
                     }
                     else -> Unit

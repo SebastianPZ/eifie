@@ -51,6 +51,8 @@
     <string name="ready">Listo</string>
 
     <string name="patient">Paciente</string>
+    <string name="patients">Pacientes</string>
+    <string name="empty_patients">Aún no cuenta con\npacientes asignados.</string>
     <string name="psychologist">Psicólogo</string>
     <string name="title_activity_register">RegisterActivity</string>
     <string name="title_activity_home">HomeActivity</string>
@@ -69,4 +71,5 @@
 
     <string name="expire_in">Expira en %1$s</string>
     <string name="assign_code">Código de asignación</string>
+    <string name="update">Actualizar</string>
 </resources>

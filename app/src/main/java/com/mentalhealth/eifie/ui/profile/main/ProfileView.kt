@@ -52,7 +52,7 @@ import com.mentalhealth.eifie.util.getActivity
 
 @Composable
 fun Profile(
-    mainNavController: NavHostController,
+    mainNavController: NavHostController?,
 ) {
 
     val viewModel: ProfileViewModel = hiltViewModel<ProfileViewModel>()
@@ -76,7 +76,7 @@ fun Profile(
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .padding(top = 15.dp, end = 15.dp),
-            onClick = { mainNavController.navigate(Router.MAIN_PROFILE.route) }) {
+            onClick = { mainNavController?.navigate(Router.MAIN_PROFILE.route) }) {
             Icon(
                 imageVector = Icons.Filled.Menu,
                 tint = Color.White,

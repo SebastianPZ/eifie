@@ -20,7 +20,7 @@ internal fun String?.ifBlank(value: () -> String): String {
 }
 
 internal fun String?.getInitials(divider: String? = emptyString()): String {
-    if(this.isNullOrEmpty()) return "--"
+    if(this.isNullOrBlank() || this.isEmpty()) return "--"
     val words = this.split(" ")
     var initials = emptyString()
     words.forEachIndexed { index, word ->
@@ -28,6 +28,24 @@ internal fun String?.getInitials(divider: String? = emptyString()): String {
         else initials.plus("${word.first()}$divider")
     }
     return initials.uppercase()
+}
+
+
+internal fun getUserName(firstName: String, lastName: String): String {
+    var nameOne = emptyString()
+    var nameTwo = emptyString()
+
+    if(firstName.isNotEmpty()) {
+        val firstNameWords = firstName.split(" ")
+        nameOne = firstNameWords.first()
+    }
+
+    if(lastName.isNotEmpty()) {
+        val lastNameWords = lastName.split(" ")
+        nameTwo = lastNameWords.first()
+    }
+
+    return "$nameOne $nameTwo"
 }
 
 val emailPattern = "^[A-Za-z](.*)([@])(.+)(\\.)(.+)".toRegex()

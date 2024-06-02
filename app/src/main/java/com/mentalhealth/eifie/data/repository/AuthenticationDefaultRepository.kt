@@ -1,15 +1,20 @@
 package com.mentalhealth.eifie.data.repository
 
 import com.mentalhealth.eifie.data.network.apidi.ApiService
-import com.mentalhealth.eifie.data.network.models.request.LoginRequest
-import com.mentalhealth.eifie.data.network.models.response.PatientResponse
-import com.mentalhealth.eifie.data.network.DataResult
+import com.mentalhealth.eifie.data.models.request.LoginRequest
+import com.mentalhealth.eifie.domain.entities.EResult
 import com.mentalhealth.eifie.data.network.performApiCall
-import com.mentalhealth.eifie.data.network.models.request.PatientRequest
-import com.mentalhealth.eifie.data.network.models.request.PsychologistRequest
-import com.mentalhealth.eifie.data.network.models.response.LoginResponse
-import com.mentalhealth.eifie.data.network.models.response.PsychologistResponse
-import com.mentalhealth.eifie.data.preferences.EPreferences
+import com.mentalhealth.eifie.data.local.preferences.EPreferences
+import com.mentalhealth.eifie.data.mappers.impl.UserPatientMapper
+import com.mentalhealth.eifie.data.mappers.impl.PatientRequestMapper
+import com.mentalhealth.eifie.data.mappers.impl.UserPsychologistMapper
+import com.mentalhealth.eifie.data.mappers.impl.PsychologistRequestMapper
+import com.mentalhealth.eifie.data.mappers.impl.LoginMapper
+import com.mentalhealth.eifie.domain.entities.PatientParams
+import com.mentalhealth.eifie.domain.entities.PsychologistParams
+import com.mentalhealth.eifie.domain.entities.Patient
+import com.mentalhealth.eifie.domain.entities.Psychologist
+import com.mentalhealth.eifie.domain.entities.User
 import com.mentalhealth.eifie.domain.repository.AuthenticationRepository
 import com.mentalhealth.eifie.util.TOKEN_KEY
 import com.mentalhealth.eifie.util.emptyString
@@ -27,32 +32,33 @@ class AuthenticationDefaultRepository @Inject constructor(
 ): AuthenticationRepository {
 
     override suspend fun authenticateUser(
-        request: LoginRequest
-    ): DataResult<LoginResponse, Exception> = withContext(dispatcher) {
+        email: String,
+        password: String
+    ): EResult<User, Exception> = withContext(dispatcher) {
         performApiCall(
-            { api.loginUser(request) },
-            { response -> response?.data?.profile },
+            { api.loginUser(LoginRequest(email = email, password = password)) },
+            { response -> response?.data?.profile?.let { LoginMapper.mapToEntity(it) } },
             { headers -> preferences.savePreference(tokenPreferences, headers[TOKEN_KEY] ?: emptyString()) }
         )
     }
 
     override suspend fun registerPatient(
-        request: PatientRequest
-    ): DataResult<PatientResponse, Exception> = withContext(dispatcher) {
+        request: PatientParams
+    ): EResult<Patient, Exception> = withContext(dispatcher) {
         performApiCall(
-            { api.registerPatient(request) },
-            { response -> response?.data }
+            { api.registerPatient(PatientRequestMapper.mapFromEntity(request)) },
+            { response -> response?.data?.let { UserPatientMapper.mapToEntity(it) } }
         )
     }
 
-    override suspend fun registerPsychologist(request: PsychologistRequest): DataResult<PsychologistResponse, Exception> = withContext(dispatcher) {
+    override suspend fun registerPsychologist(request: PsychologistParams): EResult<Psychologist, Exception> = withContext(dispatcher) {
         performApiCall(
-            { api.registerPsychologist(request) },
-            { response -> response?.data }
+            { api.registerPsychologist(PsychologistRequestMapper.mapFromEntity(request)) },
+            { response -> response?.data?.let { UserPsychologistMapper.mapToEntity(it) } }
         )
     }
 
-    override suspend fun generatePsychologistCode(psychologistId: Long): DataResult<String, Exception> = withContext(dispatcher) {
+    override suspend fun generatePsychologistCode(psychologistId: Long): EResult<String, Exception> = withContext(dispatcher) {
         performApiCall(
             {
                 val token = preferences.readPreference(tokenPreferences) ?: emptyString()
@@ -62,23 +68,23 @@ class AuthenticationDefaultRepository @Inject constructor(
         )
     }
 
-    override suspend fun validatePsychologistCode(accessCode: String): DataResult<PsychologistResponse, Exception> = withContext(dispatcher) {
+    override suspend fun validatePsychologistCode(accessCode: String): EResult<Psychologist, Exception> = withContext(dispatcher) {
         performApiCall(
             {
                 val token = preferences.readPreference(tokenPreferences) ?: emptyString()
                 api.validatePsychologistCode(token.formatToken(), accessCode)
             },
-            { response -> response?.data }
+            { response -> response?.data?.let { UserPsychologistMapper.mapToEntity(it) } }
         )
     }
 
     override suspend fun assignPsychologist(
         patientId: Long,
         psychologistId: Long
-    ): DataResult<PatientResponse, Exception> = withContext(dispatcher) {
+    ): EResult<Patient, Exception> = withContext(dispatcher) {
         performApiCall(
             { api.assignPsychologist(patientId, psychologistId) },
-            { response -> response?.data }
+            { response -> response?.data?.let { UserPatientMapper.mapToEntity(it) } }
         )
     }
 

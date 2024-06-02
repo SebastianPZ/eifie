@@ -2,8 +2,8 @@ package com.mentalhealth.eifie.ui.profile.edit
 
 import android.net.Uri
 import androidx.lifecycle.viewModelScope
-import com.mentalhealth.eifie.data.network.DataResult
-import com.mentalhealth.eifie.domain.entities.models.UserSession
+import com.mentalhealth.eifie.domain.entities.EResult
+import com.mentalhealth.eifie.domain.entities.User
 import com.mentalhealth.eifie.domain.usecases.UpdateUserInformationUseCase
 import com.mentalhealth.eifie.domain.usecases.UpdateUserPhotoUseCase
 import com.mentalhealth.eifie.ui.common.LazyViewModel
@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = ProfileEditPhotoViewModel.ProfileEditPhotoViewModelFactory::class)
 class ProfileEditPhotoViewModel @AssistedInject constructor(
-    @Assisted val user: UserSession,
+    @Assisted val user: User,
     private val updateUserPhotoUseCase: UpdateUserPhotoUseCase,
     private val updateUserUseCase: UpdateUserInformationUseCase,
 ) : LazyViewModel() {
@@ -39,32 +39,32 @@ class ProfileEditPhotoViewModel @AssistedInject constructor(
 
         updateRemoteUserPhoto().await().let {
             when(it) {
-                is DataResult.Success -> it.run {
+                is EResult.Success -> it.run {
                     handleInformationUpdate(it.data) {
                         onComplete()
                     }.await()
                 }
-                is DataResult.Error -> Unit
+                is EResult.Error -> Unit
                 else -> Unit
             }
         }
     }
 
-    private fun handleInformationUpdate(user: UserSession, onComplete: () -> Unit = {}) = viewModelScope.async {
+    private fun handleInformationUpdate(user: User, onComplete: () -> Unit = {}) = viewModelScope.async {
         updateLocalUserData(user).await().let {
             when(it) {
-                is DataResult.Success -> onComplete()
+                is EResult.Success -> onComplete()
                 else -> Unit
             }
         }
     }
 
-    private fun updateLocalUserData(user: UserSession) = viewModelScope.async {
+    private fun updateLocalUserData(user: User) = viewModelScope.async {
         updateUserUseCase.invoke(user).singleOrNull()
     }
 
     @AssistedFactory
     fun interface ProfileEditPhotoViewModelFactory {
-        fun create(user: UserSession): ProfileEditPhotoViewModel
+        fun create(user: User): ProfileEditPhotoViewModel
     }
 }

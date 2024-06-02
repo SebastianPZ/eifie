@@ -9,7 +9,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
-import com.mentalhealth.eifie.data.preferences.dataStore
+import com.mentalhealth.eifie.data.local.preferences.dataStore
 import com.mentalhealth.eifie.ui.navigation.AuthNavigation
 import com.mentalhealth.eifie.ui.theme.EifieTheme
 import com.mentalhealth.eifie.util.emptyString

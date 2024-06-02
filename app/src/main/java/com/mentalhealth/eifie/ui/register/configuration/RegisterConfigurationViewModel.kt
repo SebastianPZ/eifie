@@ -3,7 +3,7 @@ package com.mentalhealth.eifie.ui.register.configuration
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mentalhealth.eifie.R
-import com.mentalhealth.eifie.domain.entities.models.Role
+import com.mentalhealth.eifie.domain.entities.Role
 import com.mentalhealth.eifie.ui.navigation.Router
 import com.mentalhealth.eifie.ui.profile.ProfileItem
 import com.mentalhealth.eifie.util.PSYCHOLOGIST_ASSIGN

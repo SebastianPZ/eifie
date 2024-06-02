@@ -1,8 +1,8 @@
 package com.mentalhealth.eifie.domain.usecases
 
 import android.net.Uri
-import com.mentalhealth.eifie.data.network.DataResult
-import com.mentalhealth.eifie.domain.entities.models.UserSession
+import com.mentalhealth.eifie.domain.entities.EResult
+import com.mentalhealth.eifie.domain.entities.User
 import com.mentalhealth.eifie.domain.repository.UserRepository
 import kotlinx.coroutines.flow.flow
 import java.io.IOException
@@ -12,24 +12,23 @@ class UpdateUserPhotoUseCase @Inject constructor(
     private val repository: UserRepository
 ) {
 
-    fun invoke(userSession: UserSession) = flow {
+    fun invoke(user: User) = flow {
 
-        val photo = Uri.parse(userSession.picture)
+        val photo = Uri.parse(user.picture)
 
         val result = if(photo != null) {
-             when(val response = repository.updateUserPicture(userSession.profileId, photo)) {
-                is DataResult.Success -> response.data.run {
-                    DataResult.Success(
-                        userSession.apply {
-                            picture = response.data.picture?.url
+             when(val response = repository.updateUserPicture(user.profileId, photo)) {
+                is EResult.Success -> response.data.run {
+                    EResult.Success(
+                        user.apply {
+                            picture = response.data.picture
                         }
                     )
                 }
-                is DataResult.Error -> response.run { this }
-                DataResult.Loading -> DataResult.Loading
+                is EResult.Error -> response.run { this }
             }
         } else {
-            DataResult.Error(IOException("No photo found"))
+            EResult.Error(IOException("No photo found"))
         }
 
         emit(result)

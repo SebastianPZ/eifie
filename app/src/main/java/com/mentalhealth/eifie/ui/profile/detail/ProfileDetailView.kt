@@ -41,6 +41,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -64,16 +65,14 @@ import com.mentalhealth.eifie.util.getActivity
 @Composable
 fun ProfileDetail(
     context: Context = LocalContext.current,
-    navController: NavHostController,
+    navController: NavHostController?,
+    viewModel: ProfileDetailViewModel?
 ) {
-
-    val viewModel: ProfileDetailViewModel = hiltViewModel<ProfileDetailViewModel>()
-
-    val state by viewModel.state.collectAsStateWithLifecycle()
-    val userPhoto by viewModel.userPhoto.collectAsStateWithLifecycle()
+    val state = viewModel?.state?.collectAsStateWithLifecycle()
+    val userPhoto = viewModel?.userPhoto?.collectAsStateWithLifecycle()
     
     LaunchedEffect(Unit) {
-        viewModel.initUserInformation()
+        viewModel?.initUserInformation()
     }
 
     Box(
@@ -83,8 +82,10 @@ fun ProfileDetail(
     ) {
         IconButton(
             onClick = {
-                navController.previousBackStackEntry?.savedStateHandle?.set("changed", true)
-                navController.popBackStack()
+                navController?.run {
+                    previousBackStackEntry?.savedStateHandle?.set("changed", true)
+                    navController.popBackStack()
+                }
             },
             modifier = Modifier
                 .align(Alignment.TopStart)
@@ -109,18 +110,21 @@ fun ProfileDetail(
                     .size(125.dp)
             ) {
                 UserPhotoView(
-                    uri = userPhoto?.photoUri,
-                    username = userPhoto?.username,
+                    uri = userPhoto?.value?.photoUri,
+                    username = userPhoto?.value?.username,
                     modifier = Modifier.fillMaxSize()
                 )
                 IconButton(
                     onClick = {
-                        navController.currentBackStackEntry?.savedStateHandle?.set(
-                            key = "user",
-                            value = viewModel.user
-                        )
-
-                        navController.navigate(Router.PROFILE_EDIT_PHOTO.route)
+                        navController?.run {
+                            currentBackStackEntry?.run {
+                                savedStateHandle.set(
+                                    key = "user",
+                                    value = viewModel?.user
+                                )
+                                navigate(Router.PROFILE_EDIT_PHOTO.route)
+                            }
+                        }
                     },
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
@@ -146,8 +150,8 @@ fun ProfileDetail(
                     .wrapContentSize()
                     .padding(horizontal = 37.dp)
             ) {
-                when(state) {
-                    is ProfileDetailViewState.Success -> (state as ProfileDetailViewState.Success). run {
+                when(state?.value) {
+                    is ProfileDetailViewState.Success -> (state.value as ProfileDetailViewState.Success). run {
                         itemsIndexed(user.data) { index, item ->
                             FieldValue(
                                 icon = item.icon,
@@ -176,11 +180,13 @@ fun ProfileDetail(
                                 icon = item.icon,
                                 label = item.label,
                                 onClick = {
-                                    navController.currentBackStackEntry?.savedStateHandle?.set(
-                                        key = "userId",
-                                        value = viewModel.user.uid.toLong()
-                                    )
-                                    navController.navigate(item.value)
+                                    navController?.run {
+                                        currentBackStackEntry?.savedStateHandle?.set(
+                                            key = "userId",
+                                            value = viewModel.user.uid
+                                        )
+                                        navController.navigate(item.value)
+                                    }
                                 }
                             )
                         }
@@ -196,7 +202,7 @@ fun ProfileDetail(
                     .fillMaxWidth()
                     .wrapContentHeight()
                     .padding(horizontal = 37.dp)
-                    .clickable { viewModel.logoutUser(context.getActivity()!!) }
+                    .clickable { viewModel?.logoutUser(context.getActivity()!!) }
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.Logout,
@@ -289,4 +295,10 @@ fun FieldOption(
             contentDescription = ""
         )
     }
+}
+
+@Preview
+@Composable
+fun ProfileDetailPreview() {
+    ProfileDetail(navController = null, viewModel = null)
 }

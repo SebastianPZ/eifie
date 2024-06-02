@@ -2,14 +2,14 @@ package com.mentalhealth.eifie.ui.register.psychologist
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.mentalhealth.eifie.data.network.DataResult
-import com.mentalhealth.eifie.data.network.models.response.PatientResponse
-import com.mentalhealth.eifie.domain.entities.models.Psychologist
-import com.mentalhealth.eifie.domain.entities.states.CodeState
+import com.mentalhealth.eifie.domain.entities.EResult
+import com.mentalhealth.eifie.domain.entities.Patient
+import com.mentalhealth.eifie.domain.entities.Psychologist
 import com.mentalhealth.eifie.domain.usecases.AssignPsychologistUseCase
-import com.mentalhealth.eifie.domain.usecases.ValidatePsychologistCodeUseCase
+import com.mentalhealth.eifie.domain.usecases.ValidateAssignCodeUseCase
 import com.mentalhealth.eifie.ui.common.LazyViewModel
 import com.mentalhealth.eifie.ui.register.Step
+import com.mentalhealth.eifie.util.ERR_ACCESS_CODE
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -29,7 +29,7 @@ import java.io.IOException
 @HiltViewModel(assistedFactory = RegisterPsychologistViewModel.RegisterPsychologistViewModelFactory::class)
 class RegisterPsychologistViewModel @AssistedInject constructor(
     @Assisted val patientId: Long,
-    private val validateCodeUseCase: ValidatePsychologistCodeUseCase,
+    private val validateCodeUseCase: ValidateAssignCodeUseCase,
     private val assignPsychologistUseCase: AssignPsychologistUseCase
 ): LazyViewModel() {
 
@@ -52,36 +52,43 @@ class RegisterPsychologistViewModel @AssistedInject constructor(
         initialValue = steps.first()
     )
 
+    private val _psychologist: MutableStateFlow<Psychologist> = MutableStateFlow(Psychologist())
+    val psychologist = _psychologist.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(3000, 1),
+        initialValue = Psychologist()
+    )
+
     val stepsSize get() = steps.size
 
     fun updateStep(step: Int) {
         _actualStep.value = steps.first { it.order == step }
     }
 
-    fun validateCode(code: String, onSuccess: (psychologist: Psychologist) -> Unit = {}) {
+    fun validateCode(code: String, onSuccess: () -> Unit = {}) {
         validatePsychologistCode(code, onSuccess)
     }
 
-    fun assignPsychologist(psychologistId: Long, onResult: (DataResult<PatientResponse, Exception>) -> Unit = {}) {
-        assignToPsychologist(psychologistId, onResult)
+    fun assignPsychologist(onSuccess: () -> Unit = {}) {
+        assignToPsychologist(onSuccess)
     }
 
-    private fun validatePsychologistCode(code: String, onSuccess: (psychologist: Psychologist) -> Unit) = viewModelScope.launch {
+    private fun validatePsychologistCode(code: String, onSuccess: () -> Unit) = viewModelScope.launch {
         validateCodeUseCase.invoke(code)
             .retry(3L) { error -> (error is IOException).also { if(it) delay(1000) }
             }.onStart {
                 viewState.value = RegisterPsychologistViewState.Loading
             }.onEach {
                 when(it) {
-                    is CodeState.Error -> {
-                        _codeError.value = it.error
+                    is EResult.Error -> {
+                        _codeError.value = it.error.message ?: ERR_ACCESS_CODE
                         viewState.value = RegisterPsychologistViewState.Idle
                     }
-                    is CodeState.Success -> {
-                        onSuccess(it.psychologist)
+                    is EResult.Success -> it.run {
+                        _psychologist.value = data
+                        onSuccess()
                         viewState.value = RegisterPsychologistViewState.Idle
                     }
-                    else -> viewState.value = RegisterPsychologistViewState.Loading
                 }
             }.catch {
                 Log.e("RegisterViewModel", "Error", it)
@@ -89,11 +96,11 @@ class RegisterPsychologistViewModel @AssistedInject constructor(
     }
 
 
-    private fun assignToPsychologist(psychologistId: Long, onResult: (DataResult<PatientResponse, Exception>) -> Unit) = viewModelScope.launch {
-        assignPsychologistUseCase.invoke(patientId, psychologistId)
+    private fun assignToPsychologist(onSuccess: () -> Unit = {}) = viewModelScope.launch {
+        assignPsychologistUseCase.invoke(patientId, _psychologist.value.id)
             .retry(3L) { error -> (error is IOException).also { if(it) delay(1000) }}
             .onStart { viewState.value = RegisterPsychologistViewState.Loading }
-            .onEach { onResult(it) }
+            .onEach { onSuccess() }
             .catch {  }
             .launchIn(viewModelScope)
     }

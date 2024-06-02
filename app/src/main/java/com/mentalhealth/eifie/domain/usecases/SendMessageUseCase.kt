@@ -1,26 +1,25 @@
 package com.mentalhealth.eifie.domain.usecases
 
-import com.mentalhealth.eifie.data.network.DataResult
-import com.mentalhealth.eifie.domain.entities.models.Message
+import com.mentalhealth.eifie.domain.entities.EResult
+import com.mentalhealth.eifie.domain.entities.Message
 import com.mentalhealth.eifie.domain.repository.MessageRepository
-import com.mentalhealth.eifie.domain.repository.OpenAIRepository
 import kotlinx.coroutines.flow.flow
-import java.time.LocalDateTime
 import javax.inject.Inject
 
 class SendMessageUseCase @Inject constructor(
-    private val openAIRepository: OpenAIRepository,
     private val messageRepository: MessageRepository
 ) {
     fun invoke(message: Message) = flow {
+        verifyMessageIntegrity()
         messageRepository.saveMessage(message)
-        emit(
-            when(val result = openAIRepository.sendMessage(message)) {
-                is DataResult.Success -> result.run {
-                    messageRepository.saveMessage(data)
-                }
-                else -> DataResult.Loading
+        when(val result = messageRepository.sendMessage(message)) {
+            is EResult.Success -> result.run {
+                emit(messageRepository.saveMessage(data))
             }
-        )
+            else -> emit(result)
+        }
     }
+
+
+    private fun verifyMessageIntegrity() { }
 }

@@ -19,7 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mentalhealth.eifie.domain.entities.models.QuestionOption
+import com.mentalhealth.eifie.domain.entities.QuestionOption
 import com.mentalhealth.eifie.ui.theme.BlackGreen
 import com.mentalhealth.eifie.ui.theme.LightGray
 import com.mentalhealth.eifie.ui.theme.Purple

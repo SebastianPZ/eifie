@@ -1,7 +1,8 @@
 package com.mentalhealth.eifie.data.network
 
 import com.google.gson.Gson
-import com.mentalhealth.eifie.data.network.models.response.BaseResponse
+import com.mentalhealth.eifie.data.models.response.BaseResponse
+import com.mentalhealth.eifie.domain.entities.EResult
 import okhttp3.Headers
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
@@ -15,37 +16,35 @@ import java.io.File
 suspend inline fun <I, O> performApiCall(
     crossinline call: suspend() -> Response<I>,
     crossinline deserialize: (I?) -> O?,
-): DataResult<O, Exception> {
+): EResult<O, Exception> {
     val response = call()
     return if (response.isSuccessful && response.body() != null) {
         when(val result = deserialize(response.body())) {
-            null -> DataResult.Error(ApiException((response.body() as BaseResponse<*>).errorCode, (response.body() as BaseResponse<*>).errorMessage))
-            else -> {
-                DataResult.Success(result)
-            }
+            null -> EResult.Error(ApiException(
+                errorCode = (response.body() as BaseResponse<*>).errorCode,
+                message = (response.body() as BaseResponse<*>).errorMessage)
+            )
+            else -> EResult.Success(result)
         }
-    } else {
-        DataResult.Error(HttpException(response))
-    }
+    } else EResult.Error(HttpException(response))
 }
 
 suspend inline fun <I, O> performApiCall(
     crossinline call: suspend() -> Response<I>,
     crossinline deserialize: (I?) -> O?,
     crossinline adminHeaders: suspend(Headers) -> Unit
-): DataResult<O, Exception> {
+): EResult<O, Exception> {
     val response = call()
     return if (response.isSuccessful && response.body() != null) {
         adminHeaders(response.headers())
         when(val result = deserialize(response.body())) {
-            null -> DataResult.Error(ApiException((response.body() as BaseResponse<*>).errorCode))
-            else -> {
-                DataResult.Success(result)
-            }
+            null -> EResult.Error(ApiException(
+                errorCode = (response.body() as BaseResponse<*>).errorCode,
+                message = (response.body() as BaseResponse<*>).errorMessage)
+            )
+            else -> EResult.Success(result)
         }
-    } else {
-        DataResult.Error(EHttpException(response))
-    }
+    } else EResult.Error(EHttpException(response))
 }
 
 

@@ -1,15 +1,11 @@
 package com.mentalhealth.eifie.ui.navigation
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import com.mentalhealth.eifie.domain.entities.models.UserSession
 import com.mentalhealth.eifie.ui.register.configuration.RegisterConfigurationView
-import com.mentalhealth.eifie.ui.register.main.RegisterViewModel
 import com.mentalhealth.eifie.ui.register.main.RegisterView
 import com.mentalhealth.eifie.ui.register.main.RegisterSuccess
 import com.mentalhealth.eifie.ui.register.psychologist.RegisterPsychologistView

@@ -1,10 +1,12 @@
 package com.mentalhealth.eifie.data.repository
 
 import android.util.Log
-import com.mentalhealth.eifie.data.network.DataResult
-import com.mentalhealth.eifie.data.database.EDatabase
-import com.mentalhealth.eifie.data.database.entities.Chat
-import com.mentalhealth.eifie.data.preferences.EPreferences
+import com.mentalhealth.eifie.domain.entities.EResult
+import com.mentalhealth.eifie.data.local.database.EDatabase
+import com.mentalhealth.eifie.data.local.database.entities.LocalChat
+import com.mentalhealth.eifie.data.local.preferences.EPreferences
+import com.mentalhealth.eifie.data.mappers.impl.ChatMapper
+import com.mentalhealth.eifie.domain.entities.Chat
 import com.mentalhealth.eifie.domain.repository.ChatRepository
 import com.mentalhealth.eifie.util.userPreferences
 import kotlinx.coroutines.CoroutineDispatcher
@@ -18,22 +20,32 @@ class ChatDefaultRepository @Inject constructor(
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ChatRepository {
     private val chatDao = database.chatDao()
-    override suspend fun getChatByUser(): DataResult<List<Chat>, Exception> = withContext(dispatcher) {
+    override suspend fun saveChat(chat: Chat): EResult<Boolean, Exception> = withContext(dispatcher) {
         try {
             val uId = preferences.readPreference(userPreferences) ?: 0
-            DataResult.Success(chatDao.findByUser(uId))
+            chatDao.insertAll(ChatMapper.mapFromEntity(chat).apply {
+                user = uId
+            })
+            EResult.Success(true)
         } catch (e: Exception) {
-            Log.e("UserRepository", "Error-SaveUser", e)
-            DataResult.Error(e)
+            EResult.Error(e)
         }
     }
 
-    override suspend fun getChatById(chatId: Long): DataResult<Chat, Exception> = withContext(dispatcher) {
+    override suspend fun getChatByUser(): EResult<List<Chat>, Exception> = withContext(dispatcher) {
         try {
-            DataResult.Success(chatDao.findById(chatId))
+            val uId = preferences.readPreference(userPreferences) ?: 0
+            EResult.Success(chatDao.findByUser(uId).map { ChatMapper.mapToEntity(it) })
         } catch (e: Exception) {
-            Log.e("UserRepository", "Error-SaveUser", e)
-            DataResult.Error(e)
+            EResult.Error(e)
+        }
+    }
+
+    override suspend fun getChatById(chatId: Long): EResult<Chat, Exception> = withContext(dispatcher) {
+        try {
+            EResult.Success(chatDao.findById(chatId).let { ChatMapper.mapToEntity(it) })
+        } catch (e: Exception) {
+            EResult.Error(e)
         }
     }
 }

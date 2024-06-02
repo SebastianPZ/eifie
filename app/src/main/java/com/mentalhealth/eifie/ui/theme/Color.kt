@@ -33,11 +33,11 @@ val DarkGray = Color(0xFF5A6171)
 val Black = Color(0xFF33363D)
 
 val CustomWhite = Color(0xFFF7F7F7)
-val CustomWhite60 = Color(0xFFF7F7F7).copy(alpha = 0.5f)
+val CustomLightGray = Color(0xFFEAEEF3)
 
 val Purple = Color(0xFF2999A7)
-val Pink = Color(0xFFE985C3)
 val CustomRed = Color(0xFFFF0431)
 
 val OtherMessageColor = Color(0xFFE3EAF3)
 val MyMessageColor = Color(0xFF2CEEC5)
+val CustomGray = Color(0xFF4D4E50)

@@ -1,18 +1,17 @@
 package com.mentalhealth.eifie.domain.repository
 
-import com.mentalhealth.eifie.data.network.models.request.LoginRequest
-import com.mentalhealth.eifie.data.network.models.response.PatientResponse
-import com.mentalhealth.eifie.data.network.DataResult
-import com.mentalhealth.eifie.data.network.models.request.PatientRequest
-import com.mentalhealth.eifie.data.network.models.request.PsychologistRequest
-import com.mentalhealth.eifie.data.network.models.response.LoginResponse
-import com.mentalhealth.eifie.data.network.models.response.PsychologistResponse
+import com.mentalhealth.eifie.domain.entities.EResult
+import com.mentalhealth.eifie.domain.entities.PatientParams
+import com.mentalhealth.eifie.domain.entities.PsychologistParams
+import com.mentalhealth.eifie.domain.entities.Patient
+import com.mentalhealth.eifie.domain.entities.Psychologist
+import com.mentalhealth.eifie.domain.entities.User
 
 interface AuthenticationRepository {
-    suspend fun authenticateUser(request: LoginRequest): DataResult<LoginResponse, Exception>
-    suspend fun registerPatient(request: PatientRequest): DataResult<PatientResponse, Exception>
-    suspend fun registerPsychologist(request: PsychologistRequest): DataResult<PsychologistResponse, Exception>
-    suspend fun generatePsychologistCode(psychologistId: Long): DataResult<String, Exception>
-    suspend fun validatePsychologistCode(accessCode: String): DataResult<PsychologistResponse, Exception>
-    suspend fun assignPsychologist(patientId: Long, psychologistId: Long): DataResult<PatientResponse, Exception>
+    suspend fun authenticateUser(email: String, password: String): EResult<User, Exception>
+    suspend fun registerPatient(request: PatientParams): EResult<Patient, Exception>
+    suspend fun registerPsychologist(request: PsychologistParams): EResult<Psychologist, Exception>
+    suspend fun generatePsychologistCode(psychologistId: Long): EResult<String, Exception>
+    suspend fun validatePsychologistCode(accessCode: String): EResult<Psychologist, Exception>
+    suspend fun assignPsychologist(patientId: Long, psychologistId: Long): EResult<Patient, Exception>
 }

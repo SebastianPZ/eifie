@@ -2,6 +2,7 @@ package com.mentalhealth.eifie.ui.navigation
 
 enum class Router(val route: String) {
     AUTH_GRAPH("Auth"),
+    INIT("init"),
     LOGIN("login"),
 
     REGISTER_GRAPH("Register"),
@@ -21,6 +22,8 @@ enum class Router(val route: String) {
     HOME_GRAPH("Home"),
     HOME("home"),
     CHAT("chat"),
+    PATIENTS("patients"),
+    PATIENT_DETAIL("patients/"),
     CHAT_BOX("chat/chat-box/"),
     FORM("form/"),
     APPOINTMENT("appointment"),

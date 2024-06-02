@@ -2,7 +2,7 @@ package com.mentalhealth.eifie.ui.psychologist.accesscode
 
 import android.os.CountDownTimer
 import androidx.lifecycle.viewModelScope
-import com.mentalhealth.eifie.data.network.DataResult
+import com.mentalhealth.eifie.domain.entities.EResult
 import com.mentalhealth.eifie.domain.usecases.GeneratePsychologistCodeUseCase
 import com.mentalhealth.eifie.ui.common.LazyViewModel
 import com.mentalhealth.eifie.util.TimeUtil
@@ -53,7 +53,7 @@ class PsychologistCodeViewModel @AssistedInject constructor(
             .onStart {  }
             .onEach { result ->
                 when(result) {
-                    is DataResult.Success -> result.run {
+                    is EResult.Success -> result.run {
                         _accessCode.value = data
                         startTimer()
                     }

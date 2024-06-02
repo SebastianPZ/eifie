@@ -20,7 +20,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import com.mentalhealth.eifie.R
-import com.mentalhealth.eifie.domain.entities.models.Role
+import com.mentalhealth.eifie.domain.entities.Role
 import com.mentalhealth.eifie.ui.common.animation.EAnimation
 import com.mentalhealth.eifie.ui.common.dialog.EDialogError
 import com.mentalhealth.eifie.ui.common.layout.DefaultViewLayout

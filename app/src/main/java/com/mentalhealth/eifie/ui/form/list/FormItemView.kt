@@ -23,7 +23,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mentalhealth.eifie.domain.entities.models.Form
+import com.mentalhealth.eifie.domain.entities.Form
 import com.mentalhealth.eifie.ui.theme.DarkGreen
 import com.mentalhealth.eifie.ui.theme.LightGreen
 
