@@ -26,7 +26,7 @@ import androidx.compose.ui.window.Dialog
 import com.mentalhealth.eifie.R
 import com.mentalhealth.eifie.ui.common.animation.EAnimation
 import com.mentalhealth.eifie.ui.theme.BlackGreen
-import com.mentalhealth.eifie.ui.theme.White85
+import com.mentalhealth.eifie.ui.theme.White90
 
 @Composable
 fun EDialogError(
@@ -42,7 +42,7 @@ fun EDialogError(
                 .wrapContentHeight()
                 .padding(16.dp),
             colors = CardDefaults.cardColors(
-                containerColor = White85
+                containerColor = White90
             ),
             shape = RoundedCornerShape(16.dp),
         ) {
@@ -112,7 +112,7 @@ fun EDialogError(
                 .wrapContentHeight()
                 .padding(16.dp),
             colors = CardDefaults.cardColors(
-                containerColor = White85
+                containerColor = White90
             ),
             shape = RoundedCornerShape(16.dp),
         ) {

@@ -49,6 +49,7 @@ import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.mentalhealth.eifie.R
+import com.mentalhealth.eifie.ui.common.ViewState
 import com.mentalhealth.eifie.ui.common.photo.UserPhotoView
 import com.mentalhealth.eifie.ui.navigation.Router
 import com.mentalhealth.eifie.ui.profile.edit.EditProfilePhoto
@@ -69,6 +70,7 @@ fun ProfileDetail(
     viewModel: ProfileDetailViewModel?
 ) {
     val state = viewModel?.state?.collectAsStateWithLifecycle()
+    val profileData = viewModel?.profileData?.collectAsStateWithLifecycle()
     val userPhoto = viewModel?.userPhoto?.collectAsStateWithLifecycle()
     
     LaunchedEffect(Unit) {
@@ -151,14 +153,14 @@ fun ProfileDetail(
                     .padding(horizontal = 37.dp)
             ) {
                 when(state?.value) {
-                    is ProfileDetailViewState.Success -> (state.value as ProfileDetailViewState.Success). run {
-                        itemsIndexed(user.data) { index, item ->
+                    is ViewState.Success -> profileData?.value?.run {
+                        itemsIndexed(data) { index, item ->
                             FieldValue(
                                 icon = item.icon,
                                 label = item.label,
                                 value = item.value
                             )
-                            if(index < user.data.lastIndex)
+                            if(index < data.lastIndex)
                                 HorizontalDivider(
                                     color = LightSkyGray,
                                     modifier = Modifier
@@ -168,7 +170,7 @@ fun ProfileDetail(
                                 )
                         }
 
-                        itemsIndexed(user.options) { index, item ->
+                        itemsIndexed(options) { index, item ->
                             HorizontalDivider(
                                 color = LightSkyGray,
                                 modifier = Modifier
@@ -182,7 +184,7 @@ fun ProfileDetail(
                                 onClick = {
                                     navController?.run {
                                         currentBackStackEntry?.savedStateHandle?.set(
-                                            key = "userId",
+                                            key = "user",
                                             value = viewModel.user.uid
                                         )
                                         navController.navigate(item.value)

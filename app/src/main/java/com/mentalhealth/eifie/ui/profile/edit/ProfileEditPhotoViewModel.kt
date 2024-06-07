@@ -1,18 +1,22 @@
 package com.mentalhealth.eifie.ui.profile.edit
 
 import android.net.Uri
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mentalhealth.eifie.domain.entities.EResult
 import com.mentalhealth.eifie.domain.entities.User
 import com.mentalhealth.eifie.domain.usecases.UpdateUserInformationUseCase
 import com.mentalhealth.eifie.domain.usecases.UpdateUserPhotoUseCase
-import com.mentalhealth.eifie.ui.common.LazyViewModel
+import com.mentalhealth.eifie.ui.common.ViewState
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.singleOrNull
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = ProfileEditPhotoViewModel.ProfileEditPhotoViewModelFactory::class)
@@ -20,7 +24,15 @@ class ProfileEditPhotoViewModel @AssistedInject constructor(
     @Assisted val user: User,
     private val updateUserPhotoUseCase: UpdateUserPhotoUseCase,
     private val updateUserUseCase: UpdateUserInformationUseCase,
-) : LazyViewModel() {
+) : ViewModel() {
+
+    private val viewState: MutableStateFlow<ProfileEditViewState> = MutableStateFlow(ProfileEditViewState.Idle)
+
+    val state = viewState.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000, 1),
+        initialValue = ViewState.Idle
+    )
 
     init {
         viewState.value = ProfileEditViewState.Editing(Uri.parse(user.picture))

@@ -1,6 +1,7 @@
 package com.mentalhealth.eifie.data.repository
 
 import com.mentalhealth.eifie.data.local.preferences.EPreferences
+import com.mentalhealth.eifie.data.mappers.impl.PatientMapper
 import com.mentalhealth.eifie.data.mappers.impl.UserPatientMapper
 import com.mentalhealth.eifie.data.network.apidi.ApiService
 import com.mentalhealth.eifie.data.network.performApiCall
@@ -27,6 +28,16 @@ class PatientDefaultRepository @Inject constructor(
                 api.getPatientById(token.formatToken(), patientId)
             },
             { response -> response?.data?.let { UserPatientMapper.mapToEntity(it) } }
+        )
+    }
+
+    override suspend fun searchPatientBy(lastname: String): EResult<List<Patient>, Exception> = withContext(dispatcher) {
+        performApiCall(
+            {
+                val token = preferences.readPreference(tokenPreferences) ?: emptyString()
+                api.searchPatient(token.formatToken(), lastname)
+            },
+            { response -> response?.data?.map { PatientMapper.mapToEntity(it) } }
         )
     }
 }

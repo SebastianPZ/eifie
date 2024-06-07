@@ -13,17 +13,22 @@ import com.mentalhealth.eifie.ui.theme.BlackGreen
 import com.mentalhealth.eifie.ui.theme.LightSkyGray
 import com.mentalhealth.eifie.ui.theme.Purple
 import com.mentalhealth.eifie.ui.theme.SkyBlue
+import com.mentalhealth.eifie.util.compareWith
 import com.mentalhealth.eifie.util.manager.CalendarManager
 import kotlinx.coroutines.flow.flow
+import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 import javax.inject.Inject
 
 class ListAppointmentsUseCase @Inject constructor(
     private val appointmentRepository: AppointmentRepository,
-    private val userRepository: UserRepository,
-    private val calendarManager: CalendarManager = CalendarManager()
+    private val userRepository: UserRepository
 ) {
     fun invoke(date: Date? = null) = flow {
+
+        val calendarManager = CalendarManager(date = date ?: Date())
+
         val appointmentEResult = when(val result = userRepository.getUser()) {
             is EResult.Success -> result.data.run {
 
@@ -45,7 +50,7 @@ class ListAppointmentsUseCase @Inject constructor(
 
                 when(appointmentsResult) {
                     is EResult.Error -> EResult.Error(appointmentsResult.error)
-                    is EResult.Success -> EResult.Success(handleAppointmentByDate(appointmentsResult.data))
+                    is EResult.Success -> EResult.Success(handleAppointmentByDate(appointmentsResult.data, calendarManager))
                 }
             }
             is EResult.Error -> result
@@ -53,10 +58,12 @@ class ListAppointmentsUseCase @Inject constructor(
         emit(appointmentEResult)
     }
 
-    private fun handleAppointmentByDate(list: List<Appointment>): UserAppointment {
+    private fun handleAppointmentByDate(list: List<Appointment>, calendarManager: CalendarManager): UserAppointment {
         val today = calendarManager.today
         val (todayList, rest) = list
-            .partition { it.date == today }
+            .partition {
+                it.date.compareWith(today)
+            }
 
         val datesOfWeek = calendarManager.getWeekDatesOfDate(today)
         val (weekList, soonList) = rest

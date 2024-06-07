@@ -12,6 +12,7 @@ import com.mentalhealth.eifie.domain.usecases.GetUserInformationUseCase
 import com.mentalhealth.eifie.domain.usecases.LogoutUserUseCase
 import com.mentalhealth.eifie.ui.MainActivity
 import com.mentalhealth.eifie.ui.common.LazyViewModel
+import com.mentalhealth.eifie.ui.common.ViewState
 import com.mentalhealth.eifie.ui.navigation.Router
 import com.mentalhealth.eifie.ui.profile.ProfileItem
 import com.mentalhealth.eifie.ui.profile.UserPhoto
@@ -38,6 +39,15 @@ class ProfileDetailViewModel @Inject constructor(
     private val logoutUserUseCase: LogoutUserUseCase
 ) : LazyViewModel() {
 
+    private val _profileData: MutableStateFlow<ProfileDetailData> = MutableStateFlow(ProfileDetailData())
+
+    val profileData = _profileData.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000, 1),
+        initialValue = ProfileDetailData()
+    )
+
+
     private val _userPhoto: MutableStateFlow<UserPhoto?> = MutableStateFlow(null)
 
     val userPhoto = _userPhoto.stateIn(
@@ -55,14 +65,15 @@ class ProfileDetailViewModel @Inject constructor(
     fun initUserInformation() = viewModelScope.launch {
         getUserUseCase.invoke()
             .onStart {
-                viewState.value = ProfileDetailViewState.Loading
+                viewState.value = ViewState.Loading
             }.onEach {
                 when(it) {
                     is EResult.Success -> it.run {
-                        viewState.value = ProfileDetailViewState.Success(handleUserData(data))
+                        _profileData.value = handleUserData(data)
+                        viewState.value = ViewState.Success
                     }
                     is EResult.Error -> it.run {
-                        viewState.value = ProfileDetailViewState.Error
+                        viewState.value = ViewState.Error(error.message ?: "")
                     }
                 }
             }.catch {

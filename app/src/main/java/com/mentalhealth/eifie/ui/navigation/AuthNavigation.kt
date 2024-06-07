@@ -7,7 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.mentalhealth.eifie.ui.init.InitScreen
-import com.mentalhealth.eifie.ui.login.LoginScreen
+import com.mentalhealth.eifie.ui.login.LoginView
 import com.mentalhealth.eifie.ui.login.LoginViewModel
 
 @Composable
@@ -27,7 +27,7 @@ fun AuthNavigation(
             composable(
                 route = Router.LOGIN.route,
             ) {
-                LoginScreen(
+                LoginView(
                     navController = navController,
                     viewModel = hiltViewModel<LoginViewModel>(),
                     navigateToHome = navigateToHome,

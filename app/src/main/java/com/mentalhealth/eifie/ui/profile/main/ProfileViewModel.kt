@@ -6,6 +6,7 @@ import com.mentalhealth.eifie.domain.entities.EResult
 import com.mentalhealth.eifie.domain.entities.User
 import com.mentalhealth.eifie.domain.usecases.GetUserInformationUseCase
 import com.mentalhealth.eifie.ui.common.LazyViewModel
+import com.mentalhealth.eifie.ui.common.ViewState
 import com.mentalhealth.eifie.ui.profile.ProfileItem
 import com.mentalhealth.eifie.ui.profile.UserPhoto
 import com.mentalhealth.eifie.util.AGE_TITLE
@@ -29,6 +30,14 @@ class ProfileViewModel @Inject constructor(
 
     private lateinit var user: User
 
+    private val _profileItems: MutableStateFlow<List<ProfileItem>> = MutableStateFlow(emptyList())
+
+    val profileItems = _profileItems.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000, 1),
+        initialValue = emptyList()
+    )
+
     private val _userPhoto: MutableStateFlow<UserPhoto?> = MutableStateFlow(null)
 
     val userPhoto = _userPhoto.stateIn(
@@ -40,14 +49,15 @@ class ProfileViewModel @Inject constructor(
     fun initUserInformation() = viewModelScope.launch {
         getUserUseCase.invoke()
             .onStart {
-                viewState.value = ProfileViewState.Loading
+                viewState.value = ViewState.Loading
             }.onEach {
                 when(it) {
                     is EResult.Success -> it.run {
-                        viewState.value = ProfileViewState.Success(handleProfileData(data))
+                        _profileItems.value = handleProfileData(data)
+                        viewState.value = ViewState.Success
                     }
                     is EResult.Error -> it.run {
-                        viewState.value = ProfileViewState.Error
+                        viewState.value = ViewState.Error(error.message ?: "")
                     }
                 }
             }.catch {

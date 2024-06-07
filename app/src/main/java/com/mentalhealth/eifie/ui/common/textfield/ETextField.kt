@@ -25,6 +25,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.mentalhealth.eifie.ui.theme.BlackGreen
 import com.mentalhealth.eifie.ui.theme.CustomLightGray
 import com.mentalhealth.eifie.ui.theme.DarkGreen
 
@@ -38,7 +39,9 @@ fun ETextField(
             else ETextFieldPasswordLabeled(values = values)
         }
         TextFieldType.LABELED_ICON -> ETextFieldLabeledIcon(values = values)
+        TextFieldType.LABELED_SUFFIX_ICON -> ETextFieldLabeledSuffixIcon(values = values)
         TextFieldType.NO_LABELED -> ETextFieldNoLabeled(values = values)
+        TextFieldType.NO_LABELED_SUFFIX_ICON -> ETextFieldNoLabeledSuffixIcon(values = values)
         TextFieldType.NO_LABELED_ICON -> {
             if(values.inputType == InputType.DEFAULT) ETextFieldNoLabeledIcon(values = values)
             else ETextFieldPasswordNoLabeledIcon(values = values)
@@ -61,6 +64,8 @@ fun ETextFieldLabeled(
             text = values.placeholder,
             fontWeight = FontWeight.Light
         ) },
+        minLines = values.minLines,
+        maxLines = values.maxLines,
         onValueChange = {
             text = it
             values.isValid?.let { validate -> validate(it) }?.let { error ->
@@ -90,6 +95,8 @@ fun ETextFieldLabeled(
         )
     }
 }
+
+
 
 @Composable
 fun ETextFieldPasswordLabeled(
@@ -178,6 +185,41 @@ fun ETextFieldLabeledIcon(
 }
 
 @Composable
+fun ETextFieldLabeledSuffixIcon(
+    values: TextFieldValues
+) {
+
+    var text by remember { mutableStateOf(TextFieldValue(values.initialValue)) }
+
+    TextField(
+        value = text,
+        label = { values.label?.let { Text(text = it) } },
+        placeholder = { Text(
+            text = values.placeholder,
+            fontWeight = FontWeight.Light
+        ) },
+        trailingIcon = { values.icon?.let{ IconField(icon = it) }},
+        onValueChange = {
+            text = it
+            values.onValueChange(it) },
+        enabled = values.enabled,
+        shape = RoundedCornerShape((values.radius ?: 50.0).dp),
+        colors = TextFieldDefaults.colors(
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent,
+            errorIndicatorColor = Color.Transparent,
+            focusedContainerColor = CustomLightGray,
+            unfocusedContainerColor = CustomLightGray,
+            disabledContainerColor = CustomLightGray,
+            disabledLabelColor = BlackGreen,
+            disabledTrailingIconColor = BlackGreen
+        ),
+        modifier = values.modifier
+    )
+}
+
+@Composable
 fun ETextFieldNoLabeled(
     values: TextFieldValues
 ) {
@@ -222,6 +264,52 @@ fun ETextFieldNoLabeledIcon(
             fontWeight = FontWeight.Light
         ) },
         leadingIcon = { values.icon?.let{ IconField(icon = it) }},
+        onValueChange = {
+            text = it
+            values.isValid?.let { validate -> validate(it) }?.let { error ->
+                errorMessage = error.first
+                isError = error.second
+            }
+            values.onValueChange(it) },
+        isError = isError,
+        shape = RoundedCornerShape((values.radius ?: 50.0).dp),
+        colors = TextFieldDefaults.colors(
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            errorIndicatorColor = Color.Transparent,
+            focusedContainerColor = CustomLightGray,
+            unfocusedContainerColor = CustomLightGray
+        ),
+        modifier = values.modifier
+    )
+
+    if(isError) {
+        Text(
+            text = errorMessage,
+            color = Color.Red,
+            modifier = Modifier
+                .padding(top = 5.dp, start = 40.dp, end = 40.dp)
+                .fillMaxWidth()
+        )
+    }
+}
+
+@Composable
+fun ETextFieldNoLabeledSuffixIcon(
+    values: TextFieldValues
+) {
+
+    var text by remember { mutableStateOf(TextFieldValue(values.initialValue)) }
+    var isError by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf("") }
+
+    TextField(
+        value = text,
+        placeholder = { Text(
+            text = values.placeholder,
+            fontWeight = FontWeight.Light
+        ) },
+        trailingIcon = { values.icon?.let{ IconField(icon = it) }},
         onValueChange = {
             text = it
             values.isValid?.let { validate -> validate(it) }?.let { error ->
@@ -308,15 +396,14 @@ fun ETextFieldPasswordNoLabeledIcon(
 }
 
 @Composable
-fun IconField(icon: EIcon) {
-    if(icon.icon != null) {
-        Icon(
+fun IconField(icon: EIcon?): Unit {
+    when {
+        icon?.icon != null -> Icon(
             imageVector = icon.icon,
             contentDescription = icon.description,
             modifier = Modifier.size(18.dp)
         )
-    } else if(icon.painter != null) {
-        Icon(
+        icon?.painter != null -> Icon(
             painter = icon.painter,
             contentDescription = icon.description,
             modifier = Modifier.size(18.dp)
@@ -330,8 +417,10 @@ fun SimpleComposablePreview() {
     ETextField(
         values = TextFieldValues(
             initialValue = "Prueba",
-            type = TextFieldType.NO_LABELED_ICON,
+            label = "Prueba",
+            type = TextFieldType.LABELED_SUFFIX_ICON,
             borderColor = DarkGreen,
+            enabled = false
         )
     )
 }

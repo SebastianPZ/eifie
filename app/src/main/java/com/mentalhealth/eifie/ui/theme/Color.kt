@@ -11,7 +11,7 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 val White95 = Color(0xFFFFFFFF).copy(alpha = 0.95f)
-val White85 = Color(0xFFFFFFFF).copy(alpha = 0.85f)
+val White90 = Color(0xFFF7F7F7).copy(alpha = 0.90f)
 val White75 = Color(0xFFFFFFFF).copy(alpha = 0.57f)
 val White60 = Color(0xFFFFFFFF).copy(alpha = 0.6f)
 val White50 = Color(0xFFFFFFFF).copy(alpha = 0.5f)

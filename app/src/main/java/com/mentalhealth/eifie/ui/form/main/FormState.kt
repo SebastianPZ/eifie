@@ -4,8 +4,7 @@ sealed class FormState {
     object Idle: FormState()
     object InProgress: FormState()
     object LastQuestion: FormState()
-    object Complete: FormState()
-    object Canceled: FormState()
+    object Loading: FormState()
     object Error: FormState()
 
 }

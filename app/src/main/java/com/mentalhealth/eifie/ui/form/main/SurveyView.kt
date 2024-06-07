@@ -2,6 +2,7 @@ package com.mentalhealth.eifie.ui.form.main
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,54 +11,48 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.mentalhealth.eifie.R
+import com.mentalhealth.eifie.ui.common.animation.EAnimation
+import com.mentalhealth.eifie.ui.common.button.CommonButton
+import com.mentalhealth.eifie.ui.common.layout.HeaderComponent
+import com.mentalhealth.eifie.ui.theme.CustomWhite
 import com.mentalhealth.eifie.ui.theme.White95
-import com.mentalhealth.eifie.ui.theme.cutiveFontFamily
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun FormView(
-    id: Int,
-    navController: NavHostController
+fun SurveyView(
+    navController: NavHostController?,
+    viewModel: FormViewModel?
 ) {
 
-    val viewModel: FormViewModel = hiltViewModel<FormViewModel, FormViewModel.FormViewModelFactory>(
-        creationCallback = { factory -> factory.create(id = id) })
-
-    val formName by viewModel.formName.collectAsStateWithLifecycle()
-    val formState by viewModel.formState.collectAsStateWithLifecycle()
-    val formQuestions by viewModel.formQuestions.collectAsStateWithLifecycle()
-    val pagerState = rememberPagerState( pageCount = { formQuestions.size + 1 }) // 1 added bc form preview
+    val formName = viewModel?.formName?.collectAsStateWithLifecycle()
+    val formState = viewModel?.formState?.collectAsStateWithLifecycle()
+    val formQuestions = viewModel?.formQuestions?.collectAsStateWithLifecycle()
+    val pagerState = rememberPagerState( pageCount = { ( formQuestions?.value?.size ?: 0) + 1 }) // 1 added bc form preview
 
     val coroutineScope = rememberCoroutineScope()
 
-    LaunchedEffect(formQuestions) {
-        if(formQuestions.isNotEmpty()) coroutineScope.launch {
+    LaunchedEffect(formQuestions?.value) {
+        if(!formQuestions?.value.isNullOrEmpty()) coroutineScope.launch {
             pagerState.scrollToPage(pagerState.currentPage + 1)
         }
     }
@@ -74,11 +69,14 @@ fun FormView(
                 .fillMaxHeight(),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            FormHeader(formName)
-            Card(
-                colors = CardDefaults.cardColors(
-                    containerColor = White95,
-                ),
+            HeaderComponent(
+                title = formName?.value ?: "",
+                subtitle = stringResource(id = R.string.form),
+                onBack = { navController?.popBackStack() },
+                modifier = Modifier.padding(start = 20.dp, end = 20.dp, top = 50.dp),
+            )
+            Surface(
+                color = CustomWhite,
                 shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
                 modifier = Modifier
                     .padding(top = 35.dp)
@@ -102,70 +100,54 @@ fun FormView(
                                     .height(100.dp)
                             )
                             else -> QuestionOptionsView(
-                                options = formQuestions[question - 1].options,
+                                options = formQuestions?.value!![question - 1].options,
                                 onSelected = { viewModel.saveQuestionAnswer(question - 1) }
                             )
                         }
                     }
 
-                    when(formState) {
-                        FormState.Idle -> Button(
-                            onClick = { viewModel.initFormQuestions() },
+                    when(formState?.value) {
+                        FormState.InProgress -> CommonButton(
+                            text = stringResource(id = R.string.carry_on),
                             modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                            Text(
-                                stringResource(id = R.string.start)
-                            )
-                        }
-                        FormState.InProgress -> Button(
-                            onClick = { viewModel.goToNextQuestion(pagerState.currentPage - 1) {
+                            viewModel.goToNextQuestion(pagerState.currentPage - 1) {
                                 coroutineScope.launch {
                                     pagerState.scrollToPage(pagerState.currentPage + 1)
                                 }
-                            }},
-                            modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                            Text(
-                                stringResource(id = R.string.carry_on)
-                            )
+                            }
                         }
-                        FormState.LastQuestion -> Button(
-                            onClick = { viewModel.goToNextQuestion(pagerState.currentPage - 1) {
-                                navController.popBackStack()
-                            }},
+                        FormState.LastQuestion -> CommonButton(
+                            text = stringResource(id = R.string.send),
                             modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                            Text(
-                                stringResource(id = R.string.send)
-                            )
+                            viewModel.goToNextQuestion(pagerState.currentPage - 1) {
+                                navController?.popBackStack()
+                            }
                         }
-                        else -> Unit
+                        else -> CommonButton(
+                            modifier = Modifier.align(Alignment.CenterHorizontally)) {
+                            viewModel?.initFormQuestions()
+                        }
                     }
+                }
+                when(formState?.value) {
+                    FormState.Loading -> EAnimation(
+                        resource = R.raw.loading_animation,
+                        animationModifier = Modifier
+                            .size(150.dp),
+                        backgroundModifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight()
+                            .background(color = White95)
+                    )
+                    else -> Unit
                 }
             }
         }
     }
 }
 
-/** name is referred to form name or question text**/
-@Composable
-fun FormHeader(name: String) {
-    Text(
-        text = stringResource(id = R.string.form),
-        modifier = Modifier.padding(start = 24.dp, top = 50.dp),
-        fontSize = 12.sp,
-        fontFamily = cutiveFontFamily
-    )
-    Text(
-        text = name,
-        modifier = Modifier.padding(start = 24.dp, top = 3.dp),
-        fontSize = 24.sp,
-        fontWeight = FontWeight.Bold
-    )
-}
-
 @Composable
 @Preview
-fun FormPreview() {
-    FormView(
-        id = 0,
-        rememberNavController()
-    )
+fun SurveyPreview() {
+    SurveyView(null, null)
 }

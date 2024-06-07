@@ -9,9 +9,10 @@ import androidx.navigation.compose.navigation
 import com.mentalhealth.eifie.ui.view.appointment.main.AppointmentView
 import com.mentalhealth.eifie.ui.view.HomeScreen
 import com.mentalhealth.eifie.ui.profile.main.Profile
-import com.mentalhealth.eifie.ui.view.chat.main.ChatParkScreen
-import com.mentalhealth.eifie.ui.view.patient.PatientsScreen
+import com.mentalhealth.eifie.ui.view.chat.ChatParkScreen
+import com.mentalhealth.eifie.ui.view.patient.PatientParkView
 import com.mentalhealth.eifie.ui.viewmodel.ChatParkViewModel
+import com.mentalhealth.eifie.ui.viewmodel.HomeViewModel
 import com.mentalhealth.eifie.ui.viewmodel.PatientsViewModel
 
 @Composable
@@ -25,7 +26,10 @@ fun HomeNavigation(
             composable(
                 route = Router.HOME.route,
             ) {
-                HomeScreen(navController = mainNavController)
+                HomeScreen(
+                    navController = mainNavController,
+                    viewModel = hiltViewModel<HomeViewModel>()
+                )
             }
 
             composable(
@@ -37,7 +41,7 @@ fun HomeNavigation(
             composable(
                 route = Router.PATIENTS.route,
             ) {
-                PatientsScreen(navController = mainNavController, viewModel = hiltViewModel<PatientsViewModel>())
+                PatientParkView(navController = mainNavController, viewModel = hiltViewModel<PatientsViewModel>())
             }
 
             composable(

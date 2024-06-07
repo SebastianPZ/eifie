@@ -2,9 +2,13 @@ package com.mentalhealth.eifie.ui.view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,15 +30,19 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.mentalhealth.eifie.R
 import com.mentalhealth.eifie.domain.entities.Role
+import com.mentalhealth.eifie.ui.form.list.NotificationListView
+import com.mentalhealth.eifie.ui.profile.detail.FieldOption
 import com.mentalhealth.eifie.ui.theme.BlackGreen
+import com.mentalhealth.eifie.ui.theme.LightSkyGray
 import com.mentalhealth.eifie.ui.viewmodel.HomeViewModel
 
 @Composable
 fun HomeScreen(
     navController: NavHostController?,
-    viewModel: HomeViewModel = hiltViewModel<HomeViewModel>()
+    viewModel: HomeViewModel?
 ) {
-    val user by viewModel.userName.collectAsStateWithLifecycle()
+    val user = viewModel?.userName?.collectAsStateWithLifecycle()
+    val notifications = viewModel?.notifications?.collectAsStateWithLifecycle()
 
     val helloText = buildAnnotatedString {
         withStyle(style = SpanStyle(
@@ -49,14 +57,14 @@ fun HomeScreen(
             fontWeight = FontWeight.Bold
         )
         ) {
-            append(user)
+            append(user?.value ?: "")
         }
     }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .padding(horizontal = 24.dp)
     ) {
         Image(painter = painterResource(id = R.drawable.iv_eifi_logo),
@@ -90,6 +98,13 @@ fun HomeScreen(
                 fontSize = 14.sp,
                 modifier = Modifier.padding(top = 30.dp)
             )
+            NotificationListView(
+                notifications = notifications?.value ?: listOf(),
+                onItemClick = {
+                    navController?.navigate("${it.action ?: ""}1")
+                },
+                modifier = Modifier.padding(vertical = 20.dp)
+            )
         }
 
     }
@@ -98,5 +113,5 @@ fun HomeScreen(
 @Preview
 @Composable
 fun HomePreView(){
-    HomeScreen(rememberNavController())
+    HomeScreen(null, null)
 }

@@ -12,13 +12,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.mentalhealth.eifie.domain.entities.Form
+import com.mentalhealth.eifie.domain.entities.Notification
 import com.mentalhealth.eifie.ui.theme.LightSkyGray
 
 @Composable
-fun FormListView(
-    formList: List<Form>,
-    onItemClick: (form: Form) -> Unit,
+fun NotificationListView(
+    notifications: List<Notification>,
+    onItemClick: (notification: Notification) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -27,12 +27,12 @@ fun FormListView(
         verticalArrangement = Arrangement.Top,
         modifier = modifier.fillMaxSize()
     ) {
-        items(formList.size) { index ->
-            FormItemView(
-                form = formList[index],
+        items(notifications.size) { index ->
+            NotificationItem(
+                notification = notifications[index],
                 onClick = { form -> onItemClick(form) }
             )
-            if(index < formList.lastIndex)
+            if(index < notifications.lastIndex)
                 HorizontalDivider(
                     color = LightSkyGray,
                     modifier = Modifier
@@ -47,21 +47,15 @@ fun FormListView(
 @Preview
 @Composable
 fun FormListPreview() {
-    FormListView(
-        formList = listOf(
-            Form(
-                id = 0,
-                name = "Formulario diario",
-                description = "",
-                questions = "10",
-                time = "3 - 5"
+    NotificationListView(
+        notifications = listOf(
+            Notification(
+                title = "Formulario diario",
+                content = ""
             ),
-            Form(
-                id = 0,
-                name = "Formulario diario",
-                description = "",
-                questions = "10",
-                time = "3 - 5"
+            Notification(
+                title = "Formulario diario",
+                content = ""
             )
         ),
         onItemClick = {}

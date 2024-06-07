@@ -28,15 +28,14 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.mentalhealth.eifie.R
-import com.mentalhealth.eifie.domain.entities.Patient
 import com.mentalhealth.eifie.ui.navigation.Router
 import com.mentalhealth.eifie.ui.theme.CustomWhite
 import com.mentalhealth.eifie.ui.theme.DarkGreen
-import com.mentalhealth.eifie.ui.view.chat.main.ChatParkHeader
+import com.mentalhealth.eifie.ui.view.chat.ChatParkHeader
 import com.mentalhealth.eifie.ui.viewmodel.PatientsViewModel
 
 @Composable
-fun PatientsScreen(
+fun PatientParkView(
     navController: NavHostController?,
     viewModel: PatientsViewModel?
 ) {
@@ -84,7 +83,7 @@ fun PatientsScreen(
                         PatientItem(
                             patient = patients.value[index],
                             onClick = {
-                                navController?.navigate("${Router.PATIENT_DETAIL.route}${patients.value[index].id}")
+                                navController?.navigate("${Router.PATIENT_DETAIL.route}${it?.id}")
                             }
                         )
                         Spacer(modifier = Modifier.height(20.dp))
@@ -127,5 +126,5 @@ private fun RefreshButton(onClick: () -> Unit) {
 @Preview
 @Composable
 fun PatientListPreview() {
-    PatientsScreen(null, null)
+    PatientParkView(null, null)
 }

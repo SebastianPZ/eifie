@@ -1,4 +1,4 @@
-package com.mentalhealth.eifie.ui.view.chat
+package com.mentalhealth.eifie.ui.view.chatbox
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

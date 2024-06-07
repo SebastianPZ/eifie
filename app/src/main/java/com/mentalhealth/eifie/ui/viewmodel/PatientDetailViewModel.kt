@@ -1,14 +1,14 @@
 package com.mentalhealth.eifie.ui.viewmodel
 
 import androidx.compose.runtime.mutableStateListOf
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mentalhealth.eifie.R
 import com.mentalhealth.eifie.domain.entities.EResult
 import com.mentalhealth.eifie.domain.entities.Patient
 import com.mentalhealth.eifie.domain.usecases.GetPatientUseCase
+import com.mentalhealth.eifie.ui.common.LazyViewModel
+import com.mentalhealth.eifie.ui.common.ViewState
 import com.mentalhealth.eifie.ui.profile.ProfileItem
-import com.mentalhealth.eifie.ui.psychologist.PsychologistDetailViewModel
 import com.mentalhealth.eifie.util.calculateAge
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -22,13 +22,12 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel(assistedFactory = PatientDetailViewModel.PatientDetailViewModelFactory::class)
 class PatientDetailViewModel @AssistedInject constructor(
     @Assisted private val patientId: Long,
     private val getPatient: GetPatientUseCase
-): ViewModel() {
+): LazyViewModel() {
 
     val options = mutableStateListOf<ProfileItem>()
 
@@ -79,17 +78,20 @@ class PatientDetailViewModel @AssistedInject constructor(
 
     private fun initPatientInfo() = viewModelScope.launch {
         getPatient.invoke(patientId)
-            .onStart {  }
+            .onStart { viewState.value = ViewState.Loading }
             .onEach {
                 when(it) {
-                    is EResult.Error -> Unit
+                    is EResult.Error -> it.run{
+                        ViewState.Error(error.message ?: "")
+                    }
                     is EResult.Success -> {
                         setPsychologistInfo(it.data)
                         _patient.value = it.data
+                        viewState.value = ViewState.Success
                     }
                 }
             }
-            .catch {  }
+            .catch { viewState.value = ViewState.Error(it.message ?: "") }
             .launchIn(viewModelScope)
     }
 

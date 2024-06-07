@@ -1,4 +1,4 @@
-package com.mentalhealth.eifie.ui.view.chat.history
+package com.mentalhealth.eifie.ui.view.chat
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement

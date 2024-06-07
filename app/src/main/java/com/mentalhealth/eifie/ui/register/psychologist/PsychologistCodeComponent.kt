@@ -125,7 +125,7 @@ fun PsychologistCodeComponent(
         }
 
         when(state) {
-            RegisterPsychologistViewState.Loading -> {
+            ViewState.Loading -> {
                 EAnimation(
                     resource = R.raw.loading_animation,
                     animationModifier = Modifier
@@ -136,7 +136,7 @@ fun PsychologistCodeComponent(
                         .background(color = CustomWhite)
                 )
             }
-            is RegisterPsychologistViewState.Success -> {
+            is ViewState.Success -> {
                 EAnimation(
                     resource = R.raw.success_animation,
                     iterations = 1,

@@ -15,8 +15,11 @@ data class TextFieldValues(
     val initialValue: String = "",
     val placeholder: String = emptyString(),
     val label: String? = null,
+    val enabled: Boolean = true,
     val radius: Double? = null,
     val icon: EIcon? = null,
+    val minLines: Int = 1,
+    val maxLines: Int = 3,
     val onValueChange: (it: TextFieldValue) -> Unit = { },
     val isValid: ((it: TextFieldValue) -> Pair<String, Boolean>)? = null,
     val keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
@@ -50,7 +53,9 @@ data class EIcon(
 enum class TextFieldType {
     LABELED,
     LABELED_ICON,
+    LABELED_SUFFIX_ICON,
     NO_LABELED,
+    NO_LABELED_SUFFIX_ICON,
     NO_LABELED_ICON
 }
 

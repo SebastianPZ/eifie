@@ -33,6 +33,7 @@ import com.mentalhealth.eifie.domain.entities.Appointment
 import com.mentalhealth.eifie.domain.entities.AppointmentStyle
 import com.mentalhealth.eifie.domain.entities.Role
 import com.mentalhealth.eifie.domain.entities.UserAppointment
+import com.mentalhealth.eifie.ui.common.ViewState
 import com.mentalhealth.eifie.ui.view.appointment.calendar.CalendarComponent
 import com.mentalhealth.eifie.ui.common.animation.EAnimation
 import com.mentalhealth.eifie.ui.navigation.Router
@@ -46,6 +47,7 @@ fun AppointmentView(
     viewModel: AppointmentViewModel = hiltViewModel<AppointmentViewModel>()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val appointments by viewModel.appointments.collectAsStateWithLifecycle()
     val role by viewModel.userRole.collectAsStateWithLifecycle()
 
     Scaffold(
@@ -73,12 +75,11 @@ fun AppointmentView(
                 viewModel = viewModel
             )
             when(state) {
-                is AppointmentViewState.Success, is AppointmentViewState.Error -> {
+                is ViewState.Success, is ViewState.Error -> {
                     when(state) {
-                        is AppointmentViewState.Success -> (state as AppointmentViewState.Success).run {
+                        is ViewState.Success -> state.run {
                             if(appointments.isEmpty) {
-                                EmptyAppointmentListView(
-                                )
+                                EmptyAppointmentListView()
                             }
                             else {
                                 AppointmentSummaryView(
@@ -86,14 +87,14 @@ fun AppointmentView(
                                 )
                             }
                         }
-                        else -> (state as AppointmentViewState.Error).run {
+                        else -> (state as ViewState.Error).run {
                             EmptyAppointmentListView(
                                 message = message
                             )
                         }
                     }
                 }
-                is AppointmentViewState.Loading -> {
+                else -> {
                     EAnimation(
                         resource = R.raw.loading_animation,
                         animationModifier = Modifier

@@ -7,13 +7,14 @@ import com.mentalhealth.eifie.domain.repository.HospitalRepository
 import com.mentalhealth.eifie.domain.repository.MessageRepository
 import com.mentalhealth.eifie.domain.repository.PatientRepository
 import com.mentalhealth.eifie.domain.repository.PsychologistRepository
+import com.mentalhealth.eifie.domain.repository.SurveyRepository
 import com.mentalhealth.eifie.domain.repository.UserRepository
 import com.mentalhealth.eifie.domain.usecases.AssignPsychologistUseCase
 import com.mentalhealth.eifie.domain.usecases.GeneratePsychologistCodeUseCase
 import com.mentalhealth.eifie.domain.usecases.GetChatMessagesUseCase
 import com.mentalhealth.eifie.domain.usecases.GetFormDataUseCase
-import com.mentalhealth.eifie.domain.usecases.GetFormListUseCase
-import com.mentalhealth.eifie.domain.usecases.GetFormQuestionsUseCase
+import com.mentalhealth.eifie.domain.usecases.GetNotificationsUseCase
+import com.mentalhealth.eifie.domain.usecases.GetSurveyQuestionsUseCase
 import com.mentalhealth.eifie.domain.usecases.GetMonthCalendarUseCase
 import com.mentalhealth.eifie.domain.usecases.GetPatientUseCase
 import com.mentalhealth.eifie.domain.usecases.GetPatientsUseCase
@@ -30,6 +31,7 @@ import com.mentalhealth.eifie.domain.usecases.RegisterPatientUseCase
 import com.mentalhealth.eifie.domain.usecases.SendMessageUseCase
 import com.mentalhealth.eifie.domain.usecases.SaveUserInformationUseCase
 import com.mentalhealth.eifie.domain.usecases.ScheduleAppointmentUseCase
+import com.mentalhealth.eifie.domain.usecases.SearchPatientUseCase
 import com.mentalhealth.eifie.domain.usecases.UpdateUserInformationUseCase
 import com.mentalhealth.eifie.domain.usecases.UpdateUserPhotoUseCase
 import com.mentalhealth.eifie.domain.usecases.ValidateAssignCodeUseCase
@@ -110,8 +112,12 @@ object UseCaseModule {
 
     @Provides
     fun providesScheduleAppointmentUseCase(
-        appointmentRepository: AppointmentRepository): ScheduleAppointmentUseCase {
-        return ScheduleAppointmentUseCase( appointmentRepository = appointmentRepository )
+        appointmentRepository: AppointmentRepository,
+        userRepository: UserRepository): ScheduleAppointmentUseCase {
+        return ScheduleAppointmentUseCase(
+            appointmentRepository = appointmentRepository,
+            userRepository = userRepository
+        )
     }
 
     @Provides
@@ -122,18 +128,20 @@ object UseCaseModule {
 
     @Provides
     fun providesAssignPsychologistUseCase(
-        repository: AuthenticationRepository): AssignPsychologistUseCase {
-        return AssignPsychologistUseCase(repository = repository)
+        repository: AuthenticationRepository,
+        userRepository: UserRepository
+        ): AssignPsychologistUseCase {
+        return AssignPsychologistUseCase(repository = repository, userRepository = userRepository)
     }
 
     @Provides
-    fun providesGetFormListUseCase(): GetFormListUseCase {
-        return GetFormListUseCase()
+    fun providesGetFormListUseCase(): GetNotificationsUseCase {
+        return GetNotificationsUseCase()
     }
 
     @Provides
-    fun providesGetFormQuestionsUseCase(): GetFormQuestionsUseCase {
-        return GetFormQuestionsUseCase()
+    fun providesGetFormQuestionsUseCase(repository: SurveyRepository): GetSurveyQuestionsUseCase {
+        return GetSurveyQuestionsUseCase(repository = repository)
     }
 
     @Provides
@@ -187,5 +195,11 @@ object UseCaseModule {
     fun providesGetPatientUseCase(
         patientRepository: PatientRepository): GetPatientUseCase {
         return GetPatientUseCase(patientRepository = patientRepository)
+    }
+
+    @Provides
+    fun providesSearchPatientUseCase(
+        patientRepository: PatientRepository): SearchPatientUseCase {
+        return SearchPatientUseCase(patientRepository = patientRepository)
     }
 }

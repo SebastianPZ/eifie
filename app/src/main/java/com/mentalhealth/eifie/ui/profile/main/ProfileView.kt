@@ -43,6 +43,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.mentalhealth.eifie.R
+import com.mentalhealth.eifie.ui.common.ViewState
 import com.mentalhealth.eifie.ui.common.photo.UserPhotoView
 import com.mentalhealth.eifie.ui.navigation.Router
 import com.mentalhealth.eifie.ui.theme.Black10
@@ -58,6 +59,7 @@ fun Profile(
     val viewModel: ProfileViewModel = hiltViewModel<ProfileViewModel>()
 
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val profileItems by viewModel.profileItems.collectAsStateWithLifecycle()
     val userPhoto by viewModel.userPhoto.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
@@ -129,14 +131,14 @@ fun Profile(
                         )
                 ) {
                     when(state) {
-                        is ProfileViewState.Success -> (state as ProfileViewState.Success).run {
+                        is ViewState.Success -> {
                             LazyRow(
                                 horizontalArrangement = Arrangement.SpaceEvenly,
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(vertical = 25.dp)
                             ){
-                                items(items) { item ->
+                                items(profileItems) { item ->
                                     DataItem(
                                         icon = item.icon,
                                         label = item.label,

@@ -13,6 +13,7 @@ object UserPatientMapper: Mapper<UserPatientResponse, Patient> {
     override fun mapToEntity(model: UserPatientResponse): Patient {
         return Patient(
             id = model.patientId ?: 0,
+            psychologistAssigned = model.psychologistAssignedId ?: 0,
             firstname = model.user?.firstName ?: "",
             lastname = model.user?.lastName ?: "",
             username = model.user?.let { getUserName(it.firstName ?: "", it.lastName ?: "") } ?: "",

@@ -6,6 +6,7 @@ import com.mentalhealth.eifie.domain.entities.EResult
 import com.mentalhealth.eifie.domain.entities.AppointmentParams
 import com.mentalhealth.eifie.domain.usecases.ScheduleAppointmentUseCase
 import com.mentalhealth.eifie.ui.common.LazyViewModel
+import com.mentalhealth.eifie.ui.common.ViewState
 import com.mentalhealth.eifie.util.ERR_REGISTER
 import com.mentalhealth.eifie.util.FormField
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -38,9 +39,9 @@ class AppointmentRegisterViewModel @Inject constructor(
         when(field) {
             FormField.DATE -> appointment.date = text
             FormField.TIME -> appointment.time = text
-            else -> appointment.patientId = 0
+            FormField.REASON -> appointment.reason = text
+            else -> appointment.patientId = text.toLong()
         }
-
         _validForm.value = appointment.isValid()
     }
 
@@ -52,18 +53,18 @@ class AppointmentRegisterViewModel @Inject constructor(
 
     private fun registerAppointment() = viewModelScope.launch {
         scheduleAppointment.invoke(appointment)
-            .onStart { viewState.value = AppointmentRegisterViewState.Loading }
+            .onStart { viewState.value = ViewState.Loading }
             .onEach { handleScheduleAppointmentResult(it) }
-            .catch { viewState.value = AppointmentRegisterViewState.Error(ERR_REGISTER) }
+            .catch { viewState.value = ViewState.Error(ERR_REGISTER) }
             .launchIn(viewModelScope)
     }
 
     private fun handleScheduleAppointmentResult(result: EResult<Appointment, Exception>) {
         when(result) {
             is EResult.Error -> result.run {
-                viewState.value = AppointmentRegisterViewState.Error(error.message ?: ERR_REGISTER)
+                viewState.value = ViewState.Error(error.message ?: ERR_REGISTER)
             }
-            is EResult.Success -> viewState.value = AppointmentRegisterViewState.Success
+            is EResult.Success -> viewState.value = ViewState.Success
         }
     }
 

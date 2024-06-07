@@ -27,13 +27,13 @@ import com.mentalhealth.eifie.ui.theme.SkyBlue
 
 @Composable
 fun PatientItem(
-    patient: Patient?,
-    onClick: () -> Unit
+    patient: Patient,
+    onClick: (Patient) -> Unit
 ) {
     Surface(
         color = Color.White,
         shape = RoundedCornerShape(12.dp),
-        modifier = Modifier.clickable { onClick() }
+        modifier = Modifier.clickable { onClick(patient) }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -44,7 +44,7 @@ fun PatientItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 UserPhotoView(
-                    username = patient?.username,
+                    username = patient.username,
                     modifier = Modifier.size(50.dp),
                     fontSize = 14.sp
                 )
@@ -52,8 +52,8 @@ fun PatientItem(
                     verticalArrangement = Arrangement.Center,
                     modifier = Modifier.padding(start = 10.dp)
                 ) {
-                    Text(text = patient?.lastname ?: "", fontSize = 14.sp, color = BlackGreen, lineHeight = 14.sp)
-                    Text(text = patient?.firstname ?: "", fontSize = 12.sp, color = LightGray)
+                    Text(text = patient.lastname, fontSize = 14.sp, color = BlackGreen, lineHeight = 14.sp)
+                    Text(text = patient.firstname, fontSize = 12.sp, color = LightGray)
                 }
             }
             Surface(
@@ -61,7 +61,7 @@ fun PatientItem(
                 shape = RoundedCornerShape(20.dp),
             ) {
                 Text(
-                    text = patient?.state ?: "",
+                    text = patient.state,
                     fontSize = 12.sp,
                     color = Color.White,
                     fontWeight = FontWeight.Bold,
@@ -76,7 +76,7 @@ fun PatientItem(
 @Composable
 fun PatientItemPreView() {
     PatientItem(
-        Patient(0, "Luis", "Lapiedra", "Luis Lapiedra", "Ok"),
+        Patient(0, 0, "Luis", "Lapiedra", "Luis Lapiedra", "Ok"),
         {}
     )
 }

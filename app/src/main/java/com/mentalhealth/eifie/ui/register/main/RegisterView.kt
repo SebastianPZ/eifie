@@ -21,11 +21,11 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import com.mentalhealth.eifie.R
 import com.mentalhealth.eifie.domain.entities.Role
+import com.mentalhealth.eifie.ui.common.ViewState
 import com.mentalhealth.eifie.ui.common.animation.EAnimation
 import com.mentalhealth.eifie.ui.common.dialog.EDialogError
 import com.mentalhealth.eifie.ui.common.layout.DefaultViewLayout
 import com.mentalhealth.eifie.ui.navigation.Router
-import com.mentalhealth.eifie.ui.register.RegisterViewState
 import com.mentalhealth.eifie.ui.register.Step
 import com.mentalhealth.eifie.ui.register.role.RegisterRoleComponent
 import com.mentalhealth.eifie.ui.theme.CustomWhite
@@ -115,7 +115,7 @@ fun RegisterView(
     }
 
     when(state) {
-        RegisterViewState.Loading -> {
+        ViewState.Loading -> {
             EAnimation(
                 resource = R.raw.loading_animation,
                 animationModifier = Modifier
@@ -126,7 +126,7 @@ fun RegisterView(
                     .background(color = CustomWhite)
             )
         }
-        is RegisterViewState.Success -> (state as RegisterViewState.Success ).run{
+        is ViewState.Success -> {
             EAnimation(
                 resource = R.raw.success_animation,
                 iterations = 1,
@@ -144,7 +144,7 @@ fun RegisterView(
                         else -> {
                             navController.currentBackStackEntry?.savedStateHandle?.apply {
                                 set(key = "role", value = role?.id)
-                                set(key = "user", value = user)
+                                set(key = "user", value = viewModel.registeredUser)
                             }
 
                             navController.navigate(Router.REGISTER_CONFIGURATION.route) {
@@ -165,7 +165,7 @@ fun RegisterView(
                     .background(color = CustomWhite)
             )
         }
-        is RegisterViewState.Error -> (state as RegisterViewState.Error).run {
+        is ViewState.Error -> (state as ViewState.Error).run {
             EDialogError(
                 title = ERR_REGISTER,
                 message = message,

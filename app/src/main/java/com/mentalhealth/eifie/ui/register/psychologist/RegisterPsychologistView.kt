@@ -69,7 +69,10 @@ fun RegisterPsychologistView(
                     Step.SECOND -> PsychologistValidationComponent(
                         psychologist = psychologist,
                         onSuccess = { viewModel.assignPsychologist {
-                            navController.popBackStack() }
+                            navController.run {
+                                previousBackStackEntry?.savedStateHandle?.set("psychologist", it)
+                                popBackStack()
+                            }}
                         },
                         onCancel = {
                             coroutineScope.launch {

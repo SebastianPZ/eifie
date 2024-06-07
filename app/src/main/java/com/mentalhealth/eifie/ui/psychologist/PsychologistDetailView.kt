@@ -1,9 +1,11 @@
 package com.mentalhealth.eifie.ui.psychologist
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -38,34 +40,48 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.mentalhealth.eifie.R
+import com.mentalhealth.eifie.ui.common.ViewState
+import com.mentalhealth.eifie.ui.common.animation.EAnimation
+import com.mentalhealth.eifie.ui.common.button.CommonButton
 import com.mentalhealth.eifie.ui.common.photo.UserPhotoView
 import com.mentalhealth.eifie.ui.navigation.Router
 import com.mentalhealth.eifie.ui.theme.BlackGreen
 import com.mentalhealth.eifie.ui.theme.CustomWhite
 import com.mentalhealth.eifie.ui.theme.LightGray
+import com.mentalhealth.eifie.ui.theme.White90
 import com.mentalhealth.eifie.util.calculateAge
 import com.mentalhealth.eifie.util.getUserName
 
 @Composable
 fun PsychologistDetailView(
     psychologistId: Long,
+    patientId: Long,
     navController: NavHostController?,
     viewModel: PsychologistDetailViewModel?
 ) {
 
+    val state = viewModel?.state?.collectAsStateWithLifecycle()
     val psychologist = viewModel?.psychologist?.collectAsStateWithLifecycle()
     val psychologistInfo = viewModel?.psychologistInfo?.collectAsStateWithLifecycle()
 
-    LaunchedEffect(Unit) {
-        if(psychologistId < 0) {
-            navController?.navigate(Router.PSYCHOLOGIST_UPDATE.route) {
-                popUpTo(Router.PSYCHOLOGIST_DETAIL.route) {
-                    saveState = false
-                    inclusive = true
+    LaunchedEffect(psychologistId) {
+        if(psychologistId <= 0) {
+            navController?.run {
+                currentBackStackEntry?.savedStateHandle?.set(
+                    key = "user",
+                    value = patientId
+                )
+                navigate(Router.PSYCHOLOGIST_UPDATE.route) {
+                    popUpTo(Router.PSYCHOLOGIST_DETAIL.route) {
+                        saveState = false
+                        inclusive = true
+                    }
+                    launchSingleTop = true
+                    restoreState = false
                 }
-                launchSingleTop = true
-                restoreState = false
             }
+        } else {
+            viewModel?.getPsychologistDetail(psychologistId)
         }
     }
 
@@ -105,7 +121,9 @@ fun PsychologistDetailView(
             Column (
                 verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxSize().padding(horizontal = 35.dp)
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 35.dp)
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -124,7 +142,9 @@ fun PsychologistDetailView(
                         columns = GridCells.Fixed(2),
                         horizontalArrangement = Arrangement.spacedBy(45.dp),
                         verticalArrangement = Arrangement.spacedBy(15.dp),
-                        modifier = Modifier.height(150.dp).padding(vertical = 20.dp)
+                        modifier = Modifier
+                            .height(150.dp)
+                            .padding(vertical = 20.dp)
                     ) {
                         items(psychologistInfo?.value ?: listOf()) {
                             Column(
@@ -136,22 +156,12 @@ fun PsychologistDetailView(
                         }
                     }
                 }
-                Button(
-                    onClick = {
-                        navController?.navigate(Router.PSYCHOLOGIST_UPDATE.route)
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = BlackGreen
-                    ),
+                CommonButton(
+                    text = stringResource(id = R.string.update),
                     modifier = Modifier
                         .padding(vertical = 30.dp, horizontal = 45.dp)
-                        .fillMaxWidth()
                 ) {
-                    Text(
-                        text = stringResource(id = R.string.update),
-                        modifier = Modifier
-                            .padding(8.dp)
-                    )
+                    navController?.navigate(Router.PSYCHOLOGIST_UPDATE.route)
                 }
             }
         }
@@ -163,6 +173,20 @@ fun PsychologistDetailView(
                 .padding(top = 50.dp)
                 .size(140.dp)
         )
+        when(state?.value) {
+            is ViewState.Loading -> {
+                EAnimation(
+                    resource = R.raw.loading_animation,
+                    animationModifier = Modifier
+                        .size(150.dp),
+                    backgroundModifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                        .background(color = White90)
+                )
+            }
+            else -> Unit
+        }
     }
 }
 
@@ -170,5 +194,5 @@ fun PsychologistDetailView(
 @Composable
 fun PsychologistDetailPreview(
 ) {
-    PsychologistDetailView(psychologistId = -1, navController = null, viewModel = null)
+    PsychologistDetailView(psychologistId = -1, patientId = -1, navController = null, viewModel = null)
 }

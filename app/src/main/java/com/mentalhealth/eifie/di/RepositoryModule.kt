@@ -13,6 +13,7 @@ import com.mentalhealth.eifie.data.repository.MessageDefaultRepository
 import com.mentalhealth.eifie.data.repository.PatientDefaultRepository
 import com.mentalhealth.eifie.data.repository.PsychologistDefaultRepository
 import com.mentalhealth.eifie.data.repository.SupBotDefaultRepository
+import com.mentalhealth.eifie.data.repository.SurveyDefaultRepository
 import com.mentalhealth.eifie.data.repository.UserDefaultRepository
 import com.mentalhealth.eifie.domain.repository.AppointmentRepository
 import com.mentalhealth.eifie.domain.repository.AuthenticationRepository
@@ -22,6 +23,7 @@ import com.mentalhealth.eifie.domain.repository.MessageRepository
 import com.mentalhealth.eifie.domain.repository.PatientRepository
 import com.mentalhealth.eifie.domain.repository.PsychologistRepository
 import com.mentalhealth.eifie.domain.repository.SupBotRepository
+import com.mentalhealth.eifie.domain.repository.SurveyRepository
 import com.mentalhealth.eifie.domain.repository.UserRepository
 import dagger.Module
 import dagger.Provides
@@ -76,5 +78,10 @@ object RepositoryModule {
     @Provides
     fun providesPatientRepository(api: ApiService, preferences: EPreferences): PatientRepository {
         return PatientDefaultRepository(api = api, preferences = preferences)
+    }
+
+    @Provides
+    fun providesSurveyRepository(api: ApiService, preferences: EPreferences): SurveyRepository {
+        return SurveyDefaultRepository(api = api, preferences = preferences)
     }
 }

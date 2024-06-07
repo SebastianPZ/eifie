@@ -39,7 +39,7 @@ class CalendarManager(private val date: Date = Date()) {
         calendar.time = date
     }
 
-    val today get() = date
+    val today: Date get() = calendar.time
 
     fun getFormattedDate(date: Date = today): String {
         val dateFormatter = SimpleDateFormat("yyyy-MM-dd", locale)

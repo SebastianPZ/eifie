@@ -1,9 +1,11 @@
 package com.mentalhealth.eifie.ui.view.patient
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -26,7 +28,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -38,11 +39,14 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.mentalhealth.eifie.R
+import com.mentalhealth.eifie.ui.common.ViewState
+import com.mentalhealth.eifie.ui.common.animation.EAnimation
 import com.mentalhealth.eifie.ui.common.photo.UserPhotoView
 import com.mentalhealth.eifie.ui.profile.detail.FieldOption
 import com.mentalhealth.eifie.ui.theme.CustomWhite
 import com.mentalhealth.eifie.ui.theme.LightGray
 import com.mentalhealth.eifie.ui.theme.LightSkyGray
+import com.mentalhealth.eifie.ui.theme.White90
 import com.mentalhealth.eifie.ui.viewmodel.PatientDetailViewModel
 import com.mentalhealth.eifie.util.getUserName
 
@@ -52,6 +56,7 @@ fun PatientDetailView(
     viewModel: PatientDetailViewModel?
 ) {
 
+    val state = viewModel?.state?.collectAsStateWithLifecycle()
     val patient = viewModel?.patient?.collectAsStateWithLifecycle()
     val patientInfo = viewModel?.patientInfo?.collectAsStateWithLifecycle()
 
@@ -91,7 +96,9 @@ fun PatientDetailView(
             Column (
                 verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxSize().padding(horizontal = 35.dp)
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 35.dp)
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -150,6 +157,20 @@ fun PatientDetailView(
                 .padding(top = 50.dp)
                 .size(140.dp)
         )
+        when(state?.value) {
+            is ViewState.Loading -> {
+                EAnimation(
+                    resource = R.raw.loading_animation,
+                    animationModifier = Modifier
+                        .size(150.dp),
+                    backgroundModifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                        .background(color = White90)
+                )
+            }
+            else -> Unit
+        }
     }
 }
 

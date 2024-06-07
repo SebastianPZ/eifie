@@ -11,6 +11,7 @@ import com.mentalhealth.eifie.domain.entities.User
 import com.mentalhealth.eifie.domain.usecases.LoginUseCase
 import com.mentalhealth.eifie.domain.usecases.SaveUserInformationUseCase
 import com.mentalhealth.eifie.ui.common.LazyViewModel
+import com.mentalhealth.eifie.ui.common.ViewState
 import com.mentalhealth.eifie.util.ERR_SAVE_USER_SESSION
 import com.mentalhealth.eifie.util.FormField
 import com.mentalhealth.eifie.util.TRY_AGAIN
@@ -46,7 +47,7 @@ class LoginViewModel @Inject constructor(
     }
 
     fun setInitialLoginViewStatus() {
-        viewState.value = LoginViewState.Idle
+        viewState.value = ViewState.Idle
     }
 
     fun setFormValue(text: String, field: FormField) {
@@ -60,14 +61,14 @@ class LoginViewModel @Inject constructor(
     fun loginUser() = viewModelScope.launch {
         loginUseCase.invoke(user.email, user.password)
             .onStart {
-                viewState.value = LoginViewState.Loading
+                viewState.value = ViewState.Loading
             }.onEach {
                 when(it) {
                     is EResult.Success -> it.run {
                         saveUserSession(data).join()
                     }
                     is EResult.Error -> it.run {
-                        viewState.value = LoginViewState.Error("${error.message} $TRY_AGAIN")
+                        viewState.value = ViewState.Error("${error.message} $TRY_AGAIN")
                     }
                 }
             }.catch {
@@ -79,10 +80,10 @@ class LoginViewModel @Inject constructor(
         saveUserUseCase.invoke(user).onEach {
             when(it) {
                 is EResult.Success -> {
-                    viewState.value = LoginViewState.Success
+                    viewState.value = ViewState.Success
                 }
                 is EResult.Error -> {
-                    viewState.value = LoginViewState.Error("$ERR_SAVE_USER_SESSION $TRY_AGAIN")
+                    viewState.value = ViewState.Error("$ERR_SAVE_USER_SESSION $TRY_AGAIN")
                 }
             }
         }.launchIn(viewModelScope)

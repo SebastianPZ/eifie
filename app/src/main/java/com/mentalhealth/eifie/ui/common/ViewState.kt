@@ -1,6 +1,9 @@
 package com.mentalhealth.eifie.ui.common
 
 
-open class ViewState {
+sealed class ViewState {
     object Idle: ViewState()
+    object Loading: ViewState()
+    object Success: ViewState()
+    data class Error(val message: String): ViewState()
 }

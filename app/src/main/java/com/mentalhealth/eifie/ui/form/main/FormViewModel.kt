@@ -1,10 +1,12 @@
 package com.mentalhealth.eifie.ui.form.main
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mentalhealth.eifie.domain.entities.EResult
 import com.mentalhealth.eifie.domain.entities.Question
 import com.mentalhealth.eifie.domain.usecases.GetFormDataUseCase
-import com.mentalhealth.eifie.domain.usecases.GetFormQuestionsUseCase
+import com.mentalhealth.eifie.domain.usecases.GetSurveyQuestionsUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -24,7 +26,7 @@ import kotlinx.coroutines.launch
 class FormViewModel @AssistedInject constructor(
     @Assisted val id: Int,
     private val getFormDataUseCase: GetFormDataUseCase,
-    private val getFormQuestionsUseCase: GetFormQuestionsUseCase
+    private val getSurveyQuestionsUseCase: GetSurveyQuestionsUseCase
 ): ViewModel() {
 
     private val _formState: MutableStateFlow<FormState> = MutableStateFlow(FormState.Idle)
@@ -43,23 +45,48 @@ class FormViewModel @AssistedInject constructor(
         initialValue = listOf()
     )
 
-    private val _formName: MutableStateFlow<String> = MutableStateFlow("")
+    private val _formName: MutableStateFlow<String> = MutableStateFlow("Semanal")
 
     val formName = _formName.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000, 1),
-        initialValue = ""
+        initialValue = "Semanal"
     )
 
     init {
         initFormData()
     }
 
+    private fun initFormData() = viewModelScope.launch {
+        getFormDataUseCase.invoke(id)
+            .onStart { _formState.value = FormState.Idle }
+            .onEach { _formName.value = it.title }
+            .catch { _formState.value = FormState.Error }
+            .launchIn(viewModelScope)
+    }
+
+    private fun getFormQuestions() = viewModelScope.async {
+        getSurveyQuestionsUseCase.invoke()
+            .onStart { _formState.value = FormState.Loading }
+            .catch { _formState.value = FormState.Error }
+            .firstOrNull()
+    }
+
     fun initFormQuestions() = viewModelScope.launch {
         getFormQuestions().await()?.let {
-            _formQuestions.value = it
-            _formName.value = it.first().text
-        }
+            when(it) {
+                is EResult.Error -> it.run {
+                    Log.e("ERROR", error.message, error)
+                }
+                is EResult.Success -> it.run {
+                    _formState.value = if(data.size >= 2) FormState.InProgress
+                    else FormState.LastQuestion
+
+                    _formQuestions.value = data
+                    _formName.value = data.first().text
+                }
+            }
+        } ?: throw IllegalArgumentException("ERROR DE PARSEO")
     }
 
     fun saveQuestionAnswer(questionId: Int) {
@@ -77,21 +104,6 @@ class FormViewModel @AssistedInject constructor(
             else -> _formName.value = _formQuestions.value[questionId + 1].text
         }
         onComplete()
-    }
-
-    private fun initFormData() = viewModelScope.launch {
-        getFormDataUseCase.invoke(id)
-            .onStart { _formState.value = FormState.Idle }
-            .onEach { _formName.value = it.name }
-            .catch { _formState.value = FormState.Error }
-            .launchIn(viewModelScope)
-    }
-
-    private fun getFormQuestions() = viewModelScope.async {
-        getFormQuestionsUseCase.invoke(id)
-            .onStart { _formState.value = FormState.InProgress }
-            .catch { _formState.value = FormState.Error }
-            .firstOrNull()
     }
 
     private fun registerQuestionsAnswers() {

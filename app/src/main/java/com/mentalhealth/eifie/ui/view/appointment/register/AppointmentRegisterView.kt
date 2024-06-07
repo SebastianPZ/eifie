@@ -1,7 +1,7 @@
 package com.mentalhealth.eifie.ui.view.appointment.register
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,32 +11,24 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.mentalhealth.eifie.R
 import com.mentalhealth.eifie.ui.common.ViewState
 import com.mentalhealth.eifie.ui.common.animation.EAnimation
@@ -61,12 +53,17 @@ import com.mentalhealth.eifie.util.defaultRules
 
 @Composable
 fun AppointmentRegisterView(
-    navController: NavHostController,
-    viewModel: AppointmentRegisterViewModel = hiltViewModel<AppointmentRegisterViewModel>()
+    navController: NavHostController?,
+    viewModel: AppointmentRegisterViewModel?,
+    patient: Pair<Long, MutableLiveData<String>>?
 ) {
 
-    val validForm by viewModel.validForm.collectAsStateWithLifecycle()
-    val state by viewModel.state.collectAsStateWithLifecycle()
+    val validForm = viewModel?.validForm?.collectAsStateWithLifecycle()?.value ?: false
+    val state = viewModel?.state?.collectAsStateWithLifecycle()?.value ?: ViewState.Idle
+
+    LaunchedEffect(patient) {
+        viewModel?.setFormValue((patient?.first ?: -1).toString(), FormField.PATIENT)
+    }
 
     Box (
         modifier = Modifier.background(color = CustomWhite)
@@ -74,12 +71,12 @@ fun AppointmentRegisterView(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(vertical = 45.dp, horizontal = 24.dp)
+                .padding(vertical = 35.dp, horizontal = 24.dp)
         ) {
             HeaderComponent(
                 title = stringResource(id = R.string.appointment),
                 subtitle = stringResource(id = R.string.book_appointment),
-                onBack = { navController.popBackStack() }
+                onBack = { navController?.popBackStack() }
             )
             Column(
                 verticalArrangement = Arrangement.SpaceBetween,
@@ -91,12 +88,34 @@ fun AppointmentRegisterView(
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
+                    ETextField(
+                        values = TextFieldValues(
+                            label = stringResource(id = R.string.patient),
+                            initialValue = patient?.second?.value ?: "",
+                            icon = EIcon(icon = Icons.Default.Search),
+                            type = TextFieldType.LABELED_SUFFIX_ICON,
+                            borderColor = BlackGreen,
+                            enabled = false,
+                            onValueChange = {  },
+                            isValid = {
+                                (ValidateText(it.text) checkWith defaultRules).let { result ->
+                                    (result.exceptionOrNull()?.message ?: "") to result.isFailure
+                                }
+                            },
+                            modifier = Modifier
+                                .padding(top = 25.dp)
+                                .fillMaxWidth()
+                                .clickable {
+                                    navController?.navigate(Router.APPOINTMENT_SEARCH_PATIENT.route)
+                                }
+                        )
+                    )
                     EDateField(
                         TextFieldValues(
                             label = stringResource(id = R.string.appointment_date),
                             icon = EIcon(icon = Icons.Default.DateRange),
                             color = BlackGreen,
-                            onValueChange = { viewModel.setFormValue(it.text, FormField.DATE) },
+                            onValueChange = { viewModel?.setFormValue(it.text, FormField.DATE) },
                             isValid = {
                                 (ValidateText(it.text) checkWith defaultRules).let { result ->
                                     (result.exceptionOrNull()?.message ?: "") to result.isFailure
@@ -112,7 +131,7 @@ fun AppointmentRegisterView(
                             label = stringResource(id = R.string.init_hour),
                             icon = EIcon(icon = Icons.Filled.AccessTime),
                             color = BlackGreen,
-                            onValueChange = { viewModel.setFormValue(it.text, FormField.TIME) },
+                            onValueChange = { viewModel?.setFormValue(it.text, FormField.TIME) },
                             isValid = {
                                 (ValidateText(it.text) checkWith defaultRules).let { result ->
                                     (result.exceptionOrNull()?.message ?: "") to result.isFailure
@@ -125,11 +144,13 @@ fun AppointmentRegisterView(
                     )
                     ETextField(
                         values = TextFieldValues(
-                            label = stringResource(id = R.string.patient),
+                            label = stringResource(id = R.string.reason),
                             icon = EIcon(icon = Icons.Default.Lock),
                             type = TextFieldType.LABELED,
+                            radius = 30.0,
                             borderColor = BlackGreen,
-                            onValueChange = { viewModel.setFormValue(it.text, FormField.PATIENT) },
+                            minLines = 3,
+                            onValueChange = { viewModel?.setFormValue(it.text, FormField.REASON) },
                             isValid = {
                                 (ValidateText(it.text) checkWith defaultRules).let { result ->
                                     (result.exceptionOrNull()?.message ?: "") to result.isFailure
@@ -147,11 +168,12 @@ fun AppointmentRegisterView(
                         .fillMaxWidth()
                 ) {
                     CancelButtonView(
-                        onClick = { navController.popBackStack() }
+                        onClick = { navController?.popBackStack() }
                     )
                     AcceptButtonView(
+                        text = stringResource(id = R.string.schedule),
                         enabled = validForm,
-                        onClick = { viewModel.submitForm() }
+                        onClick = { viewModel?.submitForm() }
                     )
                 }
             }
@@ -168,10 +190,10 @@ fun AppointmentRegisterView(
 @Composable
 fun HandleViewState(
     state: ViewState,
-    navController: NavHostController
+    navController: NavHostController?
 ) {
     when(state) {
-        AppointmentRegisterViewState.Loading -> {
+        ViewState.Loading -> {
             EAnimation(
                 resource = R.raw.loading_animation,
                 animationModifier = Modifier
@@ -179,31 +201,25 @@ fun HandleViewState(
                 backgroundModifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight()
-                    .background(color = Color.White)
+                    .background(color = White95)
             )
         }
-        is AppointmentRegisterViewState.Success -> {
+        is ViewState.Success -> {
             EAnimation(
                 resource = R.raw.success_animation,
                 iterations = 1,
                 actionOnEnd = {
-                    navController.navigate(Router.REGISTER_SUCCESS.route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = false
-                        }
-                        launchSingleTop = true
-                        restoreState = false
-                    }
+                    navController?.popBackStack()
                 },
                 animationModifier = Modifier
                     .size(250.dp),
                 backgroundModifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight()
-                    .background(color = Color.White)
+                    .background(color = White95)
             )
         }
-        is AppointmentRegisterViewState.Error -> (state as AppointmentRegisterViewState.Error).run {
+        is ViewState.Error -> state.run {
             EDialogError(
                 title = ERR_REGISTER,
                 message = message,
@@ -216,3 +232,11 @@ fun HandleViewState(
     }
 
 }
+
+@Preview
+@Composable
+fun AppointmentRegisterPreview() {
+    AppointmentRegisterView(navController = null, viewModel = null, patient = null)
+}
+
+

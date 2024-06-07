@@ -1,4 +1,4 @@
-package com.mentalhealth.eifie.ui.view.chat.history
+package com.mentalhealth.eifie.ui.view.chat
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement

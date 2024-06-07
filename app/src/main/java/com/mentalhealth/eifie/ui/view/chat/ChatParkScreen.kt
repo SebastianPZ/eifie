@@ -1,4 +1,4 @@
-package com.mentalhealth.eifie.ui.view.chat.main
+package com.mentalhealth.eifie.ui.view.chat
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,7 +22,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.mentalhealth.eifie.R
 import com.mentalhealth.eifie.domain.entities.SupBot
-import com.mentalhealth.eifie.ui.view.chat.history.ChatHistory
 import com.mentalhealth.eifie.ui.navigation.Router
 import com.mentalhealth.eifie.ui.theme.CustomWhite
 import com.mentalhealth.eifie.ui.theme.DarkGreen

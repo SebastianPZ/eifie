@@ -11,4 +11,5 @@ enum class FormField {
     DATE,
     TIME,
     PATIENT,
+    REASON,
 }

@@ -6,8 +6,10 @@ import com.mentalhealth.eifie.domain.entities.EResult
 import com.mentalhealth.eifie.domain.entities.Patient
 import com.mentalhealth.eifie.domain.entities.Psychologist
 import com.mentalhealth.eifie.domain.usecases.AssignPsychologistUseCase
+import com.mentalhealth.eifie.domain.usecases.UpdateUserInformationUseCase
 import com.mentalhealth.eifie.domain.usecases.ValidateAssignCodeUseCase
 import com.mentalhealth.eifie.ui.common.LazyViewModel
+import com.mentalhealth.eifie.ui.common.ViewState
 import com.mentalhealth.eifie.ui.register.Step
 import com.mentalhealth.eifie.util.ERR_ACCESS_CODE
 import dagger.assisted.Assisted
@@ -69,7 +71,7 @@ class RegisterPsychologistViewModel @AssistedInject constructor(
         validatePsychologistCode(code, onSuccess)
     }
 
-    fun assignPsychologist(onSuccess: () -> Unit = {}) {
+    fun assignPsychologist(onSuccess: (Long) -> Unit = {}) {
         assignToPsychologist(onSuccess)
     }
 
@@ -77,17 +79,17 @@ class RegisterPsychologistViewModel @AssistedInject constructor(
         validateCodeUseCase.invoke(code)
             .retry(3L) { error -> (error is IOException).also { if(it) delay(1000) }
             }.onStart {
-                viewState.value = RegisterPsychologistViewState.Loading
+                viewState.value = ViewState.Loading
             }.onEach {
                 when(it) {
                     is EResult.Error -> {
                         _codeError.value = it.error.message ?: ERR_ACCESS_CODE
-                        viewState.value = RegisterPsychologistViewState.Idle
+                        viewState.value = ViewState.Idle
                     }
                     is EResult.Success -> it.run {
                         _psychologist.value = data
                         onSuccess()
-                        viewState.value = RegisterPsychologistViewState.Idle
+                        viewState.value = ViewState.Idle
                     }
                 }
             }.catch {
@@ -96,11 +98,16 @@ class RegisterPsychologistViewModel @AssistedInject constructor(
     }
 
 
-    private fun assignToPsychologist(onSuccess: () -> Unit = {}) = viewModelScope.launch {
+    private fun assignToPsychologist(onSuccess: (Long) -> Unit = {}) = viewModelScope.launch {
         assignPsychologistUseCase.invoke(patientId, _psychologist.value.id)
             .retry(3L) { error -> (error is IOException).also { if(it) delay(1000) }}
-            .onStart { viewState.value = RegisterPsychologistViewState.Loading }
-            .onEach { onSuccess() }
+            .onStart { viewState.value = ViewState.Loading }
+            .onEach {
+                when(it) {
+                    is EResult.Error -> Unit
+                    is EResult.Success -> onSuccess(it.data)
+                }
+            }
             .catch {  }
             .launchIn(viewModelScope)
     }

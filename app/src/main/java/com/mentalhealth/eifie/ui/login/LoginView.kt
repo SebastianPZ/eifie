@@ -28,7 +28,6 @@ import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.paint
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -41,6 +40,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.mentalhealth.eifie.R
 import com.mentalhealth.eifie.ui.RegisterActivity
+import com.mentalhealth.eifie.ui.common.ViewState
 import com.mentalhealth.eifie.ui.common.animation.EAnimation
 import com.mentalhealth.eifie.ui.common.dialog.EDialogError
 import com.mentalhealth.eifie.ui.common.textfield.EIcon
@@ -52,7 +52,7 @@ import com.mentalhealth.eifie.ui.theme.BlackGreen
 import com.mentalhealth.eifie.ui.theme.CustomWhite
 import com.mentalhealth.eifie.ui.theme.DarkGreen
 import com.mentalhealth.eifie.ui.theme.White50
-import com.mentalhealth.eifie.ui.theme.White85
+import com.mentalhealth.eifie.ui.theme.White90
 import com.mentalhealth.eifie.util.ERR_LOGIN
 import com.mentalhealth.eifie.util.FormField
 import com.mentalhealth.eifie.util.ValidateText
@@ -60,7 +60,7 @@ import com.mentalhealth.eifie.util.defaultRules
 import com.mentalhealth.eifie.util.emailRules
 
 @Composable
-fun LoginScreen(
+fun LoginView(
     navController: NavHostController?,
     viewModel: LoginViewModel?,
     navigateToHome: () -> Unit
@@ -186,7 +186,7 @@ fun Loading(
     val state = viewModel?.state?.collectAsStateWithLifecycle()
 
     when(state?.value) {
-        LoginViewState.Loading -> {
+        ViewState.Loading -> {
             EAnimation(
                 resource = R.raw.loading_animation,
                 animationModifier = Modifier
@@ -194,10 +194,10 @@ fun Loading(
                 backgroundModifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight()
-                    .background(color = White85)
+                    .background(color = White90)
             )
         }
-        is LoginViewState.Success -> {
+        is ViewState.Success -> {
             EAnimation(
                 resource = R.raw.unlock_animation,
                 iterations = 1,
@@ -209,10 +209,10 @@ fun Loading(
                 backgroundModifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight()
-                    .background(color = White85)
+                    .background(color = White90)
             )
         }
-        is LoginViewState.Error -> (state.value as LoginViewState.Error).run {
+        is ViewState.Error -> (state.value as ViewState.Error).run {
             EDialogError(
                 title = ERR_LOGIN,
                 message = message) {
@@ -225,16 +225,8 @@ fun Loading(
 
 }
 
-@Composable
-fun LoginButton(viewModel: LoginViewModel?) {
-
-    val validForm = viewModel?.validForm?.collectAsStateWithLifecycle()
-
-
-}
-
 @Preview(showBackground = true)
 @Composable
 fun LoginPreview() {
-    LoginScreen(null, viewModel = null, navigateToHome = {  })
+    LoginView(null, viewModel = null, navigateToHome = {  })
 }

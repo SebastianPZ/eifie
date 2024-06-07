@@ -28,5 +28,6 @@ enum class Router(val route: String) {
     FORM("form/"),
     APPOINTMENT("appointment"),
     APPOINTMENT_REGISTER("appointment/register"),
+    APPOINTMENT_SEARCH_PATIENT("appointment/register/search-patient"),
     PROFILE("profile")
 }

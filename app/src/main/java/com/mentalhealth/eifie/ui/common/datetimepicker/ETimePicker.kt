@@ -17,7 +17,7 @@ import com.mentalhealth.eifie.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ETimePicker(
-    onAccept: (Int, Int) -> Unit,
+    onAccept: (String) -> Unit,
     onCancel: () -> Unit
 ) {
     val state = rememberTimePickerState()
@@ -26,7 +26,7 @@ fun ETimePicker(
         onDismissRequest = { },
         confirmButton = {
             Button(
-                onClick = { onAccept(state.hour, state.minute) },
+                onClick = {  onAccept(String.format("%02d:%02d", state.hour, state.minute) )},
                 modifier = Modifier.padding(start = 10.dp)
             ) {
                 Text(stringResource(id = R.string.accept))
@@ -46,7 +46,7 @@ fun ETimePicker(
 @Composable
 fun ETimePickerPreview() {
     ETimePicker(
-        onAccept =  { _,_ -> },
+        onAccept =  { _ -> },
         onCancel = {}
     )
 }

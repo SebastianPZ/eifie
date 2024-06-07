@@ -5,7 +5,6 @@ import com.mentalhealth.eifie.R
 import com.mentalhealth.eifie.domain.entities.EResult
 import com.mentalhealth.eifie.data.models.request.RegisterRequest
 import com.mentalhealth.eifie.data.models.response.HospitalResponse
-import com.mentalhealth.eifie.domain.entities.Patient
 import com.mentalhealth.eifie.domain.entities.PersonalData
 import com.mentalhealth.eifie.domain.entities.Role
 import com.mentalhealth.eifie.domain.entities.UserData
@@ -13,11 +12,10 @@ import com.mentalhealth.eifie.domain.usecases.ListHospitalsUseCase
 import com.mentalhealth.eifie.domain.usecases.RegisterPsychologistUseCase
 import com.mentalhealth.eifie.domain.usecases.RegisterPatientUseCase
 import com.mentalhealth.eifie.ui.common.LazyViewModel
+import com.mentalhealth.eifie.ui.common.ViewState
 import com.mentalhealth.eifie.ui.common.dropdown.DropdownItem
-import com.mentalhealth.eifie.ui.register.RegisterViewState
 import com.mentalhealth.eifie.ui.register.role.RoleOption
 import com.mentalhealth.eifie.ui.register.Step
-import com.mentalhealth.eifie.ui.register.psychologist.RegisterPsychologistViewState
 import com.mentalhealth.eifie.util.emptyString
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -45,6 +43,8 @@ class RegisterViewModel @Inject constructor(
         Step(order = Step.SECOND, title = "Datos"),
         Step(order = Step.THIRD, title = "Usuario")
     )
+
+    lateinit var registeredUser: Number
 
     private val _personalData: MutableStateFlow<PersonalData> = MutableStateFlow(PersonalData())
 
@@ -110,7 +110,7 @@ class RegisterViewModel @Inject constructor(
     }
 
     fun setViewInitialStatus() {
-        viewState.value = RegisterViewState.Idle
+        viewState.value = ViewState.Idle
     }
 
     private fun initRoles() {
@@ -161,14 +161,15 @@ class RegisterViewModel @Inject constructor(
     private fun registerPatientUser() = viewModelScope.launch {
         registerPatientUseCase.invoke(user.toPatientRequest())
             .retry(3L) { error -> (error is IOException).also { if(it) delay(1000) }}
-            .onStart { viewState.value = RegisterViewState.Loading }
+            .onStart { viewState.value = ViewState.Loading }
             .onEach { result ->
                 when(result) {
                     is EResult.Success -> result.data.run {
-                        viewState.value = RegisterViewState.Success(user = id)
+                        registeredUser = id
+                        viewState.value = ViewState.Success
                     }
                     is EResult.Error -> result.run {
-                        viewState.value = RegisterViewState.Error(error.message ?: "")
+                        viewState.value = ViewState.Error(error.message ?: "")
                     }
                     else -> Unit
                 }
@@ -177,28 +178,18 @@ class RegisterViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
-    fun handleDataResultAfterAssign(result: EResult<Patient, Exception>) {
-        when(result) {
-            is EResult.Success -> viewState.value = RegisterPsychologistViewState.Success
-            is EResult.Error -> result.run {
-                viewState.value = RegisterPsychologistViewState.Success
-            }
-            else -> Unit
-        }
-    }
-
     private fun registerPsychologistUser() = viewModelScope.launch {
         registerPsychologistUseCase.invoke(user.toPsychologistRequest())
             .retry(3L) { error -> (error is IOException).also { if(it) delay(1000) }
             }.onStart {
-                viewState.value = RegisterViewState.Loading
+                viewState.value = ViewState.Loading
             }.onEach { result ->
                 when(result) {
                     is EResult.Success -> result.data.run {
-                        viewState.value = RegisterViewState.Success(user = id)
+                        viewState.value = ViewState.Success
                     }
                     is EResult.Error -> result.run {
-                        viewState.value = RegisterViewState.Error(error.message ?: "")
+                        viewState.value = ViewState.Error(error.message ?: "")
                     }
                     else -> Unit
                 }

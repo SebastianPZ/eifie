@@ -1,15 +1,18 @@
 package com.mentalhealth.eifie.ui.view.appointment.main
 
 import androidx.lifecycle.viewModelScope
+import com.mentalhealth.eifie.domain.entities.AppointmentList
 import com.mentalhealth.eifie.domain.entities.EResult
 import com.mentalhealth.eifie.domain.entities.Role
 import com.mentalhealth.eifie.domain.entities.User
+import com.mentalhealth.eifie.domain.entities.UserAppointment
 import com.mentalhealth.eifie.domain.usecases.GetMonthCalendarUseCase
 import com.mentalhealth.eifie.domain.usecases.GetUserInformationUseCase
 import com.mentalhealth.eifie.domain.usecases.GetWeekCalendarUseCase
 import com.mentalhealth.eifie.domain.usecases.ListAppointmentsUseCase
 import com.mentalhealth.eifie.ui.view.appointment.calendar.CalendarViewState
 import com.mentalhealth.eifie.ui.common.LazyViewModel
+import com.mentalhealth.eifie.ui.common.ViewState
 import com.mentalhealth.eifie.util.manager.DateInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -39,10 +42,20 @@ class AppointmentViewModel @Inject constructor(
         CalendarViewState.Idle
     )
 
+
+
     val calendarState = calendarViewState.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000, 1),
         initialValue = CalendarViewState.Idle
+    )
+
+    private val _appointments: MutableStateFlow<UserAppointment> = MutableStateFlow(UserAppointment())
+
+    val appointments = _appointments.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000, 1),
+        initialValue = UserAppointment()
     )
 
     private val _userRole: MutableStateFlow<Role> = MutableStateFlow(Role.PATIENT)
@@ -135,14 +148,15 @@ class AppointmentViewModel @Inject constructor(
         appointmentJob?.cancelAndJoin()
         appointmentJob = listAppointmentsUseCase.invoke(date)
             .onStart {
-                viewState.value = AppointmentViewState.Loading
+                viewState.value = ViewState.Loading
             }.onEach {
                 when(it) {
                     is EResult.Success -> it.run {
-                        viewState.value = AppointmentViewState.Success(data)
+                        _appointments.value = data
+                        viewState.value = ViewState.Success
                     }
                     is EResult.Error -> it.run {
-                        viewState.value = AppointmentViewState.Error(error.message ?: "")
+                        viewState.value = ViewState.Error(error.message ?: "")
                     }
                 }
             }.launchIn(viewModelScope)

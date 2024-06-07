@@ -4,10 +4,10 @@ import com.mentalhealth.eifie.data.mock.FormFakeData
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class GetFormListUseCase @Inject constructor() {
+class GetNotificationsUseCase @Inject constructor() {
 
     fun invoke() = flow {
-        emit(FormFakeData.getFormListData())
+        emit(FormFakeData.getNotificationsData())
     }
 
 }

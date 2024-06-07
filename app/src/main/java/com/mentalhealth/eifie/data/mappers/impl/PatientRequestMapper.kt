@@ -10,7 +10,7 @@ object PatientRequestMapper: Mapper<PatientRequest, PatientParams> {
             firstName = entity.firstName,
             lastName = entity.lastName,
             birthDate = entity.birthDate,
-            email = entity.lastName,
+            email = entity.email,
             password = entity.password,
             psychologistId = entity.psychologistId
         )

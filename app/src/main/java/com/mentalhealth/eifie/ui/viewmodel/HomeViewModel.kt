@@ -3,10 +3,10 @@ package com.mentalhealth.eifie.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mentalhealth.eifie.domain.entities.EResult
-import com.mentalhealth.eifie.domain.entities.Form
+import com.mentalhealth.eifie.domain.entities.Notification
 import com.mentalhealth.eifie.domain.entities.Role
 import com.mentalhealth.eifie.domain.entities.User
-import com.mentalhealth.eifie.domain.usecases.GetFormListUseCase
+import com.mentalhealth.eifie.domain.usecases.GetNotificationsUseCase
 import com.mentalhealth.eifie.domain.usecases.GetUserInformationUseCase
 import com.mentalhealth.eifie.util.emptyString
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,7 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getUserInformationUseCase: GetUserInformationUseCase,
-    private val getFormListUseCase: GetFormListUseCase,
+    private val getNotificationsUseCase: GetNotificationsUseCase,
 ): ViewModel() {
 
     private val _userRole: MutableStateFlow<Role> = MutableStateFlow(Role.PATIENT)
@@ -41,9 +41,9 @@ class HomeViewModel @Inject constructor(
         initialValue = emptyString()
     )
 
-    private val _formList: MutableStateFlow<List<Form>> = MutableStateFlow(listOf())
+    private val _notifications: MutableStateFlow<List<Notification>> = MutableStateFlow(listOf())
 
-    val formList = _formList.stateIn(
+    val notifications = _notifications.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000, 1),
         initialValue = listOf()
@@ -70,17 +70,17 @@ class HomeViewModel @Inject constructor(
         _userName.value = user.firstName
 
         when(user.role) {
-            Role.PATIENT -> getFormListUseCase().join()
+            Role.PATIENT -> getNotificationsUseCase().join()
             Role.PSYCHOLOGIST -> Unit
         }
     }
 
-    private fun getFormListUseCase() = viewModelScope.launch {
-        getFormListUseCase.invoke()
+    private fun getNotificationsUseCase() = viewModelScope.launch {
+        getNotificationsUseCase.invoke()
             .onStart {
 
             }.onEach {
-                _formList.value = it
+                _notifications.value = it
             }.launchIn(viewModelScope)
     }
 

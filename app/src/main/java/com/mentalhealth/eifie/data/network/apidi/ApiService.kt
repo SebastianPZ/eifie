@@ -11,6 +11,7 @@ import com.mentalhealth.eifie.data.models.response.HospitalResponse
 import com.mentalhealth.eifie.data.models.response.PatientResponse
 import com.mentalhealth.eifie.data.models.response.UserPatientResponse
 import com.mentalhealth.eifie.data.models.response.ProfileResponse
+import com.mentalhealth.eifie.data.models.response.QuestionResponse
 import com.mentalhealth.eifie.data.models.response.UserPsychologistResponse
 import com.mentalhealth.eifie.data.models.response.UserResponse
 import okhttp3.MultipartBody
@@ -61,7 +62,7 @@ interface ApiService {
         @Query("endDate") endDate: String
     ): Response<BaseResponse<List<AppointmentResponse>>>
 
-    @POST("/appointment/saveAppointment")
+    @POST("/appointment")
     suspend fun saveAppointment(
         @Header("Authorization") token: String,
         @Body generateAppointmentRequestDTO: AppointmentRequest
@@ -100,4 +101,15 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Query("patientId") patientId: Long
     ): Response<BaseResponse<UserPatientResponse>>
+
+    @GET("/patient/search")
+    suspend fun searchPatient(
+        @Header("Authorization") token: String,
+        @Query("lastName") lastname: String
+    ): Response<BaseResponse<List<PatientResponse>>>
+
+    @GET("/survey/questions")
+    suspend fun surveyQuestions(
+        @Header("Authorization") token: String
+    ): Response<BaseResponse<List<QuestionResponse>>>
 }

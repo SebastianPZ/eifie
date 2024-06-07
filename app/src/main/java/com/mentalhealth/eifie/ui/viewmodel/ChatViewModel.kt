@@ -6,9 +6,9 @@ import com.mentalhealth.eifie.domain.entities.EResult
 import com.mentalhealth.eifie.domain.usecases.GetChatMessagesUseCase
 import com.mentalhealth.eifie.domain.usecases.SendMessageUseCase
 import com.mentalhealth.eifie.ui.common.LazyViewModel
+import com.mentalhealth.eifie.ui.common.ViewState
 import com.mentalhealth.eifie.ui.mappers.impl.MessageUIMapper
 import com.mentalhealth.eifie.ui.models.MessageUI
-import com.mentalhealth.eifie.ui.view.chat.chatbox.ChatBoxViewState
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -43,16 +43,16 @@ class ChatViewModel @AssistedInject constructor(
 
     private fun initChatMessages() = viewModelScope.launch {
         getChatMessages.invoke(chatId = chatId)
-            .onStart { viewState.value = ChatBoxViewState.Loading }
+            .onStart { viewState.value = ViewState.Loading }
             .onEach { result ->
                 when(result) {
                     is EResult.Success -> result.run {
                         _messages.value = this.data.map { MessageUIMapper.mapFromEntity(it) }
                     }
-                    else -> viewState.value = ChatBoxViewState.Error
+                    is EResult.Error -> result.run { viewState.value = ViewState.Error(error.message ?: "") }
                 }
             }
-            .catch { viewState.value = ChatBoxViewState.Error }
+            .catch { viewState.value = ViewState.Error(it.message ?: "") }
             .launchIn(viewModelScope)
     }
 

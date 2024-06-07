@@ -13,6 +13,7 @@
     <string name="retry">Reintentar</string>
     <string name="go_back_login">Volver a inicio</string>
     <string name="register_button">Registrarse</string>
+    <string name="schedule">Agendar</string>
 
     <string name="select_a">Seleccione una\n</string>
     <string name="option">opción</string>
@@ -51,6 +52,7 @@
     <string name="ready">Listo</string>
 
     <string name="patient">Paciente</string>
+    <string name="reason">Motivo</string>
     <string name="patients">Pacientes</string>
     <string name="empty_patients">Aún no cuenta con\npacientes asignados.</string>
     <string name="psychologist">Psicólogo</string>

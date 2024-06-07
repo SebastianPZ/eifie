@@ -74,8 +74,8 @@ fun ETimeField(
 
     if (showTimeDialog) {
         ETimePicker(
-            onAccept = { hour, minute ->
-                text = TextFieldValue("$hour:$minute")
+            onAccept = { time ->
+                text = TextFieldValue(time)
                 values.onValueChange(text)
                 showTimeDialog = false // close dialog
             },
