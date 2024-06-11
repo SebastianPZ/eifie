@@ -7,5 +7,6 @@ class ChatUI(
     val topic: String,
     val lastMessage: String,
     val photo: String? = null,
-    val createdDate: LocalDateTime
+    val createdDate: LocalDateTime,
+    val calendarDate: String
 )

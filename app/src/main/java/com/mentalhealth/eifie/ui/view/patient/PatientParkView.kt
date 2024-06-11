@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -28,9 +30,12 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.mentalhealth.eifie.R
+import com.mentalhealth.eifie.ui.common.ViewState
+import com.mentalhealth.eifie.ui.common.animation.EAnimation
 import com.mentalhealth.eifie.ui.navigation.Router
 import com.mentalhealth.eifie.ui.theme.CustomWhite
 import com.mentalhealth.eifie.ui.theme.DarkGreen
+import com.mentalhealth.eifie.ui.theme.White90
 import com.mentalhealth.eifie.ui.view.chat.ChatParkHeader
 import com.mentalhealth.eifie.ui.viewmodel.PatientsViewModel
 
@@ -41,6 +46,7 @@ fun PatientParkView(
 ) {
 
     val patients = viewModel?.patients?.collectAsStateWithLifecycle()
+    val state = viewModel?.state?.collectAsStateWithLifecycle()
 
     Box(
         modifier = Modifier
@@ -59,34 +65,48 @@ fun PatientParkView(
                 },
                 modifier = Modifier.padding(top = 25.dp, bottom = 20.dp)
             )
-            if(patients?.value?.isEmpty() != false) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.empty_patients),
-                        textAlign = TextAlign.Center,
-                        fontSize = 12.sp,
-                        color = Color.Gray
+            when {
+                state?.value is ViewState.Loading -> {
+                    EAnimation(
+                        resource = R.raw.loading_animation,
+                        animationModifier = Modifier
+                            .size(150.dp),
+                        backgroundModifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight()
+                            .background(color = White90)
                     )
                 }
-            } else {
-                LazyColumn(
-                    horizontalAlignment = Alignment.Start,
-                    verticalArrangement = Arrangement.Top,
-                    modifier = Modifier
-                        .fillMaxSize()
-                ) {
-                    items(patients.value.size) { index ->
-                        PatientItem(
-                            patient = patients.value[index],
-                            onClick = {
-                                navController?.navigate("${Router.PATIENT_DETAIL.route}${it?.id}")
-                            }
+                patients?.value?.isEmpty() != false -> {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.empty_patients),
+                            textAlign = TextAlign.Center,
+                            fontSize = 12.sp,
+                            color = Color.Gray
                         )
-                        Spacer(modifier = Modifier.height(20.dp))
+                    }
+                }
+                else -> {
+                    LazyColumn(
+                        horizontalAlignment = Alignment.Start,
+                        verticalArrangement = Arrangement.Top,
+                        modifier = Modifier
+                            .fillMaxSize()
+                    ) {
+                        items(patients.value.size) { index ->
+                            PatientItem(
+                                patient = patients.value[index],
+                                onClick = {
+                                    navController?.navigate("${Router.PATIENT_DETAIL.route}${it.id}")
+                                }
+                            )
+                            Spacer(modifier = Modifier.height(20.dp))
+                        }
                     }
                 }
             }

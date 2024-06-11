@@ -12,7 +12,7 @@ import com.mentalhealth.eifie.data.repository.HospitalDefaultRepository
 import com.mentalhealth.eifie.data.repository.MessageDefaultRepository
 import com.mentalhealth.eifie.data.repository.PatientDefaultRepository
 import com.mentalhealth.eifie.data.repository.PsychologistDefaultRepository
-import com.mentalhealth.eifie.data.repository.SupBotDefaultRepository
+import com.mentalhealth.eifie.data.repository.SupporterDefaultRepository
 import com.mentalhealth.eifie.data.repository.SurveyDefaultRepository
 import com.mentalhealth.eifie.data.repository.UserDefaultRepository
 import com.mentalhealth.eifie.domain.repository.AppointmentRepository
@@ -22,7 +22,7 @@ import com.mentalhealth.eifie.domain.repository.HospitalRepository
 import com.mentalhealth.eifie.domain.repository.MessageRepository
 import com.mentalhealth.eifie.domain.repository.PatientRepository
 import com.mentalhealth.eifie.domain.repository.PsychologistRepository
-import com.mentalhealth.eifie.domain.repository.SupBotRepository
+import com.mentalhealth.eifie.domain.repository.SupporterRepository
 import com.mentalhealth.eifie.domain.repository.SurveyRepository
 import com.mentalhealth.eifie.domain.repository.UserRepository
 import dagger.Module
@@ -66,8 +66,8 @@ object RepositoryModule {
     }
 
     @Provides
-    fun providesSupBotRepository(database: EDatabase): SupBotRepository {
-        return SupBotDefaultRepository(database = database)
+    fun providesSupBotRepository(database: EDatabase, preferences: EPreferences): SupporterRepository {
+        return SupporterDefaultRepository(database = database, preferences = preferences)
     }
 
     @Provides

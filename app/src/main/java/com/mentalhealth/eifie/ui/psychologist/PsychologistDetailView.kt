@@ -13,14 +13,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -45,11 +42,9 @@ import com.mentalhealth.eifie.ui.common.animation.EAnimation
 import com.mentalhealth.eifie.ui.common.button.CommonButton
 import com.mentalhealth.eifie.ui.common.photo.UserPhotoView
 import com.mentalhealth.eifie.ui.navigation.Router
-import com.mentalhealth.eifie.ui.theme.BlackGreen
 import com.mentalhealth.eifie.ui.theme.CustomWhite
 import com.mentalhealth.eifie.ui.theme.LightGray
 import com.mentalhealth.eifie.ui.theme.White90
-import com.mentalhealth.eifie.util.calculateAge
 import com.mentalhealth.eifie.util.getUserName
 
 @Composable
@@ -72,7 +67,7 @@ fun PsychologistDetailView(
                     value = patientId
                 )
                 navigate(Router.PSYCHOLOGIST_UPDATE.route) {
-                    popUpTo(Router.PSYCHOLOGIST_DETAIL.route) {
+                    popUpTo(navController.currentBackStackEntry?.destination?.route ?: "") {
                         saveState = false
                         inclusive = true
                     }

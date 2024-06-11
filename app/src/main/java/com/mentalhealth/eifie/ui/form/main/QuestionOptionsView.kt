@@ -31,7 +31,7 @@ fun QuestionOptionsView(
 ) {
 
     val selectedValue = remember { mutableIntStateOf(-1) }
-    val isSelectedOption: (QuestionOption) -> Boolean = { selectedValue.intValue == it.id }
+    val isSelectedOption: (QuestionOption) -> Boolean = { selectedValue.intValue == it.score }
     val onChangeState: (Int) -> Unit = {
         selectedValue.intValue = it
         onSelected(it)
@@ -44,7 +44,7 @@ fun QuestionOptionsView(
                 modifier = Modifier
                     .selectable(
                         selected = isSelectedOption(option),
-                        onClick = { onChangeState(option.id) },
+                        onClick = { onChangeState(option.score) },
                         role = Role.RadioButton
                     )
                     .padding(8.dp)

@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.mentalhealth.eifie.domain.entities.EResult
 import com.mentalhealth.eifie.domain.entities.Patient
 import com.mentalhealth.eifie.domain.usecases.GetPatientsUseCase
+import com.mentalhealth.eifie.ui.common.LazyViewModel
+import com.mentalhealth.eifie.ui.common.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -19,7 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PatientsViewModel @Inject constructor(
     private val getPatientsUseCase: GetPatientsUseCase
-): ViewModel() {
+): LazyViewModel() {
 
     private val _patients: MutableStateFlow<List<Patient>> = MutableStateFlow(listOf())
 
@@ -39,16 +41,23 @@ class PatientsViewModel @Inject constructor(
 
     private fun listPatients() = viewModelScope.launch {
         getPatientsUseCase.invoke()
-            .onStart {  }
+            .onStart { viewState.value = ViewState.Loading }
             .onEach {
                 when(it) {
-                    is EResult.Error -> _patients.value = listOf()
-                    is EResult.Success -> it.run {
-                        _patients.value = data
+                    is EResult.Error -> {
+                        _patients.value = listOf()
+                        viewState.value = ViewState.Error(it.error.message ?: "")
+                    }
+                    is EResult.Success -> {
+                        _patients.value = it.data
+                        viewState.value = ViewState.Success
                     }
                 }
             }
-            .catch { _patients.value = listOf() }
+            .catch {
+                _patients.value = listOf()
+                viewState.value = ViewState.Error(it.message ?: "")
+            }
             .launchIn(viewModelScope)
     }
 

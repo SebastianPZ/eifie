@@ -7,6 +7,7 @@ import com.mentalhealth.eifie.domain.repository.HospitalRepository
 import com.mentalhealth.eifie.domain.repository.MessageRepository
 import com.mentalhealth.eifie.domain.repository.PatientRepository
 import com.mentalhealth.eifie.domain.repository.PsychologistRepository
+import com.mentalhealth.eifie.domain.repository.SupporterRepository
 import com.mentalhealth.eifie.domain.repository.SurveyRepository
 import com.mentalhealth.eifie.domain.repository.UserRepository
 import com.mentalhealth.eifie.domain.usecases.AssignPsychologistUseCase
@@ -28,13 +29,17 @@ import com.mentalhealth.eifie.domain.usecases.LoginUseCase
 import com.mentalhealth.eifie.domain.usecases.LogoutUserUseCase
 import com.mentalhealth.eifie.domain.usecases.RegisterPsychologistUseCase
 import com.mentalhealth.eifie.domain.usecases.RegisterPatientUseCase
+import com.mentalhealth.eifie.domain.usecases.RetrieveSupporterUseCase
 import com.mentalhealth.eifie.domain.usecases.SendMessageUseCase
 import com.mentalhealth.eifie.domain.usecases.SaveUserInformationUseCase
 import com.mentalhealth.eifie.domain.usecases.ScheduleAppointmentUseCase
 import com.mentalhealth.eifie.domain.usecases.SearchPatientUseCase
+import com.mentalhealth.eifie.domain.usecases.SendSurveyAnswersUseCase
+import com.mentalhealth.eifie.domain.usecases.UpdateSupporterUseCase
 import com.mentalhealth.eifie.domain.usecases.UpdateUserInformationUseCase
 import com.mentalhealth.eifie.domain.usecases.UpdateUserPhotoUseCase
 import com.mentalhealth.eifie.domain.usecases.ValidateAssignCodeUseCase
+import com.mentalhealth.eifie.domain.usecases.ValidateSurveyUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -201,5 +206,32 @@ object UseCaseModule {
     fun providesSearchPatientUseCase(
         patientRepository: PatientRepository): SearchPatientUseCase {
         return SearchPatientUseCase(patientRepository = patientRepository)
+    }
+
+    @Provides
+    fun providesRetrieveSupporterUseCase(
+        supporterRepository: SupporterRepository,
+        userRepository: UserRepository): RetrieveSupporterUseCase {
+        return RetrieveSupporterUseCase(supporterRepository = supporterRepository, userRepository)
+    }
+
+    @Provides
+    fun providesUpdateSupporterUseCase(
+        supporterRepository: SupporterRepository): UpdateSupporterUseCase {
+        return UpdateSupporterUseCase(repository = supporterRepository)
+    }
+
+    @Provides
+    fun providesSendSurveyAnswersUseCase(
+        surveyRepository: SurveyRepository,
+        userRepository: UserRepository): SendSurveyAnswersUseCase {
+        return SendSurveyAnswersUseCase(surveyRepository = surveyRepository, userRepository = userRepository)
+    }
+
+    @Provides
+    fun providesValidateSurveyUseCase(
+        surveyRepository: SurveyRepository,
+        userRepository: UserRepository): ValidateSurveyUseCase {
+        return ValidateSurveyUseCase(surveyRepository = surveyRepository, userRepository = userRepository)
     }
 }

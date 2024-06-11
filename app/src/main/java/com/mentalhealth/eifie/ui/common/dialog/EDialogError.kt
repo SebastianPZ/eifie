@@ -98,6 +98,7 @@ fun EDialogError(
 fun EDialogError(
     title: String,
     message: String,
+    onSuccessEnabled: Boolean = true,
     onSuccessText: String = stringResource(id = R.string.retry),
     onCancelText: String  = "",
     onSuccess: () -> Unit = {},
@@ -144,28 +145,30 @@ fun EDialogError(
                     modifier = Modifier
                         .padding(vertical = 5.dp, horizontal = 16.dp)
                 )
-                OutlinedButton(
-                    onClick = {
-                        onSuccess.invoke()
-                        onDismissRequest.invoke()
-                    },
-                    border = BorderStroke(
-                        width = 1.dp,
-                        color = BlackGreen
-                    ),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Transparent
-                    ),
-                    modifier = Modifier
-                        .padding(top = 20.dp, start = 20.dp, end = 20.dp, bottom = 5.dp)
-                        .fillMaxWidth()
-                ) {
-                    Text(
-                        text = onSuccessText,
-                        color = BlackGreen,
+                if(onSuccessEnabled) {
+                    OutlinedButton(
+                        onClick = {
+                            onSuccess.invoke()
+                            onDismissRequest.invoke()
+                        },
+                        border = BorderStroke(
+                            width = 1.dp,
+                            color = BlackGreen
+                        ),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Transparent
+                        ),
                         modifier = Modifier
-                            .padding(5.dp)
-                    )
+                            .padding(top = 20.dp, start = 20.dp, end = 20.dp, bottom = 5.dp)
+                            .fillMaxWidth()
+                    ) {
+                        Text(
+                            text = onSuccessText,
+                            color = BlackGreen,
+                            modifier = Modifier
+                                .padding(5.dp)
+                        )
+                    }
                 }
                 Button(
                     onClick = {

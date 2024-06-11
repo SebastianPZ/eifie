@@ -10,8 +10,10 @@
     <string name="password">Contraseña</string>
     <string name="login_button">Iniciar Sesión</string>
     <string name="logout_button">Cerrar Sesión</string>
+    <string name="back_up_chats">Iniciar respaldo de chats</string>
     <string name="retry">Reintentar</string>
     <string name="go_back_login">Volver a inicio</string>
+    <string name="go_back_home">Volver a inicio</string>
     <string name="register_button">Registrarse</string>
     <string name="schedule">Agendar</string>
 
@@ -38,6 +40,7 @@
 
 
     <string name="name">Nombres</string>
+    <string name="name_support">Nombre</string>
     <string name="last_name">Apellidos</string>
     <string name="birth_date">Fecha de Nacimiento</string>
     <string name="hospital">Hospital</string>
@@ -74,4 +77,5 @@
     <string name="expire_in">Expira en %1$s</string>
     <string name="assign_code">Código de asignación</string>
     <string name="update">Actualizar</string>
+    <string name="msg_token_fmt">Token 1$s</string>
 </resources>

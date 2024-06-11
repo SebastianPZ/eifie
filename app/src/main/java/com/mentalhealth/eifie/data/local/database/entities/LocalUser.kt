@@ -8,9 +8,9 @@ import com.mentalhealth.eifie.domain.entities.Role
 
 @Entity
 data class LocalUser(
-    @PrimaryKey val uid: Long,
-    @ColumnInfo(name = "profileId") val profileId: Long,
-    @ColumnInfo(name = "psychologistAssigned") val psychologistAssigned: Long,
+    @PrimaryKey val profileId: Long,
+    val uid: Long,
+    val psychologistAssigned: Long,
     @ColumnInfo(name = "firstname") val firstName: String?,
     @ColumnInfo(name = "lastname") val lastName: String?,
     @ColumnInfo(name = "email") val email: String?,

@@ -183,10 +183,11 @@ fun ProfileDetail(
                                 label = item.label,
                                 onClick = {
                                     navController?.run {
-                                        currentBackStackEntry?.savedStateHandle?.set(
-                                            key = "user",
-                                            value = viewModel.user.uid
-                                        )
+                                        currentBackStackEntry?.savedStateHandle?.apply {
+                                            set(key = "user", value = viewModel.user.uid)
+                                            set(key = "psychologist", value = viewModel.user.psychologistAssigned)
+                                        }
+
                                         navController.navigate(item.value)
                                     }
                                 }

@@ -15,10 +15,14 @@ class EDefaultPreferences(
 ): EPreferences {
 
     override suspend fun <I> readPreference(key: Preferences.Key<I>): I? {
-        return context.dataStore.data
-            .map { preferences ->
-                preferences[key]
-            }.firstOrNull()
+        try {
+            return context.dataStore.data
+                .map { preferences ->
+                    preferences[key]
+                }.firstOrNull()
+        } catch (e: Exception) {
+            throw e
+        }
     }
 
     override suspend fun <I> savePreference(key: Preferences.Key<I>, value: I) {

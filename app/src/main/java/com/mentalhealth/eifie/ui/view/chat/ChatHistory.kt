@@ -77,19 +77,22 @@ fun ChatHistoryPreview() {
                 id = 0,
                 topic = "Perros",
                 lastMessage = "Gracias",
-                createdDate = LocalDateTime.now()
+                createdDate = LocalDateTime.now(),
+                calendarDate = "Hoy"
             ),
             ChatUI(
                 id = 0,
                 topic = "Perros",
                 lastMessage = "Gracias",
-                createdDate = LocalDateTime.now()
+                createdDate = LocalDateTime.now(),
+                calendarDate = "Ayer"
             ),
             ChatUI(
                 id = 0,
                 topic = "Perros",
                 lastMessage = "Gracias",
-                createdDate = LocalDateTime.now()
+                createdDate = LocalDateTime.now(),
+                calendarDate = "2 días"
             )
         )
     )

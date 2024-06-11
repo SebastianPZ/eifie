@@ -32,20 +32,24 @@ import androidx.navigation.NavHostController
 import com.mentalhealth.eifie.R
 import com.mentalhealth.eifie.ui.common.animation.EAnimation
 import com.mentalhealth.eifie.ui.common.button.CommonButton
+import com.mentalhealth.eifie.ui.common.dialog.EDialogError
 import com.mentalhealth.eifie.ui.common.layout.HeaderComponent
 import com.mentalhealth.eifie.ui.theme.CustomWhite
 import com.mentalhealth.eifie.ui.theme.White95
+import com.mentalhealth.eifie.util.ERR_SURVEY
+import com.mentalhealth.eifie.util.ERR_SURVEY_DONE
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SurveyView(
     navController: NavHostController?,
-    viewModel: FormViewModel?
+    viewModel: SurveyViewModel?
 ) {
 
     val formName = viewModel?.formName?.collectAsStateWithLifecycle()
     val formState = viewModel?.formState?.collectAsStateWithLifecycle()
+    val survey = viewModel?.survey?.collectAsStateWithLifecycle()
     val formQuestions = viewModel?.formQuestions?.collectAsStateWithLifecycle()
     val pagerState = rememberPagerState( pageCount = { ( formQuestions?.value?.size ?: 0) + 1 }) // 1 added bc form preview
 
@@ -93,15 +97,10 @@ fun SurveyView(
                         userScrollEnabled = false
                     ) {question ->
                         when(question) {
-                            0 -> Text(
-                                text = "Page: $question",
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(100.dp)
-                            )
+                            0 -> SurveyDataView(survey = survey?.value)
                             else -> QuestionOptionsView(
                                 options = formQuestions?.value!![question - 1].options,
-                                onSelected = { viewModel.saveQuestionAnswer(question - 1) }
+                                onSelected = { viewModel.saveQuestionAnswer(question, it) }
                             )
                         }
                     }
@@ -130,7 +129,7 @@ fun SurveyView(
                     }
                 }
                 when(formState?.value) {
-                    FormState.Loading -> EAnimation(
+                    is FormState.Loading -> EAnimation(
                         resource = R.raw.loading_animation,
                         animationModifier = Modifier
                             .size(150.dp),
@@ -138,6 +137,35 @@ fun SurveyView(
                             .fillMaxWidth()
                             .fillMaxHeight()
                             .background(color = White95)
+                    )
+                    is FormState.Success -> EAnimation(
+                        resource = R.raw.success_animation,
+                        iterations = 1,
+                        actionOnEnd = {
+                            navController?.popBackStack()
+                        },
+                        animationModifier = Modifier
+                            .size(250.dp),
+                        backgroundModifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight()
+                            .background(color = CustomWhite)
+                    )
+                    is FormState.Error -> EDialogError(
+                        title = ERR_SURVEY,
+                        message = (formState.value as FormState.Error).message,
+                        onCancelText = stringResource(id = R.string.go_back_home),
+                        onSuccess = { viewModel.registerQuestionsAnswers { navController?.popBackStack() } },
+                        onCancel = {  navController?.popBackStack() },
+                        onDismissRequest = {  }
+                    )
+                    is FormState.Done -> EDialogError(
+                        title = ERR_SURVEY_DONE,
+                        message = (formState.value as FormState.Done).message,
+                        onSuccessEnabled = false,
+                        onCancelText = stringResource(id = R.string.go_back_home),
+                        onCancel = { viewModel.initFormState() },
+                        onDismissRequest = {  navController?.popBackStack() }
                     )
                     else -> Unit
                 }

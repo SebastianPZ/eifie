@@ -1,8 +1,9 @@
 package com.mentalhealth.eifie.domain.entities
 
-data class SupBot(
+class Supporter(
     val id: Long? = null,
-    val name: String,
-    val config: String,
-    val photo: String? = null,
+    val user: Long = 0,
+    var name: String = "",
+    var config: String = "",
+    var photo: String? = null,
 )

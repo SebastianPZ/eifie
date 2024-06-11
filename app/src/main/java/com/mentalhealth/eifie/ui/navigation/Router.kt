@@ -25,6 +25,7 @@ enum class Router(val route: String) {
     PATIENTS("patients"),
     PATIENT_DETAIL("patients/"),
     CHAT_BOX("chat/chat-box/"),
+    CHAT_SUPPORT("chat/support/"),
     FORM("form/"),
     APPOINTMENT("appointment"),
     APPOINTMENT_REGISTER("appointment/register"),

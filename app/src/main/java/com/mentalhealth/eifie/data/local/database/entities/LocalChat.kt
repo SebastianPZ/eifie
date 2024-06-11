@@ -9,7 +9,7 @@ import java.time.LocalDateTime
 
 @Entity(foreignKeys = [ForeignKey(
     entity = LocalUser::class,
-    parentColumns = arrayOf("uid"),
+    parentColumns = arrayOf("profileId"),
     childColumns = arrayOf("user"),
     onDelete = ForeignKey.CASCADE)])
 data class LocalChat(

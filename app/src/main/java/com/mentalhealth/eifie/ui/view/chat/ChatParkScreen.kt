@@ -8,8 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.mentalhealth.eifie.R
-import com.mentalhealth.eifie.domain.entities.SupBot
 import com.mentalhealth.eifie.ui.navigation.Router
 import com.mentalhealth.eifie.ui.theme.CustomWhite
 import com.mentalhealth.eifie.ui.theme.DarkGreen
@@ -33,6 +32,7 @@ fun ChatParkScreen(
     viewModel: ChatParkViewModel?
 ) {
     val chatsHistory = viewModel?.chatsHistory?.collectAsStateWithLifecycle()
+    val supporter = viewModel?.supporter?.collectAsStateWithLifecycle()
 
     Box(
         modifier = Modifier
@@ -47,7 +47,9 @@ fun ChatParkScreen(
                 options = {
                     Row {
                         SearchButton { }
-                        MoreOptionsButton { }
+                        MoreOptionsButton {
+                            navController?.navigate(Router.CHAT_SUPPORT.route)
+                        }
 
                     }
                 },
@@ -59,9 +61,9 @@ fun ChatParkScreen(
                 modifier = Modifier.weight(1f)
             )
             ChatBotItem(
-                supBot = SupBot(id = 0, name = "Inami", config = ""),
+                supBot = supporter?.value,
                 modifier = Modifier.padding(bottom = 25.dp),
-                onNewMessage = { viewModel?.saveBot() }
+                onNewMessage = { viewModel?.saveChat() }
             )
         }
 
@@ -88,7 +90,7 @@ private fun MoreOptionsButton(onClick: () -> Unit) {
         onClick = onClick
     ) {
         Icon(
-            imageVector = Icons.Filled.MoreVert,
+            imageVector = Icons.Filled.Settings,
             tint = DarkGreen,
             contentDescription = "",
             modifier = Modifier.size(30.dp)

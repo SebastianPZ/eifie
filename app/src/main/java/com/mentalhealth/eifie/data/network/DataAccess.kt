@@ -19,12 +19,22 @@ suspend inline fun <I, O> performApiCall(
 ): EResult<O, Exception> {
     val response = call()
     return if (response.isSuccessful && response.body() != null) {
-        when(val result = deserialize(response.body())) {
-            null -> EResult.Error(ApiException(
-                errorCode = (response.body() as BaseResponse<*>).errorCode,
-                message = (response.body() as BaseResponse<*>).errorMessage)
-            )
-            else -> EResult.Success(result)
+        when {
+            (response.body() as BaseResponse<*>).errorCode?.let { it > 0 } == true -> {
+                EResult.Error(ApiException(
+                    errorCode = (response.body() as BaseResponse<*>).errorCode,
+                    message = (response.body() as BaseResponse<*>).errorMessage)
+                )
+            }
+            else -> {
+                when(val result = deserialize(response.body())) {
+                    null -> EResult.Error(ApiException(
+                        errorCode = (response.body() as BaseResponse<*>).errorCode,
+                        message = (response.body() as BaseResponse<*>).errorMessage)
+                    )
+                    else -> EResult.Success(result)
+                }
+            }
         }
     } else EResult.Error(HttpException(response))
 }
@@ -37,12 +47,22 @@ suspend inline fun <I, O> performApiCall(
     val response = call()
     return if (response.isSuccessful && response.body() != null) {
         adminHeaders(response.headers())
-        when(val result = deserialize(response.body())) {
-            null -> EResult.Error(ApiException(
-                errorCode = (response.body() as BaseResponse<*>).errorCode,
-                message = (response.body() as BaseResponse<*>).errorMessage)
-            )
-            else -> EResult.Success(result)
+        when {
+            (response.body() as BaseResponse<*>).errorCode?.let { it > 0 } == true -> {
+                EResult.Error(ApiException(
+                    errorCode = (response.body() as BaseResponse<*>).errorCode,
+                    message = (response.body() as BaseResponse<*>).errorMessage)
+                )
+            }
+            else -> {
+                when(val result = deserialize(response.body())) {
+                    null -> EResult.Error(ApiException(
+                        errorCode = (response.body() as BaseResponse<*>).errorCode,
+                        message = (response.body() as BaseResponse<*>).errorMessage)
+                    )
+                    else -> EResult.Success(result)
+                }
+            }
         }
     } else EResult.Error(EHttpException(response))
 }

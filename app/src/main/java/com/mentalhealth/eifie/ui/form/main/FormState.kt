@@ -5,6 +5,8 @@ sealed class FormState {
     object InProgress: FormState()
     object LastQuestion: FormState()
     object Loading: FormState()
-    object Error: FormState()
+    data class Success(val message: String): FormState()
+    data class Error(val message: String): FormState()
+    data class Done(val message: String): FormState()
 
 }

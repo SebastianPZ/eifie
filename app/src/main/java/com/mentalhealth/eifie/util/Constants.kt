@@ -8,6 +8,8 @@ import java.util.regex.Pattern
 
 const val ERR_LOGIN = "Error de inicio de sesión."
 const val ERR_REGISTER = "Error de registro."
+const val ERR_SURVEY = "Error en envío de formulario."
+const val ERR_SURVEY_DONE = "Formulario completo."
 const val ERR_SAVE_USER_SESSION = "Hubo un error durante el inicio de sesión."
 const val TRY_AGAIN = "Por favor vuelva a intentar."
 

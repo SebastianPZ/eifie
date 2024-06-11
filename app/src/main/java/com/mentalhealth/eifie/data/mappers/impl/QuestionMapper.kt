@@ -29,7 +29,7 @@ object QuestionMapper: Mapper<QuestionResponse, Question> {
                 else answer.split(".")
 
                 QuestionOption(
-                    id = option.first().toInt(),
+                    score = option.first().toInt(),
                     text = option.last()
                 )
             }

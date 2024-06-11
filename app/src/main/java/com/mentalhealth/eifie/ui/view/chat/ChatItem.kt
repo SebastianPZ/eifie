@@ -61,7 +61,7 @@ fun ChatItem(
                 }
             }
             Text(
-                text = chat.createdDate.toString(),
+                text = chat.calendarDate,
                 color = LightGray,
                 fontSize = 14.sp,
                 modifier = Modifier.padding(top = 8.dp)
@@ -73,5 +73,5 @@ fun ChatItem(
 @Preview
 @Composable
 fun ChatItemPreview() {
-    ChatItem(chat = ChatUI(1, "Perros", "Gracias", createdDate = LocalDateTime.now()))
+    ChatItem(chat = ChatUI(1, "Perros", "Gracias", createdDate = LocalDateTime.now(), calendarDate = "Hoy"))
 }

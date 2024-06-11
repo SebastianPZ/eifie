@@ -2,6 +2,7 @@ package com.mentalhealth.eifie.data.mock
 
 import com.mentalhealth.eifie.data.models.response.QuestionResponse
 import com.mentalhealth.eifie.domain.entities.Notification
+import com.mentalhealth.eifie.domain.entities.Survey
 import com.mentalhealth.eifie.ui.navigation.Router
 import okhttp3.Route
 
@@ -10,17 +11,20 @@ object FormFakeData {
     fun getNotificationsData(): List<Notification> {
         return listOf(
             Notification(
-                title = "Formulario semanal",
+                title = "Formulario diario",
                 content = "",
                 action = Router.FORM.route
             )
         )
     }
 
-    fun getFormData(): Notification {
-        return Notification(
-            title = "Formulario semanal",
-            content = ""
+    fun getFormData(): Survey {
+        return Survey(
+            title = "Formulario diario",
+            description = "Formulario elaborado para seguimiento diario de paciente.",
+            questions = 10,
+            minimumTime = 3,
+            maxTime = 5
         )
     }
 

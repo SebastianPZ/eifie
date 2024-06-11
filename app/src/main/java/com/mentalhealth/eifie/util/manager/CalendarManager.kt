@@ -33,7 +33,7 @@ data class MonthInfo(
 class CalendarManager(private val date: Date = Date()) {
     private val timeZone = TimeZone.getTimeZone("America/Lima")
     private val locale = Locale("es", "PE")
-    private val calendar = Calendar.getInstance(timeZone, locale)
+    val calendar = Calendar.getInstance(timeZone, locale)
 
     init {
         calendar.time = date

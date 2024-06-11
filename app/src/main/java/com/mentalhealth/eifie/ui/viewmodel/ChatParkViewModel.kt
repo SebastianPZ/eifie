@@ -2,7 +2,8 @@ package com.mentalhealth.eifie.ui.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import com.mentalhealth.eifie.domain.entities.EResult
-import com.mentalhealth.eifie.domain.usecases.CreateSupportBotUseCase
+import com.mentalhealth.eifie.domain.entities.Supporter
+import com.mentalhealth.eifie.domain.usecases.RetrieveSupporterUseCase
 import com.mentalhealth.eifie.domain.usecases.GetUserChatsUseCase
 import com.mentalhealth.eifie.domain.usecases.SaveChatUseCase
 import com.mentalhealth.eifie.ui.common.LazyViewModel
@@ -24,7 +25,7 @@ import javax.inject.Inject
 class ChatParkViewModel @Inject constructor(
     private val getUserChatsUseCase: GetUserChatsUseCase,
     private val saveChatUseCase: SaveChatUseCase,
-    private val saveSupportBotUseCase: CreateSupportBotUseCase
+    private val retrieveSupporterUseCase: RetrieveSupporterUseCase
 ): LazyViewModel() {
 
     private val _chatsHistory: MutableStateFlow<List<ChatUI>> = MutableStateFlow(listOf())
@@ -35,18 +36,31 @@ class ChatParkViewModel @Inject constructor(
         initialValue = listOf()
     )
 
+    private val _supporter: MutableStateFlow<Supporter> = MutableStateFlow(Supporter())
+
+    val supporter = _supporter.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000, 1),
+        initialValue = Supporter()
+    )
+
     init {
-        initChats()
+        initChatsData()
     }
 
-    fun saveBot() = viewModelScope.launch {
-        saveSupportBotUseCase.invoke("")
+    private fun initChatsData() = viewModelScope.launch {
+        saveSupporter().join()
+        initChats().join()
+    }
+
+    private fun saveSupporter() = viewModelScope.launch {
+        retrieveSupporterUseCase.invoke()
             .onStart { viewState.value = ViewState.Success }
             .onEach { result ->
                 when(result) {
                     is EResult.Error -> viewState.value = ViewState.Success
                     is EResult.Success -> result.run {
-                        saveChat(data.id ?: 0)
+                        _supporter.value = data
                         viewState.value = ViewState.Success
                     }
                 }
@@ -55,8 +69,8 @@ class ChatParkViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
-    private fun saveChat(supBot: Long) = viewModelScope.launch {
-        saveChatUseCase.invoke(supBot)
+    fun saveChat() = viewModelScope.launch {
+        saveChatUseCase.invoke(_supporter.value.id ?: 0)
             .onStart { viewState.value = ViewState.Loading }
             .onEach { result ->
                 when(result) {

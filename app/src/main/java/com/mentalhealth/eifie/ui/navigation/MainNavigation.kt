@@ -13,7 +13,7 @@ import com.mentalhealth.eifie.ui.view.appointment.register.AppointmentRegisterVi
 import com.mentalhealth.eifie.ui.view.ParkScreen
 import com.mentalhealth.eifie.ui.view.chatbox.ChatScreen
 import com.mentalhealth.eifie.ui.form.main.SurveyView
-import com.mentalhealth.eifie.ui.form.main.FormViewModel
+import com.mentalhealth.eifie.ui.form.main.SurveyViewModel
 import com.mentalhealth.eifie.ui.profile.detail.ProfileDetail
 import com.mentalhealth.eifie.ui.profile.detail.ProfileDetailViewModel
 import com.mentalhealth.eifie.ui.profile.edit.EditProfilePhoto
@@ -24,10 +24,12 @@ import com.mentalhealth.eifie.ui.register.psychologist.RegisterPsychologistView
 import com.mentalhealth.eifie.ui.view.appointment.register.AppointmentRegisterViewModel
 import com.mentalhealth.eifie.ui.view.appointment.register.SearchPatientView
 import com.mentalhealth.eifie.ui.view.patient.PatientDetailView
+import com.mentalhealth.eifie.ui.view.support.SupportSettingsView
 import com.mentalhealth.eifie.ui.viewmodel.ParkViewModel
 import com.mentalhealth.eifie.ui.viewmodel.ChatViewModel
 import com.mentalhealth.eifie.ui.viewmodel.PatientDetailViewModel
 import com.mentalhealth.eifie.ui.viewmodel.SearchPatientViewModel
+import com.mentalhealth.eifie.ui.viewmodel.SupportSettingsViewModel
 
 @Composable
 fun MainNavigation() {
@@ -49,7 +51,7 @@ fun MainNavigation() {
                 val arguments = requireNotNull(it.arguments)
                 SurveyView(
                     navController = navController,
-                    viewModel = hiltViewModel<FormViewModel, FormViewModel.FormViewModelFactory>(
+                    viewModel = hiltViewModel<SurveyViewModel, SurveyViewModel.FormViewModelFactory>(
                         creationCallback = { factory -> factory.create(id = arguments.getInt("form")) })
                 )
             }
@@ -67,6 +69,15 @@ fun MainNavigation() {
             }
 
             composable(
+                route = Router.CHAT_SUPPORT.route
+            ) {
+                SupportSettingsView(
+                    navController = navController,
+                    viewModel = hiltViewModel<SupportSettingsViewModel>()
+                )
+            }
+
+            composable(
                 route = "${Router.PATIENT_DETAIL.route}{patient}",
                 arguments = listOf(navArgument("patient") { type = NavType.LongType })
             ) {
@@ -77,7 +88,6 @@ fun MainNavigation() {
                         creationCallback = { factory -> factory.create(patientId = arguments.getLong("patient")) })
                 )
             }
-
 
             composable(
                 route = Router.APPOINTMENT_REGISTER.route,

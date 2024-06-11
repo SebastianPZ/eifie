@@ -1,5 +1,6 @@
 package com.mentalhealth.eifie.data.network.apidi
 
+import com.mentalhealth.eifie.data.models.request.AnswerRequest
 import com.mentalhealth.eifie.data.models.request.AppointmentRequest
 import com.mentalhealth.eifie.data.models.request.LoginRequest
 import com.mentalhealth.eifie.data.models.request.PatientRequest
@@ -111,5 +112,17 @@ interface ApiService {
     @GET("/survey/questions")
     suspend fun surveyQuestions(
         @Header("Authorization") token: String
+    ): Response<BaseResponse<List<QuestionResponse>>>
+
+    @POST("/survey")
+    suspend fun surveyAnswers(
+        @Header("Authorization") token: String,
+        @Body request: AnswerRequest
+    ): Response<BaseResponse<List<QuestionResponse>>>
+
+    @GET("/survey/validateToday")
+    suspend fun surveyValidate(
+        @Header("Authorization") token: String,
+        @Query("patientId") patientId: Long
     ): Response<BaseResponse<List<QuestionResponse>>>
 }

@@ -57,7 +57,7 @@ fun NotificationItem(
 fun FormItemPreview() {
     NotificationItem(
         notification = Notification(
-            title = "Formulario semanal",
+            title = "Formulario diario",
             content = ""
         ),
         onClick = {}

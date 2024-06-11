@@ -19,13 +19,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mentalhealth.eifie.R
-import com.mentalhealth.eifie.domain.entities.SupBot
+import com.mentalhealth.eifie.domain.entities.Supporter
 import com.mentalhealth.eifie.ui.common.photo.UserPhotoView
 import com.mentalhealth.eifie.ui.theme.BlackGreen
 
 @Composable
 fun ChatBotItem(
-    supBot: SupBot,
+    supBot: Supporter?,
     onNewMessage: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -53,7 +53,7 @@ fun ChatBotItem(
                     fontSize = 14.sp
                 )
                 Text(
-                    text = supBot.name,
+                    text = supBot?.name ?: "",
                     fontSize = 16.sp,
                     color = BlackGreen,
                     modifier = Modifier.padding(start = 15.dp)
@@ -80,7 +80,7 @@ fun ChatBotItem(
 @Preview
 @Composable
 fun ChatBotItemPreview() {
-    ChatBotItem(supBot = SupBot(
+    ChatBotItem(supBot = Supporter(
         id = 0,
         name = "Carlos",
         config = ""),
