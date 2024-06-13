@@ -70,7 +70,7 @@ class ChatParkViewModel @Inject constructor(
     }
 
     fun saveChat() = viewModelScope.launch {
-        saveChatUseCase.invoke(_supporter.value.id ?: 0)
+        saveChatUseCase.invoke(_supporter.value)
             .onStart { viewState.value = ViewState.Loading }
             .onEach { result ->
                 when(result) {

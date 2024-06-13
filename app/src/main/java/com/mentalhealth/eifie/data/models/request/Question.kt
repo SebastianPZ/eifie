@@ -2,7 +2,7 @@ package com.mentalhealth.eifie.data.models.request
 
 data class Question(
     val model: String = "gpt-3.5-turbo",
-    val messages:List<Message>
+    val messages: List<Message>
 )
 data class Message(
     val role: String,

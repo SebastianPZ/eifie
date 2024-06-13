@@ -13,6 +13,22 @@ import retrofit2.HttpException
 import retrofit2.Response
 import java.io.File
 
+suspend inline fun <I, O> performOpenAICall(
+    crossinline call: suspend() -> Response<I>,
+    crossinline deserialize: (I?) -> O?,
+): EResult<O, Exception> {
+    val response = call()
+    return if (response.isSuccessful && response.body() != null) {
+        when(val result = deserialize(response.body())) {
+            null -> EResult.Error(ApiException(
+                errorCode = (response.body() as BaseResponse<*>).errorCode,
+                message = (response.body() as BaseResponse<*>).errorMessage)
+            )
+            else -> EResult.Success(result)
+        }
+    } else EResult.Error(HttpException(response))
+}
+
 suspend inline fun <I, O> performApiCall(
     crossinline call: suspend() -> Response<I>,
     crossinline deserialize: (I?) -> O?,

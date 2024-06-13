@@ -9,7 +9,7 @@ import com.mentalhealth.eifie.data.local.database.entities.LocalChat
 @Dao
 interface ChatDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(vararg chat: LocalChat)
+    suspend fun insert(chat: LocalChat): Long
     @Query("SELECT * FROM localchat WHERE id = :id")
     fun findById(id: Long): LocalChat
 

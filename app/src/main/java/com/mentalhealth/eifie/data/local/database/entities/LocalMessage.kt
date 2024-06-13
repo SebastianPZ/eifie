@@ -15,6 +15,7 @@ import java.time.LocalDateTime
 data class LocalMessage(
     @PrimaryKey(autoGenerate = true) val id: Long? = null,
     @ColumnInfo(name = "text") val text: String,
+    @ColumnInfo(name = "role") val role: String,
     @ColumnInfo(name = "chat") val chat: Long,
     @ColumnInfo(name = "send_date") val sendDate: LocalDateTime,
     @ColumnInfo(name = "from_me") val fromMe: Boolean

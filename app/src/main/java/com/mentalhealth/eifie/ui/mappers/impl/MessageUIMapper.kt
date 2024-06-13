@@ -17,6 +17,7 @@ object MessageUIMapper: Mapper<MessageUI, Message> {
     override fun mapToEntity(model: MessageUI): Message {
         return Message(
             chat = model.chat,
+            role = "user",
             text = model.content,
             fromMe = model.isFromMe,
             sendDate = model.sendDate

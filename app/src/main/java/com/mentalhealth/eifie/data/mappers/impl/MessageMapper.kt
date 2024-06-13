@@ -10,6 +10,7 @@ object MessageMapper: Mapper<LocalMessage, Message> {
             text = entity.text,
             chat = entity.chat,
             sendDate = entity.sendDate,
+            role = entity.role,
             fromMe = entity.fromMe
         )
     }
@@ -18,6 +19,7 @@ object MessageMapper: Mapper<LocalMessage, Message> {
         return Message(
             text = model.text,
             chat = model.chat,
+            role = model.role,
             sendDate = model.sendDate,
             fromMe = model.fromMe
         )

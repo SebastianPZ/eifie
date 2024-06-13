@@ -9,7 +9,18 @@ import java.util.Locale
 
 object AppointmentMapper: Mapper<List<AppointmentResponse>, List<Appointment>> {
     override fun mapFromEntity(entity: List<Appointment>): List<AppointmentResponse> {
-        TODO("Not yet implemented")
+        return entity.map { appointment ->
+            AppointmentResponse(
+                appointmentId = appointment.appointmentId,
+                patientFirstName = appointment.patientFirstName,
+                patientLastName = appointment.patientLastName,
+                psychologistFirstName = appointment.psychologistFirstName,
+                psychologistLastName = appointment.psychologistLastName,
+                status = appointment.status,
+                date = SimpleDateFormat("yyyy-MM-dd", Locale("es", "PE")).format(appointment.date),
+                time = appointment.time
+            )
+        }
     }
 
     override fun mapToEntity(model: List<AppointmentResponse>): List<Appointment> {

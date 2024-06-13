@@ -1,10 +1,8 @@
 package com.mentalhealth.eifie.data.mock
 
-import com.mentalhealth.eifie.data.models.response.QuestionResponse
 import com.mentalhealth.eifie.domain.entities.Notification
 import com.mentalhealth.eifie.domain.entities.Survey
 import com.mentalhealth.eifie.ui.navigation.Router
-import okhttp3.Route
 
 object FormFakeData {
 

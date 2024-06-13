@@ -20,13 +20,12 @@ class ChatDefaultRepository @Inject constructor(
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ChatRepository {
     private val chatDao = database.chatDao()
-    override suspend fun saveChat(chat: Chat): EResult<Boolean, Exception> = withContext(dispatcher) {
+    override suspend fun saveChat(chat: Chat): EResult<Long, Exception> = withContext(dispatcher) {
         try {
             val uId = preferences.readPreference(userPreferences) ?: 0
-            chatDao.insertAll(ChatMapper.mapFromEntity(chat).apply {
+            EResult.Success(chatDao.insert(ChatMapper.mapFromEntity(chat).apply {
                 user = uId
-            })
-            EResult.Success(true)
+            }))
         } catch (e: Exception) {
             EResult.Error(e)
         }

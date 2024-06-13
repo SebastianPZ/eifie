@@ -2,6 +2,7 @@ package com.mentalhealth.eifie.ui.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
+import com.mentalhealth.eifie.data.models.request.OpenAIRole
 import com.mentalhealth.eifie.domain.entities.EResult
 import com.mentalhealth.eifie.domain.usecases.GetChatMessagesUseCase
 import com.mentalhealth.eifie.domain.usecases.SendMessageUseCase
@@ -47,7 +48,9 @@ class ChatViewModel @AssistedInject constructor(
             .onEach { result ->
                 when(result) {
                     is EResult.Success -> result.run {
-                        _messages.value = this.data.map { MessageUIMapper.mapFromEntity(it) }
+                        _messages.value = this.data.filter { it.role != OpenAIRole.SYSTEM.key  }.map {
+                            MessageUIMapper.mapFromEntity(it)
+                        }
                     }
                     is EResult.Error -> result.run { viewState.value = ViewState.Error(error.message ?: "") }
                 }

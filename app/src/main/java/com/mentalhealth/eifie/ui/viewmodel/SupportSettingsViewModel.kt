@@ -4,7 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.mentalhealth.eifie.domain.entities.EResult
 import com.mentalhealth.eifie.domain.entities.Supporter
 import com.mentalhealth.eifie.domain.usecases.RetrieveSupporterUseCase
-import com.mentalhealth.eifie.domain.usecases.UpdateSupporterUseCase
+import com.mentalhealth.eifie.domain.usecases.UpdateSupporterNameUseCase
 import com.mentalhealth.eifie.ui.common.LazyViewModel
 import com.mentalhealth.eifie.ui.common.ViewState
 import com.mentalhealth.eifie.ui.profile.UserPhoto
@@ -22,7 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SupportSettingsViewModel @Inject constructor(
     private val retrieveSupporterUseCase: RetrieveSupporterUseCase,
-    private val updateSupporterUseCase: UpdateSupporterUseCase
+    private val updateSupporterNameUseCase: UpdateSupporterNameUseCase
 ): LazyViewModel() {
 
     private val _supportPhoto: MutableStateFlow<UserPhoto?> = MutableStateFlow(null)
@@ -76,10 +76,14 @@ class SupportSettingsViewModel @Inject constructor(
     }
 
     private fun updateSupporter(name: String? = null, photo: String? = null) = viewModelScope.launch {
-        name?.let { supporter.name = it }
+        var includeName = false
+        name?.let {
+            supporter.name = it
+            includeName = true
+        }
         photo?.let { supporter.photo = it }
 
-        updateSupporterUseCase.invoke(supporter)
+        updateSupporterNameUseCase.invoke(supporter, includeName)
             .onStart { viewState.value = ViewState.Loading }
             .onEach {
                 when(it) {

@@ -30,12 +30,13 @@ import com.mentalhealth.eifie.domain.usecases.LogoutUserUseCase
 import com.mentalhealth.eifie.domain.usecases.RegisterPsychologistUseCase
 import com.mentalhealth.eifie.domain.usecases.RegisterPatientUseCase
 import com.mentalhealth.eifie.domain.usecases.RetrieveSupporterUseCase
+import com.mentalhealth.eifie.domain.usecases.SaveChatUseCase
 import com.mentalhealth.eifie.domain.usecases.SendMessageUseCase
 import com.mentalhealth.eifie.domain.usecases.SaveUserInformationUseCase
 import com.mentalhealth.eifie.domain.usecases.ScheduleAppointmentUseCase
 import com.mentalhealth.eifie.domain.usecases.SearchPatientUseCase
 import com.mentalhealth.eifie.domain.usecases.SendSurveyAnswersUseCase
-import com.mentalhealth.eifie.domain.usecases.UpdateSupporterUseCase
+import com.mentalhealth.eifie.domain.usecases.UpdateSupporterNameUseCase
 import com.mentalhealth.eifie.domain.usecases.UpdateUserInformationUseCase
 import com.mentalhealth.eifie.domain.usecases.UpdateUserPhotoUseCase
 import com.mentalhealth.eifie.domain.usecases.ValidateAssignCodeUseCase
@@ -217,8 +218,10 @@ object UseCaseModule {
 
     @Provides
     fun providesUpdateSupporterUseCase(
-        supporterRepository: SupporterRepository): UpdateSupporterUseCase {
-        return UpdateSupporterUseCase(repository = supporterRepository)
+        supporterRepository: SupporterRepository,
+        userRepository: UserRepository
+    ): UpdateSupporterNameUseCase {
+        return UpdateSupporterNameUseCase(repository = supporterRepository, userRepository = userRepository)
     }
 
     @Provides
@@ -233,5 +236,13 @@ object UseCaseModule {
         surveyRepository: SurveyRepository,
         userRepository: UserRepository): ValidateSurveyUseCase {
         return ValidateSurveyUseCase(surveyRepository = surveyRepository, userRepository = userRepository)
+    }
+
+    @Provides
+    fun providesSaveChatUseCase(
+        repository: ChatRepository,
+        messageRepository: MessageRepository
+    ): SaveChatUseCase {
+        return SaveChatUseCase(repository = repository, messageRepository = messageRepository)
     }
 }

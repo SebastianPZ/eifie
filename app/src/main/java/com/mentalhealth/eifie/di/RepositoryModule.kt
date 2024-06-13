@@ -10,6 +10,7 @@ import com.mentalhealth.eifie.data.repository.AuthenticationDefaultRepository
 import com.mentalhealth.eifie.data.repository.ChatDefaultRepository
 import com.mentalhealth.eifie.data.repository.HospitalDefaultRepository
 import com.mentalhealth.eifie.data.repository.MessageDefaultRepository
+import com.mentalhealth.eifie.data.repository.NotificationDefaultRepository
 import com.mentalhealth.eifie.data.repository.PatientDefaultRepository
 import com.mentalhealth.eifie.data.repository.PsychologistDefaultRepository
 import com.mentalhealth.eifie.data.repository.SupporterDefaultRepository
@@ -20,6 +21,7 @@ import com.mentalhealth.eifie.domain.repository.AuthenticationRepository
 import com.mentalhealth.eifie.domain.repository.ChatRepository
 import com.mentalhealth.eifie.domain.repository.HospitalRepository
 import com.mentalhealth.eifie.domain.repository.MessageRepository
+import com.mentalhealth.eifie.domain.repository.NotificationRepository
 import com.mentalhealth.eifie.domain.repository.PatientRepository
 import com.mentalhealth.eifie.domain.repository.PsychologistRepository
 import com.mentalhealth.eifie.domain.repository.SupporterRepository
@@ -61,8 +63,8 @@ object RepositoryModule {
     }
 
     @Provides
-    fun providesMessageRepository(database: EDatabase, api: OpenAIService): MessageRepository {
-        return MessageDefaultRepository(database = database, api = api)
+    fun providesMessageRepository(database: EDatabase, api: OpenAIService, preferences: EPreferences): MessageRepository {
+        return MessageDefaultRepository(database = database, api = api, preferences = preferences)
     }
 
     @Provides
@@ -84,4 +86,13 @@ object RepositoryModule {
     fun providesSurveyRepository(api: ApiService, preferences: EPreferences): SurveyRepository {
         return SurveyDefaultRepository(api = api, preferences = preferences)
     }
+
+    @Provides
+    fun providesNotificationRepository(
+        @ApplicationContext context: Context,
+        preferences: EPreferences,
+        database: EDatabase): NotificationRepository {
+        return NotificationDefaultRepository(context = context, preferences, database)
+    }
+
 }

@@ -1,10 +1,15 @@
 package com.mentalhealth.eifie.ui.viewmodel
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewModelScope
 import com.mentalhealth.eifie.domain.entities.EResult
 import com.mentalhealth.eifie.domain.entities.Notification
 import com.mentalhealth.eifie.domain.entities.Role
 import com.mentalhealth.eifie.domain.entities.User
+import com.mentalhealth.eifie.domain.usecases.GetAppointmentNotificationsUseCase
 import com.mentalhealth.eifie.domain.usecases.GetNotificationsUseCase
 import com.mentalhealth.eifie.domain.usecases.GetUserInformationUseCase
 import com.mentalhealth.eifie.ui.common.LazyViewModel
@@ -23,7 +28,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getUserInformationUseCase: GetUserInformationUseCase,
-    private val getNotificationsUseCase: GetNotificationsUseCase
+    private val getNotificationsUseCase: GetNotificationsUseCase,
+    private val getAppointmentNotificationsUseCase: GetAppointmentNotificationsUseCase
 ): LazyViewModel() {
 
     private val _userRole: MutableStateFlow<Role> = MutableStateFlow(Role.PATIENT)
@@ -82,6 +88,16 @@ class HomeViewModel @Inject constructor(
 
             }.onEach {
                 _notifications.value = it
+            }.launchIn(viewModelScope)
+    }
+
+    fun getAppointmentNotifications(withPermission: Boolean = false) = viewModelScope.launch {
+
+        getAppointmentNotificationsUseCase.invoke(withPermission)
+            .onStart {
+
+            }.onEach {
+
             }.launchIn(viewModelScope)
     }
 

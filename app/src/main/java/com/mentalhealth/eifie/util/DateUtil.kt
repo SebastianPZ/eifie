@@ -15,6 +15,23 @@ internal fun Long.toDateFormat(dateFormat: String = "yyyy-MM-dd"): String {
     return formatter.format(Date(this))
 }
 
+internal fun Date.toDateTimeFormat(dateFormat: String = "yyyy-MM-dd HH:mm"): String {
+    val formatter = SimpleDateFormat(dateFormat, Locale("es", "PE"))
+    formatter.timeZone = TimeZone.getTimeZone("America/Lima")
+    return formatter.format(this)
+}
+
+internal fun Date.toTimeFormat(dateFormat: String = "HH:mm"): String {
+    val formatter = SimpleDateFormat(dateFormat, Locale("es", "PE"))
+    formatter.timeZone = TimeZone.getTimeZone("America/Lima")
+    return formatter.format(this)
+}
+
+internal fun Date.getFormattedDate(): String {
+    val dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale("es", "PE"))
+    return dateFormatter.format(this)
+}
+
 internal fun Date.compareWith(dateToCompare: Date, locale: Locale = Locale("es", "PE")): Boolean {
     val dateFormatter = SimpleDateFormat("yyyy-MM-dd", locale)
     return dateFormatter.format(this) == dateFormatter.format(dateToCompare)
