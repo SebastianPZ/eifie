@@ -54,18 +54,16 @@ class AppointmentRegisterViewModel @Inject constructor(
     private fun registerAppointment() = viewModelScope.launch {
         scheduleAppointment.invoke(appointment)
             .onStart { viewState.value = ViewState.Loading }
-            .onEach { handleScheduleAppointmentResult(it) }
+            .onEach {
+                when(it) {
+                    is EResult.Error -> it.run {
+                        viewState.value = ViewState.Error(error.message ?: ERR_REGISTER)
+                    }
+                    is EResult.Success -> viewState.value = ViewState.Success
+                }
+            }
             .catch { viewState.value = ViewState.Error(ERR_REGISTER) }
             .launchIn(viewModelScope)
-    }
-
-    private fun handleScheduleAppointmentResult(result: EResult<Appointment, Exception>) {
-        when(result) {
-            is EResult.Error -> result.run {
-                viewState.value = ViewState.Error(error.message ?: ERR_REGISTER)
-            }
-            is EResult.Success -> viewState.value = ViewState.Success
-        }
     }
 
 }

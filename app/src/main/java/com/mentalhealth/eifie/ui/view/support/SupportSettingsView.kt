@@ -84,7 +84,7 @@ fun SupportSettingsView(
         IconButton(
             onClick = {
                 navController?.run {
-                    previousBackStackEntry?.savedStateHandle?.set("changed", true)
+                    previousBackStackEntry?.savedStateHandle?.set("supporter", supportName?.value)
                     navController.popBackStack()
                 }
             },

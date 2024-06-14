@@ -14,6 +14,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,11 +29,16 @@ import com.mentalhealth.eifie.ui.viewmodel.ChatParkViewModel
 
 @Composable
 fun ChatParkScreen(
+    supporterName: String?,
     navController: NavHostController?,
     viewModel: ChatParkViewModel?
 ) {
     val chatsHistory = viewModel?.chatsHistory?.collectAsStateWithLifecycle()
     val supporter = viewModel?.supporter?.collectAsStateWithLifecycle()
+
+    LaunchedEffect(supporterName) {
+        viewModel?.saveSupporter()
+    }
 
     Box(
         modifier = Modifier
@@ -104,6 +110,6 @@ fun ChatParkPreview() {
     Surface (
         color = CustomWhite
     ) {
-        ChatParkScreen(null, null)
+        ChatParkScreen(null,null, null)
     }
 }

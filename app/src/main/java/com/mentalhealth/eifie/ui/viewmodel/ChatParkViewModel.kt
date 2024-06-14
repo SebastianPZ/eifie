@@ -49,11 +49,10 @@ class ChatParkViewModel @Inject constructor(
     }
 
     private fun initChatsData() = viewModelScope.launch {
-        saveSupporter().join()
         initChats().join()
     }
 
-    private fun saveSupporter() = viewModelScope.launch {
+    fun saveSupporter() = viewModelScope.launch {
         retrieveSupporterUseCase.invoke()
             .onStart { viewState.value = ViewState.Success }
             .onEach { result ->

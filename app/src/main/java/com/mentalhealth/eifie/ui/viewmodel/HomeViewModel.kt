@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewModelScope
+import com.mentalhealth.eifie.domain.entities.Appointment
 import com.mentalhealth.eifie.domain.entities.EResult
 import com.mentalhealth.eifie.domain.entities.Notification
 import com.mentalhealth.eifie.domain.entities.Role
@@ -14,6 +15,7 @@ import com.mentalhealth.eifie.domain.usecases.GetNotificationsUseCase
 import com.mentalhealth.eifie.domain.usecases.GetUserInformationUseCase
 import com.mentalhealth.eifie.ui.common.LazyViewModel
 import com.mentalhealth.eifie.ui.common.ViewState
+import com.mentalhealth.eifie.ui.view.appointment.AppointmentsState
 import com.mentalhealth.eifie.util.emptyString
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -56,6 +58,22 @@ class HomeViewModel @Inject constructor(
         initialValue = listOf()
     )
 
+    private val _appointments: MutableStateFlow<List<Appointment>> = MutableStateFlow(listOf())
+
+    val appointments = _appointments.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000, 1),
+        initialValue = listOf()
+    )
+
+    private val _appointmentsState: MutableStateFlow<AppointmentsState> = MutableStateFlow(AppointmentsState.Idle)
+
+    val appointmentsState = _appointmentsState.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000, 1),
+        initialValue = AppointmentsState.Idle
+    )
+
     init {
         initUserCustomHome()
     }
@@ -92,13 +110,25 @@ class HomeViewModel @Inject constructor(
     }
 
     fun getAppointmentNotifications(withPermission: Boolean = false) = viewModelScope.launch {
+        if(_appointmentsState.value !is AppointmentsState.Success) {
+            getAppointmentNotificationsUseCase.invoke(withPermission)
+                .onStart {
+                    _appointmentsState.value = AppointmentsState.Loading
+                }.onEach {
+                    when(it) {
+                        is EResult.Error -> _appointmentsState.value = AppointmentsState.Error
+                        is EResult.Success -> {
+                            _appointments.value = it.data
+                            _appointmentsState.value = AppointmentsState.Success
+                        }
+                    }
+                }.launchIn(viewModelScope)
+        }
+    }
 
-        getAppointmentNotificationsUseCase.invoke(withPermission)
-            .onStart {
-
-            }.onEach {
-
-            }.launchIn(viewModelScope)
+    fun refreshAppointmentNotifications() = viewModelScope.launch {
+        _appointmentsState.value = AppointmentsState.Idle
+        getAppointmentNotifications(true).join()
     }
 
 }

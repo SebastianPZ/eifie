@@ -58,6 +58,7 @@
     <string name="reason">Motivo</string>
     <string name="patients">Pacientes</string>
     <string name="empty_patients">Aún no cuenta con\npacientes asignados.</string>
+    <string name="empty_soon_appointments">No cuenta con citas en la próxima semana.</string>
     <string name="psychologist">Psicólogo</string>
     <string name="title_activity_register">RegisterActivity</string>
     <string name="title_activity_home">HomeActivity</string>

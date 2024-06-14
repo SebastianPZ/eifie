@@ -35,7 +35,8 @@ fun HomeNavigation(
             composable(
                 route = Router.CHAT.route,
             ) {
-                ChatParkScreen(navController = mainNavController, viewModel = hiltViewModel<ChatParkViewModel>())
+                val supporterName = it.savedStateHandle.get<String>("supporter")
+                ChatParkScreen(supporterName = supporterName, navController = mainNavController, viewModel = hiltViewModel<ChatParkViewModel>())
             }
 
             composable(

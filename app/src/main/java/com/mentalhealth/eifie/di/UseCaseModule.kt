@@ -5,6 +5,7 @@ import com.mentalhealth.eifie.domain.repository.AuthenticationRepository
 import com.mentalhealth.eifie.domain.repository.ChatRepository
 import com.mentalhealth.eifie.domain.repository.HospitalRepository
 import com.mentalhealth.eifie.domain.repository.MessageRepository
+import com.mentalhealth.eifie.domain.repository.NotificationRepository
 import com.mentalhealth.eifie.domain.repository.PatientRepository
 import com.mentalhealth.eifie.domain.repository.PsychologistRepository
 import com.mentalhealth.eifie.domain.repository.SupporterRepository
@@ -119,10 +120,12 @@ object UseCaseModule {
     @Provides
     fun providesScheduleAppointmentUseCase(
         appointmentRepository: AppointmentRepository,
-        userRepository: UserRepository): ScheduleAppointmentUseCase {
+        userRepository: UserRepository,
+        notificationRepository: NotificationRepository): ScheduleAppointmentUseCase {
         return ScheduleAppointmentUseCase(
             appointmentRepository = appointmentRepository,
-            userRepository = userRepository
+            userRepository = userRepository,
+            notificationRepository = notificationRepository
         )
     }
 

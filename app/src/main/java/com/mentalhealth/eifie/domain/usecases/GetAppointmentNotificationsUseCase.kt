@@ -32,8 +32,8 @@ class GetAppointmentNotificationsUseCase @Inject constructor(
                 val calendar = Calendar.getInstance(timeZone, locale)
 
 
-                val startDate = calendar.time.getFormattedDate()
-                val endDate = calendar.apply { add(Calendar.DAY_OF_YEAR, 5) }.time.getFormattedDate()
+                val startDate = calendar.apply { add(Calendar.DATE, 1) }.time.getFormattedDate()
+                val endDate = calendar.apply { add(Calendar.DATE, 5) }.time.getFormattedDate()
 
                 val appointmentsResult = when(role) {
                     Role.PATIENT -> appointmentRepository.getAppointmentsByPatient(
@@ -68,7 +68,6 @@ class GetAppointmentNotificationsUseCase @Inject constructor(
         }
         emit(appointmentEResult)
     }
-
 
     private fun getCompleteDate(date: Date, time: String): Date? {
         val dateString = SimpleDateFormat("yyyy-MM-dd", Locale("es", "PE")).format(date)
