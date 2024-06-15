@@ -47,6 +47,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.mentalhealth.eifie.R
+import com.mentalhealth.eifie.ui.common.ViewState
+import com.mentalhealth.eifie.ui.common.animation.EAnimation
 import com.mentalhealth.eifie.ui.common.photo.UserPhotoView
 import com.mentalhealth.eifie.ui.common.textfield.EIcon
 import com.mentalhealth.eifie.ui.common.textfield.ETextField
@@ -68,6 +70,7 @@ fun SupportSettingsView(
     viewModel: SupportSettingsViewModel?
 ) {
 
+    val state = viewModel?.state?.collectAsStateWithLifecycle()
     val supportPhoto = viewModel?.supportPhoto?.collectAsStateWithLifecycle()
     val supportName = viewModel?.supportName?.collectAsStateWithLifecycle()
 
@@ -84,7 +87,7 @@ fun SupportSettingsView(
         IconButton(
             onClick = {
                 navController?.run {
-                    previousBackStackEntry?.savedStateHandle?.set("supporter", supportName?.value)
+                    previousBackStackEntry?.savedStateHandle?.set("supporter", viewModel?.supporter)
                     navController.popBackStack()
                 }
             },
@@ -120,10 +123,10 @@ fun SupportSettingsView(
                         navController?.run {
                             currentBackStackEntry?.run {
                                 savedStateHandle.set(
-                                    key = "user",
-                                    value = 1
+                                    key = "supporter",
+                                    value = viewModel?.supporter
                                 )
-                                navigate(Router.PROFILE_EDIT_PHOTO.route)
+                                navigate(Router.SUPPORT_EDIT_PHOTO.route)
                             }
                         }
                     },
@@ -204,7 +207,9 @@ fun SupportSettingsView(
                     .fillMaxWidth()
                     .wrapContentHeight()
                     .padding(horizontal = 37.dp)
-                    .clickable { }
+                    .clickable {
+                        viewModel?.backUpChats()
+                    }
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Backup,
@@ -221,6 +226,35 @@ fun SupportSettingsView(
                 )
             }
         }
+    }
+
+    when(state?.value) {
+        ViewState.Loading -> {
+            EAnimation(
+                resource = R.raw.loading_animation,
+                text = "Enviando...",
+                animationModifier = Modifier
+                    .size(250.dp),
+                backgroundModifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .background(color = CustomWhite)
+            )
+        }
+        is ViewState.Success -> {
+            EAnimation(
+                resource = R.raw.success_animation,
+                iterations = 1,
+                actionOnEnd = { viewModel.restartState() },
+                animationModifier = Modifier
+                    .size(250.dp),
+                backgroundModifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .background(color = Color.Transparent)
+            )
+        }
+        else -> Unit
     }
 
     if (showBottomSheet) {
@@ -252,7 +286,9 @@ fun SupportSettingsView(
                 )
                 Row (
                     horizontalArrangement = Arrangement.End,
-                    modifier = Modifier.padding(bottom = 20.dp).fillMaxWidth()
+                    modifier = Modifier
+                        .padding(bottom = 20.dp)
+                        .fillMaxWidth()
                 ) {
                     Button(
                         colors = ButtonDefaults.buttonColors(

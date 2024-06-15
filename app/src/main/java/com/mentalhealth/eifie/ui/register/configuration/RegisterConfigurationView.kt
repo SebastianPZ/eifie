@@ -66,7 +66,7 @@ fun RegisterConfigurationView(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Image(painter = painterResource(id = R.drawable.iv_eifi_logo),
-                contentDescription = "MoonMinder",
+                contentDescription = "MoodMinder",
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier
                     .width(25.dp)

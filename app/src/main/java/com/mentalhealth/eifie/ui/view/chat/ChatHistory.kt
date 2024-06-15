@@ -13,11 +13,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mentalhealth.eifie.R
 import com.mentalhealth.eifie.ui.models.ChatUI
 import com.mentalhealth.eifie.ui.theme.CustomGray
 import java.time.LocalDateTime
@@ -26,16 +28,12 @@ import java.time.LocalDateTime
 fun ChatHistory(
     chats: List<ChatUI>,
     onItemClick: (Long) -> Unit = {},
+    emptyText: String = "Comience un chat con la IA\npara guardar el historial.",
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
     ) {
-        Text(
-            text = "Historial",
-            fontWeight = FontWeight.Bold,
-            fontSize = 14.sp
-        )
         if(chats.isEmpty()) {
             Column(
                 verticalArrangement = Arrangement.Center,
@@ -43,7 +41,7 @@ fun ChatHistory(
                 modifier = Modifier.fillMaxHeight().fillMaxWidth()
             ) {
                 Text(
-                    text = "Comience un chat con la IA\npara guardar el historial.",
+                    text = emptyText,
                     textAlign = TextAlign.Center,
                     fontSize = 12.sp,
                     color = CustomGray
@@ -54,7 +52,6 @@ fun ChatHistory(
             LazyColumn(
                 horizontalAlignment = Alignment.Start,
                 verticalArrangement = Arrangement.Top,
-                modifier = Modifier.padding(top = 16.dp)
             ) {
                 items(chats.size) { index ->
                     ChatItem(

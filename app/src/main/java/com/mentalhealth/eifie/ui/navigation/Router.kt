@@ -15,6 +15,7 @@ enum class Router(val route: String) {
     MAIN_HOME("main/home"),
     MAIN_PROFILE("main/profile"),
     PROFILE_EDIT_PHOTO("main/profile/edit-photo"),
+    SUPPORT_EDIT_PHOTO("main/support/edit-photo"),
     PSYCHOLOGIST_CODE("main/profile/psychologist-code"),
     PSYCHOLOGIST_DETAIL("main/profile/psychologist-detail"),
     PSYCHOLOGIST_UPDATE("main/profile/psychologist-update"),

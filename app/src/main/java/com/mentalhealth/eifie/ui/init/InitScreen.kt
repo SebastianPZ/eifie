@@ -54,7 +54,7 @@ fun InitScreen(
         ) {
             Image(
                 painter = painterResource(id = R.drawable.iv_eifi_logotype),
-                contentDescription = "MoonMinder",
+                contentDescription = "MoodMinder",
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier
                     .width(150.dp)

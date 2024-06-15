@@ -3,8 +3,10 @@ package com.mentalhealth.eifie.data.network.apidi
 import com.mentalhealth.eifie.data.models.request.AnswerRequest
 import com.mentalhealth.eifie.data.models.request.AppointmentRequest
 import com.mentalhealth.eifie.data.models.request.LoginRequest
+import com.mentalhealth.eifie.data.models.request.NotificationRequest
 import com.mentalhealth.eifie.data.models.request.PatientRequest
 import com.mentalhealth.eifie.data.models.request.PsychologistRequest
+import com.mentalhealth.eifie.data.models.request.UpdateTokenRequest
 import com.mentalhealth.eifie.data.models.response.AppointmentRegisterResponse
 import com.mentalhealth.eifie.data.models.response.AppointmentResponse
 import com.mentalhealth.eifie.data.models.response.BaseResponse
@@ -125,4 +127,16 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Query("patientId") patientId: Long
     ): Response<BaseResponse<List<QuestionResponse>>>
+
+    @POST("util/notification")
+    suspend fun sendNotification(
+        @Header("Authorization") token: String,
+        @Body requestDTO: NotificationRequest
+    ): Response<BaseResponse<Boolean>>
+
+    @POST("user/updateFirebaseToken")
+    suspend fun updateFirebaseToken(
+        @Header("Authorization") token: String,
+        @Body request: UpdateTokenRequest
+    ): Response<BaseResponse<UserResponse>>
 }

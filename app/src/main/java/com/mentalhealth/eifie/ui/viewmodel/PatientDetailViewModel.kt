@@ -8,7 +8,13 @@ import com.mentalhealth.eifie.domain.entities.Patient
 import com.mentalhealth.eifie.domain.usecases.GetPatientUseCase
 import com.mentalhealth.eifie.ui.common.LazyViewModel
 import com.mentalhealth.eifie.ui.common.ViewState
+import com.mentalhealth.eifie.ui.models.PatientInfoTile
+import com.mentalhealth.eifie.ui.navigation.Router
 import com.mentalhealth.eifie.ui.profile.ProfileItem
+import com.mentalhealth.eifie.ui.theme.CustomRed
+import com.mentalhealth.eifie.ui.theme.DarkGray
+import com.mentalhealth.eifie.ui.theme.DarkGreen
+import com.mentalhealth.eifie.ui.theme.LightGreen
 import com.mentalhealth.eifie.util.calculateAge
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -31,11 +37,21 @@ class PatientDetailViewModel @AssistedInject constructor(
 
     val options = mutableStateListOf<ProfileItem>()
 
-    private val _patientInfo: MutableStateFlow<List<Pair<String, String>>> = MutableStateFlow(
+    private val _ageInformation: MutableStateFlow<List<Pair<String, String>>> = MutableStateFlow(
         listOf()
     )
 
-    val patientInfo = _patientInfo.stateIn(
+    val ageInformation = _ageInformation.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000, 1),
+        initialValue = listOf()
+    )
+
+    private val _generalInformation: MutableStateFlow<List<PatientInfoTile>> = MutableStateFlow(
+        listOf()
+    )
+
+    val generalInformation = _generalInformation.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000, 1),
         initialValue = listOf()
@@ -55,22 +71,22 @@ class PatientDetailViewModel @AssistedInject constructor(
     }
 
     private fun initPatientItems() {
+        /*ProfileItem(
+            icon = R.drawable.ic_profile_user,
+            label = "Informe General",
+            value = ""
+        )*/
         options.addAll(
             listOf(
                 ProfileItem(
                     icon = R.drawable.ic_profile_user,
-                    label = "Informe General",
-                    value = ""
-                ),
-                ProfileItem(
-                    icon = R.drawable.ic_profile_user,
                     label = "Historial Mensajes",
-                    value = ""
+                    value = "${Router.PATIENT_DETAIL.route}$patientId/chats"
                 ),
                 ProfileItem(
                     icon = R.drawable.ic_profile_user,
                     label = "Historial Citas",
-                    value = ""
+                    value = "${Router.PATIENT_DETAIL.route}$patientId/appointments"
                 )
             )
         )
@@ -85,7 +101,7 @@ class PatientDetailViewModel @AssistedInject constructor(
                         ViewState.Error(error.message ?: "")
                     }
                     is EResult.Success -> {
-                        setPsychologistInfo(it.data)
+                        setPatientInfo(it.data)
                         _patient.value = it.data
                         viewState.value = ViewState.Success
                     }
@@ -95,12 +111,22 @@ class PatientDetailViewModel @AssistedInject constructor(
             .launchIn(viewModelScope)
     }
 
-    private fun setPsychologistInfo(psychologist: Patient) {
-        _patientInfo.value = listOf(
-            "Fecha de nacimiento" to psychologist.birthDate,
-            "Edad" to "${calculateAge(psychologist.birthDate)} años",
-            "Correo" to psychologist.email,
-            "Estado" to psychologist.state,
+    private fun setPatientInfo(patient: Patient) {
+        _ageInformation.value = listOf(
+            "Fecha de nacimiento" to patient.birthDate,
+            "Edad" to "${calculateAge(patient.birthDate)} años"
+        )
+
+        _generalInformation.value = listOf(
+            PatientInfoTile("Correo", patient.email),
+            PatientInfoTile(
+                "Estado", patient.status(), when (patient.status) {
+                    1 -> DarkGreen
+                    2 -> CustomRed
+                    else -> DarkGray
+                }
+            ),
+            PatientInfoTile("Última evaluación de estado", patient.lastStatusUpdateDate)
         )
     }
 

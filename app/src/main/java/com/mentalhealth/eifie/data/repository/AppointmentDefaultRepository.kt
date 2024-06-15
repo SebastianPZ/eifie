@@ -9,6 +9,7 @@ import com.mentalhealth.eifie.data.mappers.impl.AppointmentRegisterMapper
 import com.mentalhealth.eifie.data.mappers.impl.AppointmentRequestMapper
 import com.mentalhealth.eifie.domain.entities.Appointment
 import com.mentalhealth.eifie.domain.entities.AppointmentParams
+import com.mentalhealth.eifie.domain.entities.Role
 import com.mentalhealth.eifie.domain.repository.AppointmentRepository
 import com.mentalhealth.eifie.util.emptyString
 import com.mentalhealth.eifie.util.formatToken
@@ -33,7 +34,8 @@ class AppointmentDefaultRepository @Inject constructor(
                 val token = preferences.readPreference(tokenPreferences) ?: emptyString()
                 api.getAppointmentByPatient(token.formatToken(), patient, startDate, endDate)
             },
-            { response -> response?.data?.let { AppointmentMapper.mapToEntity(it) } }
+            { response -> response?.data?.let { AppointmentMapper.mapToEntity(it) }?.sortedWith(
+                compareBy({it.date}, {it.time}))}
         )
     }
 
@@ -47,7 +49,10 @@ class AppointmentDefaultRepository @Inject constructor(
                 val token = preferences.readPreference(tokenPreferences) ?: emptyString()
                 api.getAppointmentByPsychologist(token.formatToken(), psychologist, startDate, endDate)
             },
-            { response -> response?.data?.let { AppointmentMapper.mapToEntity(it) } }
+            { response -> response?.data?.let { AppointmentMapper.mapToEntity(it).map { appointment ->
+                appointment.apply { type = Role.PSYCHOLOGIST.ordinal }
+            } }?.sortedWith(
+                compareBy({it.date}, {it.time})) }
         )
     }
 

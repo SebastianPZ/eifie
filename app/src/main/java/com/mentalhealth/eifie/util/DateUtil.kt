@@ -46,3 +46,8 @@ internal fun calculateAge(birthDate: String): Int {
         0
     }
 }
+
+internal fun getCompleteDate(date: Date, time: String): Date? {
+    val dateString = SimpleDateFormat("yyyy-MM-dd", Locale("es", "PE")).format(date)
+    return SimpleDateFormat("yyyy-MM-dd HH:mm", Locale("es", "PE")).parse("$dateString $time")
+}

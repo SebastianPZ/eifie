@@ -8,6 +8,15 @@ data class Patient(
     val username: String = "",
     val birthDate: String = "",
     val email: String = "",
-    val state: String = "",
+    val status: Int = 0,
+    val lastStatusUpdateDate: String = "",
     val picture: String? = null
-)
+) {
+    fun status(status: Int = this.status): String {
+        return when(status) {
+            1 -> "Probibilidad de depresión inexistente"
+            2 -> "Probabilidad de depresión existente"
+            else -> "Pendiente de evaluación"
+        }
+    }
+}

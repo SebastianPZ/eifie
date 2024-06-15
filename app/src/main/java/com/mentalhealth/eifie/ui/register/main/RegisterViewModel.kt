@@ -18,6 +18,8 @@ import com.mentalhealth.eifie.ui.register.role.RoleOption
 import com.mentalhealth.eifie.ui.register.Step
 import com.mentalhealth.eifie.util.emptyString
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -93,6 +95,7 @@ class RegisterViewModel @Inject constructor(
     val user by lazy { initRegisterUser() }
 
     val stepsSize get() = steps.size
+    private var registerJob: Job? = null
 
     init {
         setViewInitialStatus()
@@ -159,7 +162,8 @@ class RegisterViewModel @Inject constructor(
     }
 
     private fun registerPatientUser() = viewModelScope.launch {
-        registerPatientUseCase.invoke(user.toPatientRequest())
+        registerJob?.cancelAndJoin()
+        registerJob = registerPatientUseCase.invoke(user.toPatientRequest())
             .retry(3L) { error -> (error is IOException).also { if(it) delay(1000) }}
             .onStart { viewState.value = ViewState.Loading }
             .onEach { result ->
@@ -179,7 +183,8 @@ class RegisterViewModel @Inject constructor(
     }
 
     private fun registerPsychologistUser() = viewModelScope.launch {
-        registerPsychologistUseCase.invoke(user.toPsychologistRequest())
+        registerJob?.cancelAndJoin()
+        registerJob = registerPsychologistUseCase.invoke(user.toPsychologistRequest())
             .retry(3L) { error -> (error is IOException).also { if(it) delay(1000) }
             }.onStart {
                 viewState.value = ViewState.Loading

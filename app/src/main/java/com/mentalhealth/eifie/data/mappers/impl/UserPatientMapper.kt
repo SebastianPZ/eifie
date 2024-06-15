@@ -20,7 +20,8 @@ object UserPatientMapper: Mapper<UserPatientResponse, Patient> {
             birthDate = model.user?.birthDate ?: "",
             email = model.user?.email ?: "",
             picture = model.user?.picture?.url,
-            state = "Ok"
+            status = model.status ?: 0,
+            lastStatusUpdateDate = model.lastStatusUpdateDate ?: "Pendiente de evaluación"
         )
     }
 }

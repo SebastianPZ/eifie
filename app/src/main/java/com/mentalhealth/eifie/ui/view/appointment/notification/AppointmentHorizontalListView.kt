@@ -22,7 +22,8 @@ import com.mentalhealth.eifie.domain.entities.Appointment
 @Composable
  fun AppointmentHorizontalListView(
      appointments: List<Appointment>,
-     modifier: Modifier = Modifier
+     modifier: Modifier = Modifier,
+     emptyText: String = stringResource(id = R.string.empty_soon_appointments)
  ) {
     if(appointments.isEmpty()) {
         Column(
@@ -31,7 +32,7 @@ import com.mentalhealth.eifie.domain.entities.Appointment
             modifier = Modifier.fillMaxSize()
         ) {
             Text(
-                text = stringResource(id = R.string.empty_soon_appointments),
+                text = emptyText,
                 textAlign = TextAlign.Center,
                 fontSize = 12.sp,
                 color = Color.Gray

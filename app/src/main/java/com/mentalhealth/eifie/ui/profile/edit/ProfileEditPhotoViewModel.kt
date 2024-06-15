@@ -35,7 +35,7 @@ class ProfileEditPhotoViewModel @AssistedInject constructor(
     )
 
     init {
-        viewState.value = ProfileEditViewState.Editing(Uri.parse(user.picture))
+        viewState.value = ProfileEditViewState.Editing(Uri.parse(user.picture ?: ""))
     }
 
     fun updatePhotoResource(uri: Uri) {

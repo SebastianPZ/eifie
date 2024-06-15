@@ -33,12 +33,6 @@ fun ChatHeader(
             contentDescription = "",
             modifier = Modifier.size(30.dp).clickable { onBack() }
         )
-        Icon(
-            imageVector = Icons.Filled.Menu,
-            tint = DarkGreen,
-            contentDescription = "",
-            modifier = Modifier.size(30.dp)
-        )
     }
 }
 

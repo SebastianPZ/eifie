@@ -1,9 +1,6 @@
 package com.mentalhealth.eifie.ui.profile.detail
 
 import android.content.Context
-import android.util.Log
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -33,7 +30,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -44,23 +40,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.mentalhealth.eifie.R
 import com.mentalhealth.eifie.ui.common.ViewState
 import com.mentalhealth.eifie.ui.common.photo.UserPhotoView
 import com.mentalhealth.eifie.ui.navigation.Router
-import com.mentalhealth.eifie.ui.profile.edit.EditProfilePhoto
-import com.mentalhealth.eifie.ui.profile.main.ProfileViewModel
 import com.mentalhealth.eifie.ui.theme.CustomRed
 import com.mentalhealth.eifie.ui.theme.CustomWhite
 import com.mentalhealth.eifie.ui.theme.DarkGray
 import com.mentalhealth.eifie.ui.theme.LightGray
 import com.mentalhealth.eifie.ui.theme.LightSkyGray
 import com.mentalhealth.eifie.ui.theme.Purple
-import com.mentalhealth.eifie.ui.theme.WhitePink
 import com.mentalhealth.eifie.util.getActivity
 
 @Composable
@@ -266,6 +257,7 @@ fun FieldValue(
 fun FieldOption(
     icon: Int,
     label: String,
+    labelColor: Color = DarkGray,
     onClick: () -> Unit = {}
 ) {
     Row(
@@ -288,7 +280,7 @@ fun FieldOption(
             Text(
                 text = label,
                 fontSize = 14.sp,
-                color = DarkGray,
+                color = labelColor,
                 modifier = Modifier.padding(horizontal = 30.dp)
             )
         }

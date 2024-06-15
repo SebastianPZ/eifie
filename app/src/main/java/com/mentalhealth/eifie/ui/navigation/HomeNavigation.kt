@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import com.mentalhealth.eifie.domain.entities.Supporter
 import com.mentalhealth.eifie.ui.view.appointment.main.AppointmentView
 import com.mentalhealth.eifie.ui.view.HomeScreen
 import com.mentalhealth.eifie.ui.profile.main.Profile
@@ -35,8 +36,8 @@ fun HomeNavigation(
             composable(
                 route = Router.CHAT.route,
             ) {
-                val supporterName = it.savedStateHandle.get<String>("supporter")
-                ChatParkScreen(supporterName = supporterName, navController = mainNavController, viewModel = hiltViewModel<ChatParkViewModel>())
+                val savedSupporter = it.savedStateHandle.get<Supporter>("supporter")
+                ChatParkScreen(savedSupporter = savedSupporter, navController = mainNavController, viewModel = hiltViewModel<ChatParkViewModel>())
             }
 
             composable(

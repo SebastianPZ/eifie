@@ -105,7 +105,7 @@ fun RegisterUserComponent(
                         isValid.value = userData.isValid()
                     },
                     isValid = {
-                        if(it.text == userData.confirmPassword) "" to false
+                        if(it.text == userData.password) "" to false
                         else ERR_SAME_TEXT to true
                     },
                     type = TextFieldType.LABELED,

@@ -4,6 +4,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.mentalhealth.eifie.data.local.database.dao.ChatDao
+import com.mentalhealth.eifie.data.local.database.dao.DatabaseDao
 import com.mentalhealth.eifie.data.local.database.dao.MessageDao
 import com.mentalhealth.eifie.data.local.database.dao.NotificationDao
 import com.mentalhealth.eifie.data.local.database.dao.SupporterDao
@@ -25,4 +26,5 @@ abstract class EDatabase: RoomDatabase() {
     abstract fun messageDao(): MessageDao
     abstract fun supporterDao(): SupporterDao
     abstract fun notificationDao(): NotificationDao
+    abstract fun databaseDao(): DatabaseDao
 }

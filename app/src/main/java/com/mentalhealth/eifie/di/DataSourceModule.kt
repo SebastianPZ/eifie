@@ -22,7 +22,7 @@ object DataSourceModule {
     @Provides
     fun providesApiService(): ApiService {
         return Retrofit.Builder()
-            .baseUrl("https://depresivoinador.azurewebsites.net/")
+            .baseUrl("https://moodminder-backend.azurewebsites.net/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(ApiService::class.java)

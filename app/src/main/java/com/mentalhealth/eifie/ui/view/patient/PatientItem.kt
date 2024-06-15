@@ -56,7 +56,7 @@ fun PatientItem(
                     Text(text = patient.firstname, fontSize = 12.sp, color = LightGray)
                 }
             }
-            Surface(
+            /*Surface(
                 color = SkyBlue,
                 shape = RoundedCornerShape(20.dp),
             ) {
@@ -67,7 +67,7 @@ fun PatientItem(
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(horizontal = 14.dp, vertical = 7.dp)
                 )
-            }
+            }*/
         }
     }
 }

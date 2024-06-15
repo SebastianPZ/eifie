@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.mentalhealth.eifie.domain.entities.Supporter
 import com.mentalhealth.eifie.domain.entities.User
 import com.mentalhealth.eifie.ui.view.appointment.register.AppointmentRegisterView
 import com.mentalhealth.eifie.ui.view.ParkScreen
@@ -23,10 +24,17 @@ import com.mentalhealth.eifie.ui.psychologist.accesscode.PsychologistCodeView
 import com.mentalhealth.eifie.ui.register.psychologist.RegisterPsychologistView
 import com.mentalhealth.eifie.ui.view.appointment.register.AppointmentRegisterViewModel
 import com.mentalhealth.eifie.ui.view.appointment.register.SearchPatientView
+import com.mentalhealth.eifie.ui.view.chatbox.MessageHistoryView
+import com.mentalhealth.eifie.ui.view.patient.PatientAppointmentView
+import com.mentalhealth.eifie.ui.view.patient.PatientChatsView
 import com.mentalhealth.eifie.ui.view.patient.PatientDetailView
+import com.mentalhealth.eifie.ui.view.support.SupportEditPhoto
 import com.mentalhealth.eifie.ui.view.support.SupportSettingsView
 import com.mentalhealth.eifie.ui.viewmodel.ParkViewModel
 import com.mentalhealth.eifie.ui.viewmodel.ChatViewModel
+import com.mentalhealth.eifie.ui.viewmodel.MessageHistoryViewModel
+import com.mentalhealth.eifie.ui.viewmodel.PatientAppointmentViewModel
+import com.mentalhealth.eifie.ui.viewmodel.PatientChatsViewModel
 import com.mentalhealth.eifie.ui.viewmodel.PatientDetailViewModel
 import com.mentalhealth.eifie.ui.viewmodel.SearchPatientViewModel
 import com.mentalhealth.eifie.ui.viewmodel.SupportSettingsViewModel
@@ -90,6 +98,50 @@ fun MainNavigation() {
             }
 
             composable(
+                route = "${Router.PATIENT_DETAIL.route}{patient}/chats",
+                arguments = listOf(navArgument("patient") { type = NavType.LongType })
+            ) {
+                val arguments = requireNotNull(it.arguments)
+                PatientChatsView(
+                    navController = navController,
+                    viewModel = hiltViewModel<PatientChatsViewModel, PatientChatsViewModel.PatientChatsViewModelFactory>(
+                        creationCallback = { factory -> factory.create(patient = arguments.getLong("patient")) })
+                )
+            }
+
+            composable(
+                route = "${Router.PATIENT_DETAIL.route}{patient}/chats/{chat}",
+                arguments = listOf(
+                    navArgument("chat") { type = NavType.LongType },
+                    navArgument("patient") { type = NavType.LongType }
+                )
+            ) {
+                val arguments = requireNotNull(it.arguments)
+                MessageHistoryView(
+                    navController = navController,
+                    viewModel = hiltViewModel<MessageHistoryViewModel, MessageHistoryViewModel.MessageHistoryViewModelFactory>(
+                        creationCallback = { factory -> factory.create(
+                            chat = arguments.getLong("chat"),
+                            patient = arguments.getLong("patient")
+                        ) })
+                )
+            }
+
+
+
+            composable(
+                route = "${Router.PATIENT_DETAIL.route}{patient}/appointments",
+                arguments = listOf(navArgument("patient") { type = NavType.LongType })
+            ) {
+                val arguments = requireNotNull(it.arguments)
+                PatientAppointmentView(
+                    navController = navController,
+                    viewModel = hiltViewModel<PatientAppointmentViewModel, PatientAppointmentViewModel.PatientAppointmentViewModelFactory>(
+                        creationCallback = { factory -> factory.create(patient = arguments.getLong("patient")) })
+                )
+            }
+
+            composable(
                 route = Router.APPOINTMENT_REGISTER.route,
             ) {
                 val name = it.savedStateHandle.getLiveData<String>("patientName")
@@ -114,7 +166,7 @@ fun MainNavigation() {
             composable(
                 route = Router.PSYCHOLOGIST_CODE.route,
             ) {
-                val psychologist = navController.previousBackStackEntry?.savedStateHandle?.get<Long>("userId") ?: 1
+                val psychologist = navController.previousBackStackEntry?.savedStateHandle?.get<Long>("user") ?: 1
                 PsychologistCodeView(psychologist = psychologist, navController = navController)
             }
 
@@ -145,6 +197,13 @@ fun MainNavigation() {
             ) {
                 val user = navController.previousBackStackEntry?.savedStateHandle?.get<User>("user") ?: User()
                 EditProfilePhoto(user = user, navController = navController)
+            }
+
+            composable(
+                route = Router.SUPPORT_EDIT_PHOTO.route,
+            ) {
+                val supporter = navController.previousBackStackEntry?.savedStateHandle?.get<Supporter>("supporter") ?: Supporter()
+                SupportEditPhoto(supporter = supporter, navController = navController)
             }
         }
     }

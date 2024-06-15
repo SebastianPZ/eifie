@@ -15,6 +15,7 @@ object UserPsychologistMapper: Mapper<UserPsychologistResponse, Psychologist> {
     override fun mapToEntity(model: UserPsychologistResponse): Psychologist {
         return Psychologist(
             id = model.psychologistId ?: 0L,
+            uId = model.user?.userId ?: 0L,
             firstName = model.user?.firstName ?: "",
             lastName = model.user?.lastName ?: "",
             hospital = model.hospital?.name ?: "",

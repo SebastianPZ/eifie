@@ -6,21 +6,30 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Context.ALARM_SERVICE
 import android.content.Intent
+import android.util.Log
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.messaging.FirebaseMessaging
 import com.mentalhealth.eifie.data.local.database.EDatabase
 import com.mentalhealth.eifie.data.local.database.entities.LocalNotification
 import com.mentalhealth.eifie.data.local.preferences.EPreferences
-import com.mentalhealth.eifie.data.service.NotificationReceiver
+import com.mentalhealth.eifie.data.models.request.NotificationRequest
+import com.mentalhealth.eifie.data.network.apidi.ApiService
+import com.mentalhealth.eifie.data.network.performApiCall
+import com.mentalhealth.eifie.service.NotificationReceiver
 import com.mentalhealth.eifie.domain.entities.EResult
 import com.mentalhealth.eifie.domain.entities.Notification
 import com.mentalhealth.eifie.domain.entities.NotificationType
 import com.mentalhealth.eifie.domain.repository.NotificationRepository
-import com.mentalhealth.eifie.util.getFormattedDate
+import com.mentalhealth.eifie.util.emptyString
+import com.mentalhealth.eifie.util.formatToken
 import com.mentalhealth.eifie.util.toDateTimeFormat
 import com.mentalhealth.eifie.util.toTimeFormat
+import com.mentalhealth.eifie.util.tokenPreferences
 import com.mentalhealth.eifie.util.userPreferences
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.internal.wait
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -30,6 +39,7 @@ import kotlin.Exception
 
 class NotificationDefaultRepository @Inject constructor(
     private val context: Context,
+    private val api: ApiService,
     private val preferences: EPreferences,
     private val database: EDatabase,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
@@ -50,6 +60,17 @@ class NotificationDefaultRepository @Inject constructor(
         }catch (e: Exception){
             EResult.Error(e)
         }
+    }
+
+    override suspend fun sendFirebaseNotification(
+        user: Long,
+        title: String,
+        message: String): EResult<Boolean, Exception> = withContext(dispatcher) {
+        val token = preferences.readPreference(tokenPreferences) ?: emptyString()
+        performApiCall(
+            { api.sendNotification(token.formatToken(), NotificationRequest(message, title, user)) },
+            { response -> response?.data }
+        )
     }
 
     private suspend fun saveAppointmentNotification(date: Date?, key: String, user: Long) {

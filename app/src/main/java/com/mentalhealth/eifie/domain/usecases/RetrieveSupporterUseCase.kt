@@ -4,6 +4,7 @@ import com.mentalhealth.eifie.domain.entities.EResult
 import com.mentalhealth.eifie.domain.entities.Supporter
 import com.mentalhealth.eifie.domain.repository.SupporterRepository
 import com.mentalhealth.eifie.domain.repository.UserRepository
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
@@ -14,9 +15,16 @@ class RetrieveSupporterUseCase @Inject constructor(
     fun invoke() = flow {
         supporterRepository.getByUser().let {
             when(it) {
-                is EResult.Error -> emit(saveSupporter())
+                is EResult.Error -> emit(getFirebaseSupporter())
                 is EResult.Success -> emit(it)
             }
+        }
+    }
+
+    private suspend fun getFirebaseSupporter(): EResult<Supporter, Exception> {
+        return when(val result = supporterRepository.getSupporterBackUp()) {
+            is EResult.Error -> saveSupporter()
+            is EResult.Success -> result
         }
     }
 

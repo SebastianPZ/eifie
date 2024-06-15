@@ -49,6 +49,8 @@ fun ChatBotItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 UserPhotoView(
+                    uri = supBot?.photo,
+                    username = supBot?.name,
                     modifier = Modifier.size(60.dp),
                     fontSize = 14.sp
                 )
@@ -83,6 +85,7 @@ fun ChatBotItemPreview() {
     ChatBotItem(supBot = Supporter(
         id = 0,
         name = "Carlos",
+        photo = null,
         config = ""),
         onNewMessage = {}
     )

@@ -99,7 +99,7 @@ fun HomeScreen(
             .padding(horizontal = 24.dp)
     ) {
         Image(painter = painterResource(id = R.drawable.iv_eifi_logo),
-            contentDescription = "MoonMinder",
+            contentDescription = "MoodMinder",
             contentScale = ContentScale.FillWidth,
             modifier = Modifier
                 .width(25.dp)

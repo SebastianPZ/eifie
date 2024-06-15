@@ -7,6 +7,7 @@ import com.mentalhealth.eifie.domain.entities.Chat
 object ChatMapper: Mapper<LocalChat, Chat> {
     override fun mapFromEntity(entity: Chat): LocalChat {
         return LocalChat(
+            id = entity.id,
             name = entity.topic,
             date = entity.createdDate,
             lastMessage = entity.lastMessage,

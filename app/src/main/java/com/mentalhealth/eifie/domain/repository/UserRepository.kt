@@ -10,4 +10,5 @@ interface UserRepository {
     suspend fun getUser(): EResult<User, Exception>
     suspend fun logoutUser(): EResult<Boolean, Exception>
     suspend fun updateUserPicture(userId: Long, photo: Uri): EResult<User, Exception>
+    suspend fun updateFirebaseToken(fToken: String): EResult<Boolean, Exception>
 }

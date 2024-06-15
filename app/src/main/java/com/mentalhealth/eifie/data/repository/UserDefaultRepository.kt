@@ -10,9 +10,12 @@ import com.mentalhealth.eifie.data.local.database.EDatabase
 import com.mentalhealth.eifie.data.local.preferences.EPreferences
 import com.mentalhealth.eifie.data.mappers.impl.LocalUserMapper
 import com.mentalhealth.eifie.data.mappers.impl.UserMapper
+import com.mentalhealth.eifie.data.models.request.NotificationRequest
+import com.mentalhealth.eifie.data.models.request.UpdateTokenRequest
 import com.mentalhealth.eifie.domain.entities.User
 import com.mentalhealth.eifie.domain.repository.UserRepository
 import com.mentalhealth.eifie.util.emptyString
+import com.mentalhealth.eifie.util.formatToken
 import com.mentalhealth.eifie.util.tokenPreferences
 import com.mentalhealth.eifie.util.userPreferences
 import kotlinx.coroutines.CoroutineDispatcher
@@ -85,6 +88,15 @@ class UserDefaultRepository @Inject constructor(
                 api.registerProfilePicture(userId, profilePic = partRequest.second)
             },
             { response -> response?.data?.let { UserMapper.mapToEntity(it) } }
+        )
+    }
+
+    override suspend fun updateFirebaseToken(fToken: String): EResult<Boolean, Exception> = withContext(dispatcher) {
+        val token = preferences.readPreference(tokenPreferences) ?: emptyString()
+        val user = preferences.readPreference(userPreferences) ?: 0
+        performApiCall(
+            { api.updateFirebaseToken(token.formatToken(), UpdateTokenRequest(fToken.replace('\u00A0',' '), user)) },
+            { response -> true }
         )
     }
 }

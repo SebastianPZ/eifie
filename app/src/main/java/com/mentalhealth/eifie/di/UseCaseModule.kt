@@ -1,5 +1,6 @@
 package com.mentalhealth.eifie.di
 
+import com.mentalhealth.eifie.domain.repository.AppRepository
 import com.mentalhealth.eifie.domain.repository.AppointmentRepository
 import com.mentalhealth.eifie.domain.repository.AuthenticationRepository
 import com.mentalhealth.eifie.domain.repository.ChatRepository
@@ -12,12 +13,15 @@ import com.mentalhealth.eifie.domain.repository.SupporterRepository
 import com.mentalhealth.eifie.domain.repository.SurveyRepository
 import com.mentalhealth.eifie.domain.repository.UserRepository
 import com.mentalhealth.eifie.domain.usecases.AssignPsychologistUseCase
+import com.mentalhealth.eifie.domain.usecases.BackUpChatsUseCase
 import com.mentalhealth.eifie.domain.usecases.GeneratePsychologistCodeUseCase
 import com.mentalhealth.eifie.domain.usecases.GetChatMessagesUseCase
 import com.mentalhealth.eifie.domain.usecases.GetFormDataUseCase
 import com.mentalhealth.eifie.domain.usecases.GetNotificationsUseCase
 import com.mentalhealth.eifie.domain.usecases.GetSurveyQuestionsUseCase
 import com.mentalhealth.eifie.domain.usecases.GetMonthCalendarUseCase
+import com.mentalhealth.eifie.domain.usecases.GetPatientChatsUseCase
+import com.mentalhealth.eifie.domain.usecases.GetPatientMessageUseCase
 import com.mentalhealth.eifie.domain.usecases.GetPatientUseCase
 import com.mentalhealth.eifie.domain.usecases.GetPatientsUseCase
 import com.mentalhealth.eifie.domain.usecases.GetPsychologistUseCase
@@ -37,7 +41,8 @@ import com.mentalhealth.eifie.domain.usecases.SaveUserInformationUseCase
 import com.mentalhealth.eifie.domain.usecases.ScheduleAppointmentUseCase
 import com.mentalhealth.eifie.domain.usecases.SearchPatientUseCase
 import com.mentalhealth.eifie.domain.usecases.SendSurveyAnswersUseCase
-import com.mentalhealth.eifie.domain.usecases.UpdateSupporterNameUseCase
+import com.mentalhealth.eifie.domain.usecases.UpdateSupporterUseCase
+import com.mentalhealth.eifie.domain.usecases.UpdateTokenUseCase
 import com.mentalhealth.eifie.domain.usecases.UpdateUserInformationUseCase
 import com.mentalhealth.eifie.domain.usecases.UpdateUserPhotoUseCase
 import com.mentalhealth.eifie.domain.usecases.ValidateAssignCodeUseCase
@@ -57,8 +62,8 @@ object UseCaseModule {
     }
 
     @Provides
-    fun providesLogoutUserUseCase(repository: UserRepository): LogoutUserUseCase {
-        return LogoutUserUseCase(repository = repository)
+    fun providesLogoutUserUseCase(repository: UserRepository, appRepository: AppRepository): LogoutUserUseCase {
+        return LogoutUserUseCase(repository = repository, appRepository)
     }
 
     @Provides
@@ -178,9 +183,16 @@ object UseCaseModule {
 
     @Provides
     fun providesSendMessagesUseCase(
-        repository: MessageRepository
+        repository: MessageRepository,
+        userRepository: UserRepository,
+        psychologistRepository: PsychologistRepository,
+        notificationRepository: NotificationRepository
     ): SendMessageUseCase {
-        return SendMessageUseCase(messageRepository = repository)
+        return SendMessageUseCase(
+            messageRepository = repository,
+            userRepository = userRepository,
+            psychologistRepository = psychologistRepository,
+            notificationRepository = notificationRepository)
     }
 
     @Provides
@@ -223,8 +235,8 @@ object UseCaseModule {
     fun providesUpdateSupporterUseCase(
         supporterRepository: SupporterRepository,
         userRepository: UserRepository
-    ): UpdateSupporterNameUseCase {
-        return UpdateSupporterNameUseCase(repository = supporterRepository, userRepository = userRepository)
+    ): UpdateSupporterUseCase {
+        return UpdateSupporterUseCase(repository = supporterRepository, userRepository = userRepository)
     }
 
     @Provides
@@ -247,5 +259,35 @@ object UseCaseModule {
         messageRepository: MessageRepository
     ): SaveChatUseCase {
         return SaveChatUseCase(repository = repository, messageRepository = messageRepository)
+    }
+
+    @Provides
+    fun providesBackUpChatsUseCase(
+        chatRepository: ChatRepository,
+        messageRepository: MessageRepository,
+        supporterRepository: SupporterRepository
+    ): BackUpChatsUseCase {
+        return BackUpChatsUseCase(messageRepository, supporterRepository, chatRepository)
+    }
+
+    @Provides
+    fun providesUpdateTokenUseCase(
+        userRepository: UserRepository
+    ): UpdateTokenUseCase {
+        return UpdateTokenUseCase(userRepository)
+    }
+
+    @Provides
+    fun providesGetPatientMessageUseCase(
+        messageRepository: MessageRepository
+    ): GetPatientMessageUseCase {
+        return GetPatientMessageUseCase(messageRepository)
+    }
+
+    @Provides
+    fun providesGetPatientChatsUseCase(
+        chatRepository: ChatRepository
+    ): GetPatientChatsUseCase {
+        return GetPatientChatsUseCase(chatRepository)
     }
 }

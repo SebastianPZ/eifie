@@ -5,6 +5,7 @@ import com.mentalhealth.eifie.data.network.apidi.ApiService
 import com.mentalhealth.eifie.data.local.database.EDatabase
 import com.mentalhealth.eifie.data.network.apiopenai.OpenAIService
 import com.mentalhealth.eifie.data.local.preferences.EPreferences
+import com.mentalhealth.eifie.data.repository.AppDefaultRepository
 import com.mentalhealth.eifie.data.repository.AppointmentDefaultRepository
 import com.mentalhealth.eifie.data.repository.AuthenticationDefaultRepository
 import com.mentalhealth.eifie.data.repository.ChatDefaultRepository
@@ -16,6 +17,7 @@ import com.mentalhealth.eifie.data.repository.PsychologistDefaultRepository
 import com.mentalhealth.eifie.data.repository.SupporterDefaultRepository
 import com.mentalhealth.eifie.data.repository.SurveyDefaultRepository
 import com.mentalhealth.eifie.data.repository.UserDefaultRepository
+import com.mentalhealth.eifie.domain.repository.AppRepository
 import com.mentalhealth.eifie.domain.repository.AppointmentRepository
 import com.mentalhealth.eifie.domain.repository.AuthenticationRepository
 import com.mentalhealth.eifie.domain.repository.ChatRepository
@@ -90,9 +92,15 @@ object RepositoryModule {
     @Provides
     fun providesNotificationRepository(
         @ApplicationContext context: Context,
+        api: ApiService,
         preferences: EPreferences,
         database: EDatabase): NotificationRepository {
-        return NotificationDefaultRepository(context = context, preferences, database)
+        return NotificationDefaultRepository(context = context, api, preferences, database)
+    }
+
+    @Provides
+    fun providesAppRepository(database: EDatabase): AppRepository {
+        return AppDefaultRepository(database)
     }
 
 }

@@ -11,9 +11,9 @@ data class Appointment(
     val status: String = "",
     val date: Date = Date(),
     val time: String = "",
-    val type: Int = Role.PATIENT.ordinal
+    var type: Int = Role.PATIENT.ordinal
 ) {
-    val patientName = "$patientLastName, $patientFirstName"
-    val psychologistName = "$psychologistLastName, $psychologistFirstName"
+    val patientName = "${patientLastName.trim()}, ${patientFirstName.trim()}"
+    val psychologistName = "${psychologistLastName.trim()}, ${psychologistFirstName.trim()}"
 }
 

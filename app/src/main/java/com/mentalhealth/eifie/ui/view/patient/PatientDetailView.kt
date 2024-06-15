@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,6 +18,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -58,7 +60,8 @@ fun PatientDetailView(
 
     val state = viewModel?.state?.collectAsStateWithLifecycle()
     val patient = viewModel?.patient?.collectAsStateWithLifecycle()
-    val patientInfo = viewModel?.patientInfo?.collectAsStateWithLifecycle()
+    val ageInformation = viewModel?.ageInformation?.collectAsStateWithLifecycle()
+    val generalInformation = viewModel?.generalInformation?.collectAsStateWithLifecycle()
 
     Box {
         Image(
@@ -118,10 +121,9 @@ fun PatientDetailView(
                         horizontalArrangement = Arrangement.spacedBy(35.dp),
                         verticalArrangement = Arrangement.spacedBy(15.dp),
                         modifier = Modifier
-                            .height(150.dp)
                             .padding(vertical = 20.dp)
                     ) {
-                        items(patientInfo?.value ?: listOf()) {
+                        items(ageInformation?.value ?: listOf()) {
                             Column(
                                 modifier = Modifier.wrapContentHeight()
                             ) {
@@ -130,8 +132,22 @@ fun PatientDetailView(
                             }
                         }
                     }
+                    LazyColumn (
+                        horizontalAlignment = Alignment.Start,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        itemsIndexed(generalInformation?.value ?: listOf()) { index, item ->
+                            Column(
+                                modifier = Modifier.wrapContentHeight()
+                            ) {
+                                Text(text = item.label, color = LightGray, fontSize = 12.sp)
+                                Text(text = item.value, fontSize = 14.sp, color = item.color)
+                            }
+                            if(index < (generalInformation?.value?.size ?: 0) - 1 ) Spacer(modifier = Modifier.height(15.dp))
+                        }
+                    }
                     LazyColumn {
-                        itemsIndexed(viewModel?.options ?: listOf()) { index, item ->
+                        itemsIndexed(viewModel?.options ?: listOf()) { _, item ->
                             HorizontalDivider(
                                 color = LightSkyGray,
                                 modifier = Modifier
@@ -142,7 +158,9 @@ fun PatientDetailView(
                             FieldOption(
                                 icon = item.icon,
                                 label = item.label,
-                                onClick = { }
+                                onClick = {
+                                    navController?.navigate(item.value)
+                                }
                             )
                         }
                     }

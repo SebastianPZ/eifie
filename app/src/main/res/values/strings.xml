@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Eifie</string>
+    <string name="app_name">MoodMinder</string>
 
     <string name="welcome_title">Bienvenido\n</string>
     <string name="welcome_title_no_space">Bienvenido</string>
@@ -59,6 +59,9 @@
     <string name="patients">Pacientes</string>
     <string name="empty_patients">Aún no cuenta con\npacientes asignados.</string>
     <string name="empty_soon_appointments">No cuenta con citas en la próxima semana.</string>
+    <string name="empty_patient_messages">Aún no hay mensajes en este chat.</string>
+    <string name="empty_patient_chats">El paciente aún no tiene chats.</string>
+    <string name="empty_patient_appointments">El paciente aún no ha tenido citas a la fecha.</string>
     <string name="psychologist">Psicólogo</string>
     <string name="title_activity_register">RegisterActivity</string>
     <string name="title_activity_home">HomeActivity</string>

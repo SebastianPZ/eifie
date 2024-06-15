@@ -4,12 +4,15 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.messaging.FirebaseMessaging
 import com.mentalhealth.eifie.domain.entities.EResult
 import com.mentalhealth.eifie.data.models.request.LoginRequest
 import com.mentalhealth.eifie.domain.entities.User
 import com.mentalhealth.eifie.domain.usecases.LoginUseCase
 import com.mentalhealth.eifie.domain.usecases.SaveUserInformationUseCase
+import com.mentalhealth.eifie.domain.usecases.UpdateTokenUseCase
 import com.mentalhealth.eifie.ui.common.LazyViewModel
 import com.mentalhealth.eifie.ui.common.ViewState
 import com.mentalhealth.eifie.util.ERR_SAVE_USER_SESSION
@@ -29,7 +32,8 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
-    private val saveUserUseCase: SaveUserInformationUseCase
+    private val saveUserUseCase: SaveUserInformationUseCase,
+    private val updateTokenUseCase: UpdateTokenUseCase
 ): LazyViewModel() {
 
     private val user: LoginRequest = LoginRequest()
@@ -81,12 +85,36 @@ class LoginViewModel @Inject constructor(
             when(it) {
                 is EResult.Success -> {
                     viewState.value = ViewState.Success
+                    getFirebaseToken()
                 }
                 is EResult.Error -> {
                     viewState.value = ViewState.Error("$ERR_SAVE_USER_SESSION $TRY_AGAIN")
                 }
             }
         }.launchIn(viewModelScope)
+    }
+
+    private fun getFirebaseToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w("Firebase Token", "No token")
+            }
+
+            val token = task.result
+            Log.d("Firebase Token", token)
+            updateToken(token)
+        }
+    }
+
+    private fun updateToken(token: String) = viewModelScope.launch {
+        updateTokenUseCase.invoke(token)
+            .onEach {
+                when(it) {
+                    is EResult.Error -> Unit
+                    is EResult.Success -> Unit
+                }
+            }
+            .launchIn(viewModelScope)
     }
 
     fun navigateToYoutubeVideo(context: Context, id: String) {

@@ -16,8 +16,7 @@ object PatientMapper: Mapper<PatientResponse, Patient> {
             psychologistAssigned = model.psychologistAssignedId ?: 0,
             firstname = model.firstName ?: "",
             lastname = model.lastName ?: "",
-            username = getUserName(model.firstName ?: "", model.lastName ?: ""),
-            state = ""
+            username = getUserName(model.firstName ?: "", model.lastName ?: "")
         )
     }
 }

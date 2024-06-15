@@ -94,7 +94,7 @@ fun LoginView(
                 .imePadding()
         ) {
             Image(painter = painterResource(id = R.drawable.eifi_logotype_h),
-                contentDescription = "MoonMinder",
+                contentDescription = "MoodMinder",
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier
                     .width(250.dp)

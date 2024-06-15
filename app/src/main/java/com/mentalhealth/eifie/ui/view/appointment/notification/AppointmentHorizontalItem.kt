@@ -1,11 +1,16 @@
 package com.mentalhealth.eifie.ui.view.appointment.notification
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -26,6 +31,7 @@ import com.mentalhealth.eifie.ui.theme.BlackGreen
 import com.mentalhealth.eifie.ui.theme.LightGray
 import com.mentalhealth.eifie.ui.theme.LightSkyGray
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 @Composable
@@ -38,20 +44,23 @@ fun AppointmentHorizontalItem(
         modifier = Modifier
             .defaultMinSize(minWidth = 105.dp)
             .fillMaxWidth()
+            .wrapContentHeight()
             .shadow(
                 elevation = 8.dp,
                 spotColor = Black10,
                 shape = RoundedCornerShape(15.dp)
             )
     ) {
-        Row {
+        Row(
+            modifier = Modifier.height(100.dp)
+        ) {
             Surface(
                 color = LightSkyGray,
                 shape = RoundedCornerShape(
                     topStart = 12.dp
                 ),
                 modifier = Modifier
-                    .defaultMinSize(minWidth = 70.dp, minHeight = 92.dp)
+                    .defaultMinSize(minWidth = 70.dp, minHeight = 100.dp)
             ) {
                 Column(
                     verticalArrangement = Arrangement.Center,
@@ -79,34 +88,43 @@ fun AppointmentHorizontalItem(
                 }
             }
             Column(
-                modifier = Modifier.padding(top = 15.dp, start = 20.dp, bottom = 15.dp, end = 20.dp)
+                verticalArrangement = Arrangement.SpaceEvenly,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 20.dp, vertical = 10.dp)
             ) {
-                Text(
-                    text = if(appointment.type == Role.PATIENT.ordinal) "Psicólogo" else "Paciente",
-                    fontSize = 10.sp,
-                    color = LightGray
-                )
-                Text(
-                    text = if(appointment.type == Role.PATIENT.ordinal) appointment.psychologistName else appointment.patientName,
-                    fontSize = 12.sp,
-                    color = BlackGreen,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-            Column(
-                modifier = Modifier.padding(top = 15.dp, start = 20.dp, bottom = 6.dp, end = 20.dp)
-            ) {
-                Text(
-                    text = "Hora",
-                    fontSize = 10.sp,
-                    color = LightGray
-                )
-                Text(
-                    text = appointment.time,
-                    fontSize = 12.sp,
-                    color = BlackGreen
-                )
+                Column {
+                    Text(
+                        text = if(appointment.type == Role.PATIENT.ordinal) "Psicólogo" else "Paciente",
+                        fontSize = 10.sp,
+                        lineHeight = 10.sp,
+                        color = LightGray
+                    )
+                    Spacer(modifier = Modifier.height(3.dp))
+                    Text(
+                        text = if(appointment.type == Role.PATIENT.ordinal) appointment.psychologistName else appointment.patientName,
+                        fontSize = 12.sp,
+                        lineHeight = 12.sp,
+                        color = BlackGreen,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+                Column {
+                    Text(
+                        text = "Hora",
+                        fontSize = 10.sp,
+                        lineHeight = 10.sp,
+                        color = LightGray
+                    )
+                    Spacer(modifier = Modifier.height(3.dp))
+                    Text(
+                        text = appointment.time,
+                        fontSize = 12.sp,
+                        lineHeight = 12.sp,
+                        color = BlackGreen
+                    )
+                }
             }
         }
     }
@@ -115,5 +133,5 @@ fun AppointmentHorizontalItem(
 @Preview
 @Composable
 fun AppointmentHorizontalItemPreview() {
-    AppointmentHorizontalItem(appointment = Appointment())
+    AppointmentHorizontalItem(appointment = Appointment(psychologistFirstName = "Marycielo Diego", psychologistLastName = "Marycielo Diego", time = "20:00"))
 }

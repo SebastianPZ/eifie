@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -15,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -27,6 +29,7 @@ fun EAnimation(
     resource: Int,
     iterations: Int = LottieConstants.IterateForever,
     actionOnEnd: () -> Unit = {},
+    text: String = "",
     @SuppressLint("ModifierParameter") animationModifier: Modifier = Modifier,
     @SuppressLint("ModifierParameter") backgroundModifier: Modifier = Modifier
         .wrapContentSize()
@@ -51,6 +54,12 @@ fun EAnimation(
             composition = composition,
             progress = { progress },
             modifier = animationModifier
+                .align(Alignment.Center)
+        )
+        Text(
+            text = text,
+            fontSize = 12.sp,
+            modifier = Modifier
                 .align(Alignment.Center)
         )
     }

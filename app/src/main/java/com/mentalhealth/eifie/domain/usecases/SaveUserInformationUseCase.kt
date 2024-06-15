@@ -8,7 +8,6 @@ import javax.inject.Inject
 class SaveUserInformationUseCase @Inject constructor(
     private val repository: UserRepository
 ) {
-
     fun invoke(user: User) = flow {
         emit(repository.saveUser(user))
     }

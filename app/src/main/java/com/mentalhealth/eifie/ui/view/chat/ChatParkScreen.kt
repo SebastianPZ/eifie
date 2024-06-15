@@ -13,15 +13,19 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.mentalhealth.eifie.R
+import com.mentalhealth.eifie.domain.entities.Supporter
 import com.mentalhealth.eifie.ui.navigation.Router
 import com.mentalhealth.eifie.ui.theme.CustomWhite
 import com.mentalhealth.eifie.ui.theme.DarkGreen
@@ -29,14 +33,14 @@ import com.mentalhealth.eifie.ui.viewmodel.ChatParkViewModel
 
 @Composable
 fun ChatParkScreen(
-    supporterName: String?,
+    savedSupporter: Supporter?,
     navController: NavHostController?,
     viewModel: ChatParkViewModel?
 ) {
     val chatsHistory = viewModel?.chatsHistory?.collectAsStateWithLifecycle()
     val supporter = viewModel?.supporter?.collectAsStateWithLifecycle()
 
-    LaunchedEffect(supporterName) {
+    LaunchedEffect(savedSupporter) {
         viewModel?.saveSupporter()
     }
 
@@ -61,10 +65,15 @@ fun ChatParkScreen(
                 },
                 modifier = Modifier.padding(top = 25.dp, bottom = 20.dp)
             )
+            Text(
+                text = "Historial",
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp
+            )
             ChatHistory(
                 chats = chatsHistory?.value ?: listOf(),
                 onItemClick = { chatId -> navController?.navigate("${Router.CHAT_BOX.route}$chatId") },
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f).padding(top = 16.dp)
             )
             ChatBotItem(
                 supBot = supporter?.value,

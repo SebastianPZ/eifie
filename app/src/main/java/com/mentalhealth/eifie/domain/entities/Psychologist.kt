@@ -6,6 +6,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 class Psychologist(
     val id: Long = 0,
+    val uId: Long = 0,
     val firstName: String = "",
     val lastName: String = "",
     val hospital: String = "",

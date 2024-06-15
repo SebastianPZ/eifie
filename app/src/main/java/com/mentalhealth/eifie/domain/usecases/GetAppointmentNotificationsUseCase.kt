@@ -2,14 +2,13 @@ package com.mentalhealth.eifie.domain.usecases
 
 import com.mentalhealth.eifie.domain.entities.EResult
 import com.mentalhealth.eifie.domain.entities.Notification
-import com.mentalhealth.eifie.domain.entities.NotificationType
 import com.mentalhealth.eifie.domain.entities.Role
 import com.mentalhealth.eifie.domain.repository.AppointmentRepository
 import com.mentalhealth.eifie.domain.repository.NotificationRepository
 import com.mentalhealth.eifie.domain.repository.UserRepository
+import com.mentalhealth.eifie.util.getCompleteDate
 import com.mentalhealth.eifie.util.getFormattedDate
 import kotlinx.coroutines.flow.flow
-import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -32,7 +31,7 @@ class GetAppointmentNotificationsUseCase @Inject constructor(
                 val calendar = Calendar.getInstance(timeZone, locale)
 
 
-                val startDate = calendar.apply { add(Calendar.DATE, 1) }.time.getFormattedDate()
+                val startDate = calendar.time.getFormattedDate()
                 val endDate = calendar.apply { add(Calendar.DATE, 5) }.time.getFormattedDate()
 
                 val appointmentsResult = when(role) {
@@ -48,30 +47,28 @@ class GetAppointmentNotificationsUseCase @Inject constructor(
                     )
                 }
 
-                when(appointmentsResult) {
+                when (appointmentsResult) {
                     is EResult.Error -> EResult.Error(appointmentsResult.error)
                     is EResult.Success -> {
-                        if(withPermission) notificationRepository.save(appointmentsResult.data
+                        appointmentsResult.data
                             .filter { getCompleteDate(it.date, it.time)?.after(Date()) ?: false }
-                            .map {
-                                Notification(
-                                    key = "${it.appointmentId}",
-                                    date = getCompleteDate(it.date, it.time)
+                            .run {
+                                if (withPermission) notificationRepository.save(
+                                    this.map {
+                                        Notification(
+                                            key = "${it.appointmentId}",
+                                            date = getCompleteDate(it.date, it.time)
+                                        )
+                                    }
                                 )
+                                EResult.Success(this)
                             }
-                        )
-                        EResult.Success(appointmentsResult.data)
                     }
                 }
             }
             is EResult.Error -> result
         }
         emit(appointmentEResult)
-    }
-
-    private fun getCompleteDate(date: Date, time: String): Date? {
-        val dateString = SimpleDateFormat("yyyy-MM-dd", Locale("es", "PE")).format(date)
-        return SimpleDateFormat("yyyy-MM-dd HH:mm", Locale("es", "PE")).parse("$dateString $time")
     }
 
 }

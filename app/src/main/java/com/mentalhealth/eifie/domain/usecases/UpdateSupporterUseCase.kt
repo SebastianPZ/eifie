@@ -7,7 +7,7 @@ import com.mentalhealth.eifie.domain.repository.UserRepository
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class UpdateSupporterNameUseCase @Inject constructor(
+class UpdateSupporterUseCase @Inject constructor(
     private val repository: SupporterRepository,
     private val userRepository: UserRepository
 ) {

@@ -15,11 +15,11 @@ import com.mentalhealth.eifie.ui.theme.MyMessageColor
 import com.mentalhealth.eifie.ui.theme.OtherMessageColor
 
 @Composable
-fun MessageBubble(
+fun MessageHistoryBubble(
     message: MessageUI
 ) {
     Row(
-        horizontalArrangement = if (message.isFromMe) Arrangement.End else Arrangement.Start,
+        horizontalArrangement = Arrangement.Start,
         modifier = Modifier.fillMaxWidth()
     ) {
         Surface(
@@ -27,8 +27,8 @@ fun MessageBubble(
             shape = RoundedCornerShape(
                 topStart = 15.dp,
                 topEnd = 15f.dp,
-                bottomStart = if (message.isFromMe) 15.dp else 0.dp,
-                bottomEnd = if (message.isFromMe) 0.dp else 15.dp
+                bottomStart = 0.dp,
+                bottomEnd = 15.dp
             ),
             modifier = Modifier
                 .padding(8.dp)

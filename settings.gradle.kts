@@ -13,5 +13,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Eifie"
+rootProject.name = "MoodMinder"
 include(":app")

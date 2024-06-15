@@ -1,6 +1,7 @@
 package com.mentalhealth.eifie.ui.viewmodel
 
 import androidx.lifecycle.viewModelScope
+import com.mentalhealth.eifie.data.local.preferences.EPreferences
 import com.mentalhealth.eifie.domain.entities.EResult
 import com.mentalhealth.eifie.domain.entities.Supporter
 import com.mentalhealth.eifie.domain.usecases.RetrieveSupporterUseCase
@@ -10,6 +11,7 @@ import com.mentalhealth.eifie.ui.common.LazyViewModel
 import com.mentalhealth.eifie.ui.common.ViewState
 import com.mentalhealth.eifie.ui.mappers.impl.ChatUIMapper
 import com.mentalhealth.eifie.ui.models.ChatUI
+import com.mentalhealth.eifie.util.userPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -23,6 +25,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChatParkViewModel @Inject constructor(
+    private val preferences: EPreferences,
     private val getUserChatsUseCase: GetUserChatsUseCase,
     private val saveChatUseCase: SaveChatUseCase,
     private val retrieveSupporterUseCase: RetrieveSupporterUseCase
@@ -82,7 +85,7 @@ class ChatParkViewModel @Inject constructor(
     }
 
     private fun initChats() = viewModelScope.launch {
-        getUserChatsUseCase.invoke()
+        getUserChatsUseCase.invoke(preferences.readPreference(userPreferences) ?: 0)
             .onStart { viewState.value = ViewState.Loading }
             .onEach { result ->
                 when(result) {

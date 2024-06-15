@@ -3,6 +3,7 @@ package com.mentalhealth.eifie.ui.profile.main
 import androidx.lifecycle.viewModelScope
 import com.mentalhealth.eifie.R
 import com.mentalhealth.eifie.domain.entities.EResult
+import com.mentalhealth.eifie.domain.entities.Role
 import com.mentalhealth.eifie.domain.entities.User
 import com.mentalhealth.eifie.domain.usecases.GetUserInformationUseCase
 import com.mentalhealth.eifie.ui.common.LazyViewModel
@@ -75,10 +76,14 @@ class ProfileViewModel @Inject constructor(
     private fun handleProfileData(user: User): List<ProfileItem> {
         this.user = user
         handleUserPhoto(user)
-        return listOf(
-            ProfileItem(R.drawable.ic_age, AGE_TITLE, user.age.toString()),
-            ProfileItem(R.drawable.ic_status, STATUS_TITLE, user.status.value),
-            ProfileItem(R.drawable.ic_hospital, HOSPITAL_TITLE, user.hospitalName)
-        )
+        return when(user.role) {
+            Role.PATIENT -> listOf(
+                ProfileItem(R.drawable.ic_age, AGE_TITLE, user.age.toString())
+            )
+            Role.PSYCHOLOGIST -> listOf(
+                ProfileItem(R.drawable.ic_age, AGE_TITLE, user.age.toString()),
+                ProfileItem(R.drawable.ic_hospital, HOSPITAL_TITLE, user.hospitalName)
+            )
+        }
     }
 }

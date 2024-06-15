@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class LocalSupBot(
-    @PrimaryKey(autoGenerate = true) val id: Long? = null,
+    @PrimaryKey val id: Long? = null,
     val userId: Long? = null,
     val name: String,
     val config: String,
