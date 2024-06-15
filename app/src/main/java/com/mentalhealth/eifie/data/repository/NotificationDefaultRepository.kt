@@ -9,12 +9,11 @@ import android.content.Intent
 import com.mentalhealth.eifie.data.local.database.EDatabase
 import com.mentalhealth.eifie.data.local.database.entities.LocalNotification
 import com.mentalhealth.eifie.data.local.preferences.EPreferences
-import com.mentalhealth.eifie.data.service.NotificationReceiver
+import com.mentalhealth.eifie.service.NotificationReceiver
 import com.mentalhealth.eifie.domain.entities.EResult
 import com.mentalhealth.eifie.domain.entities.Notification
 import com.mentalhealth.eifie.domain.entities.NotificationType
 import com.mentalhealth.eifie.domain.repository.NotificationRepository
-import com.mentalhealth.eifie.util.getFormattedDate
 import com.mentalhealth.eifie.util.toDateTimeFormat
 import com.mentalhealth.eifie.util.toTimeFormat
 import com.mentalhealth.eifie.util.userPreferences
@@ -50,6 +49,10 @@ class NotificationDefaultRepository @Inject constructor(
         }catch (e: Exception){
             EResult.Error(e)
         }
+    }
+
+    override suspend fun sendFirebaseNotification(): EResult<Boolean, Exception> {
+        TODO("Not yet implemented")
     }
 
     private suspend fun saveAppointmentNotification(date: Date?, key: String, user: Long) {
