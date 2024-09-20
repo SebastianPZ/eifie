@@ -39,5 +39,7 @@ const val PSYCHOLOGIST_ASSIGN = "Asignación de psicólogo"
 
 const val TOKEN_KEY = "token"
 const val USER_KEY = "user"
+const val USER_ROLE_KEY = "user_role"
 val tokenPreferences = stringPreferencesKey(TOKEN_KEY)
 val userPreferences = longPreferencesKey(USER_KEY)
+val userRolePreferences = longPreferencesKey(USER_ROLE_KEY)

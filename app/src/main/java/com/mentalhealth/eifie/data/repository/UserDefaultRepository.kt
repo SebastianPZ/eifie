@@ -18,6 +18,7 @@ import com.mentalhealth.eifie.util.emptyString
 import com.mentalhealth.eifie.util.formatToken
 import com.mentalhealth.eifie.util.tokenPreferences
 import com.mentalhealth.eifie.util.userPreferences
+import com.mentalhealth.eifie.util.userRolePreferences
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -37,6 +38,7 @@ class UserDefaultRepository @Inject constructor(
         try {
             userDao.insertAll(LocalUserMapper.mapFromEntity(user))
             preferences.savePreference(userPreferences, user.profileId)
+            preferences.savePreference(userRolePreferences, user.uid)
             EResult.Success(true)
         } catch (e: Exception) {
             EResult.Error(e)

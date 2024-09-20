@@ -11,6 +11,7 @@ import com.mentalhealth.eifie.domain.repository.PatientRepository
 import com.mentalhealth.eifie.util.emptyString
 import com.mentalhealth.eifie.util.formatToken
 import com.mentalhealth.eifie.util.tokenPreferences
+import com.mentalhealth.eifie.util.userRolePreferences
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -35,7 +36,8 @@ class PatientDefaultRepository @Inject constructor(
         performApiCall(
             {
                 val token = preferences.readPreference(tokenPreferences) ?: emptyString()
-                api.searchPatient(token.formatToken(), lastname)
+                val psychologist = preferences.readPreference(userRolePreferences) ?: 0
+                api.searchPatient(token.formatToken(), lastname, psychologist)
             },
             { response -> response?.data?.map { PatientMapper.mapToEntity(it) } }
         )

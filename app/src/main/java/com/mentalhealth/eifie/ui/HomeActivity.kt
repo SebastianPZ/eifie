@@ -15,11 +15,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequest
+import androidx.work.WorkManager
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
+import com.mentalhealth.eifie.service.UploadMessagesWorker
 import com.mentalhealth.eifie.ui.navigation.MainNavigation
 import com.mentalhealth.eifie.ui.theme.EifieTheme
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class HomeActivity : ComponentActivity() {
@@ -28,6 +33,20 @@ class HomeActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Create a periodic work request
+        val uploadMessages = PeriodicWorkRequest.Builder(
+            UploadMessagesWorker::class.java,
+            1, TimeUnit.HOURS
+        ).build()
+
+        // Enqueue the work request
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            "UPLOAD_MOOD_MINDER_MESSAGES_TASK",
+            ExistingPeriodicWorkPolicy.KEEP,
+            uploadMessages
+        )
+
         setContent {
             EifieTheme {
                 // A surface container using the 'background' color from the theme

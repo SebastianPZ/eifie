@@ -1,5 +1,6 @@
 package com.mentalhealth.eifie.ui.register.main
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,6 +11,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -40,6 +42,9 @@ fun RegisterUserComponent(
 ) {
 
     val isValid = remember { mutableStateOf(false) }
+    val enableConfirmPassword = remember { mutableStateOf(false) }
+    val password = remember { mutableStateOf("") }
+    Log.d("Confirm password habilitado => $enableConfirmPassword", enableConfirmPassword.toString())
 
     return Column(
         verticalArrangement = Arrangement.SpaceBetween,
@@ -59,7 +64,7 @@ fun RegisterUserComponent(
                     icon = EIcon(icon = Icons.Default.Lock),
                     onValueChange = {
                         userData.email = it.text
-                        isValid.value = userData.isValid()
+                        isValid.value = userData.isValid(password.value)
                     },
                     isValid = {
                         (ValidateText(it.text) checkWith emailRules).let { result ->
@@ -78,11 +83,12 @@ fun RegisterUserComponent(
                     label = stringResource(id = R.string.password),
                     icon = EIcon(icon = Icons.Default.Lock),
                     onValueChange = {
-                        userData.password = it.text
-                        isValid.value = userData.isValid()
+                        password.value = it.text
+                        isValid.value = userData.isValid(password.value)
                     },
                     isValid = {
                         (ValidateText(it.text) checkWith passwordRules).let { result ->
+                            if(result.isSuccess) enableConfirmPassword.value = true
                             (result.exceptionOrNull()?.message ?: "") to result.isFailure
                         }
                     },
@@ -97,15 +103,17 @@ fun RegisterUserComponent(
             )
             ETextField(
                 TextFieldValues(
+                    enabled = enableConfirmPassword.value,
+                    compareValue = password.value,
                     initialValue = userData.confirmPassword,
                     label = stringResource(id = R.string.repeat_password),
                     icon = EIcon(icon = Icons.Default.Lock),
                     onValueChange = {
                         userData.confirmPassword = it.text
-                        isValid.value = userData.isValid()
+                        isValid.value = userData.isValid(password.value)
                     },
                     isValid = {
-                        if(it.text == userData.password) "" to false
+                        if(it.text == password.value) "" to false
                         else ERR_SAME_TEXT to true
                     },
                     type = TextFieldType.LABELED,
@@ -130,7 +138,7 @@ fun RegisterUserComponent(
                 enabled = isValid.value,
                 text = stringResource(id = R.string.register_button)
             ) {
-                onContinue(userData)
+                onContinue(userData.apply { this.password = password.value })
             }
         }
     }

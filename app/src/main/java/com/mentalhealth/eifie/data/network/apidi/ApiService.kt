@@ -108,7 +108,8 @@ interface ApiService {
     @GET("/patient/search")
     suspend fun searchPatient(
         @Header("Authorization") token: String,
-        @Query("lastName") lastname: String
+        @Query("lastName") lastname: String,
+        @Query("psychologistId") psychologistId: Long
     ): Response<BaseResponse<List<PatientResponse>>>
 
     @GET("/survey/questions")

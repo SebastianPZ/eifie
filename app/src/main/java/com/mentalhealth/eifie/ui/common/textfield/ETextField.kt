@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -108,6 +109,15 @@ fun ETextFieldPasswordLabeled(
     var isError by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
 
+    LaunchedEffect(values.compareValue) {
+        if(values.compareValue != null) {
+            values.isValid?.let { validate -> validate(text) }?.let { error ->
+                errorMessage = error.first
+                isError = error.second
+            }
+        }
+    }
+
     TextField(
         value = text,
         label = { values.label?.let { Text(text = it) } },
@@ -115,6 +125,7 @@ fun ETextFieldPasswordLabeled(
             text = values.placeholder,
             fontWeight = FontWeight.Light
         ) },
+        enabled = values.enabled,
         onValueChange = {
             text = it
             values.isValid?.let { validate -> validate(it) }?.let { error ->
@@ -136,8 +147,11 @@ fun ETextFieldPasswordLabeled(
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
             errorIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent,
             focusedContainerColor = CustomLightGray,
-            unfocusedContainerColor = CustomLightGray
+            unfocusedContainerColor = CustomLightGray,
+            disabledLabelColor = BlackGreen,
+            disabledTrailingIconColor = BlackGreen
         ),
         modifier = values.modifier
     )
@@ -147,7 +161,7 @@ fun ETextFieldPasswordLabeled(
             text = errorMessage,
             color = Color.Red,
             modifier = Modifier
-                .padding(top = 5.dp, start = 40.dp, end = 40.dp)
+                .padding(top = 5.dp, start = 20.dp, end = 20.dp)
                 .fillMaxWidth()
         )
     }

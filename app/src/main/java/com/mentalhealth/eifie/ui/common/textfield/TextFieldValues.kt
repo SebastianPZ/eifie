@@ -13,6 +13,7 @@ import com.mentalhealth.eifie.util.emptyString
 
 data class TextFieldValues(
     val initialValue: String = "",
+    val compareValue: String? = null,
     val placeholder: String = emptyString(),
     val label: String? = null,
     val enabled: Boolean = true,
