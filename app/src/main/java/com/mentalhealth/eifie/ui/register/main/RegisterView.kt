@@ -27,6 +27,7 @@ import com.mentalhealth.eifie.ui.common.dialog.EDialogError
 import com.mentalhealth.eifie.ui.common.layout.DefaultViewLayout
 import com.mentalhealth.eifie.ui.navigation.Router
 import com.mentalhealth.eifie.ui.register.Step
+import com.mentalhealth.eifie.ui.register.email.ValidateEmailComponent
 import com.mentalhealth.eifie.ui.register.role.RegisterRoleComponent
 import com.mentalhealth.eifie.ui.theme.CustomWhite
 import com.mentalhealth.eifie.util.ERR_REGISTER
@@ -106,8 +107,25 @@ fun RegisterView(
                         }
                     },
                     onContinue = {
-                        viewModel.setUserData(it)
-                        viewModel.registerUser()
+                        coroutineScope.launch {
+                            viewModel.setUserData(it)
+                            viewModel.sendEmailCodeUseCase().let {
+                                viewModel.updateStep(Step.FOURTH)
+                                pagerState.animateScrollToPage(Step.FOURTH)
+                            }
+                        }
+
+                    }
+                )
+                Step.FOURTH -> ValidateEmailComponent(
+                    onBack = {
+                        coroutineScope.launch {
+                            viewModel.updateStep(Step.THIRD)
+                            pagerState.animateScrollToPage(Step.THIRD)
+                        }
+                    },
+                    onContinue = {
+                        viewModel.validateEmailCodeUseCase(it)
                     }
                 )
             }

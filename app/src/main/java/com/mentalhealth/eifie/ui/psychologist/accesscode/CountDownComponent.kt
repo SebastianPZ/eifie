@@ -74,7 +74,7 @@ fun CountDownIndicator(
                     .align(Alignment.Center)
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_profile_doctor_code),
+                    painter = painterResource(id = R.drawable.ic_update_password),
                     contentDescription = "",
                     tint = LightGreen,
                     modifier = Modifier.padding(bottom = 20.dp).size(30.dp)

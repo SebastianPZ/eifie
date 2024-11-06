@@ -34,7 +34,7 @@ class RegisterConfigurationViewModel @AssistedInject constructor(
     private fun initOptions() {
         _options.value = when(role) {
             Role.PATIENT.ordinal -> listOf(
-                ProfileItem(R.drawable.ic_profile_doctor_code, PSYCHOLOGIST_ASSIGN, Router.REGISTER_PSYCHOLOGIST.route)
+                ProfileItem(R.drawable.ic_doctor_code, PSYCHOLOGIST_ASSIGN, Router.REGISTER_PSYCHOLOGIST.route)
             )
             else -> listOf()
         }

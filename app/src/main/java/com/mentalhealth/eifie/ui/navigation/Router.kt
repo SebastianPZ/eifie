@@ -4,6 +4,7 @@ enum class Router(val route: String) {
     AUTH_GRAPH("Auth"),
     INIT("init"),
     LOGIN("login"),
+    RECOVER_PASSWORD("recover_password"),
 
     REGISTER_GRAPH("Register"),
     REGISTER("register"),
@@ -18,6 +19,7 @@ enum class Router(val route: String) {
     SUPPORT_EDIT_PHOTO("main/support/edit-photo"),
     PSYCHOLOGIST_CODE("main/profile/psychologist-code"),
     PSYCHOLOGIST_DETAIL("main/profile/psychologist-detail"),
+    UPDATE_PASSWORD("main/profile/update-password"),
     PSYCHOLOGIST_UPDATE("main/profile/psychologist-update"),
 
     HOME_GRAPH("Home"),

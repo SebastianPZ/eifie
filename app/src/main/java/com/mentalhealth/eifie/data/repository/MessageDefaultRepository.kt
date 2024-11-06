@@ -6,13 +6,10 @@ import com.google.firebase.firestore.firestore
 import com.mentalhealth.eifie.domain.entities.EResult
 import com.mentalhealth.eifie.data.local.database.EDatabase
 import com.mentalhealth.eifie.data.local.preferences.EPreferences
-import com.mentalhealth.eifie.data.mappers.impl.ChatFirebaseMapper
-import com.mentalhealth.eifie.data.mappers.impl.ChatMapper
 import com.mentalhealth.eifie.data.mappers.impl.MessageFirebaseMapper
 import com.mentalhealth.eifie.data.mappers.impl.MessageMapper
 import com.mentalhealth.eifie.data.models.request.Question
 import com.mentalhealth.eifie.data.network.apiopenai.OpenAIService
-import com.mentalhealth.eifie.data.network.performApiCall
 import com.mentalhealth.eifie.data.network.performOpenAICall
 import com.mentalhealth.eifie.domain.entities.Message
 import com.mentalhealth.eifie.domain.repository.MessageRepository

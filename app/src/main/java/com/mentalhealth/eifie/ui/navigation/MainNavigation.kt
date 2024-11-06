@@ -18,6 +18,8 @@ import com.mentalhealth.eifie.ui.form.main.SurveyViewModel
 import com.mentalhealth.eifie.ui.profile.detail.ProfileDetail
 import com.mentalhealth.eifie.ui.profile.detail.ProfileDetailViewModel
 import com.mentalhealth.eifie.ui.profile.edit.EditProfilePhoto
+import com.mentalhealth.eifie.ui.profile.edit.UpdatePasswordView
+import com.mentalhealth.eifie.ui.profile.edit.UpdatePasswordViewModel
 import com.mentalhealth.eifie.ui.psychologist.PsychologistDetailView
 import com.mentalhealth.eifie.ui.psychologist.PsychologistDetailViewModel
 import com.mentalhealth.eifie.ui.psychologist.accesscode.PsychologistCodeView
@@ -183,6 +185,12 @@ fun MainNavigation() {
                     navController = navController,
                     viewModel = hiltViewModel<PsychologistDetailViewModel>()
                 )
+            }
+
+            composable(
+                route = Router.UPDATE_PASSWORD.route,
+            ) {
+                UpdatePasswordView(navController = navController, viewModel = hiltViewModel<UpdatePasswordViewModel>())
             }
 
             composable(

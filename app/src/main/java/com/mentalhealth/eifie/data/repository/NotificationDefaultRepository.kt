@@ -6,15 +6,12 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Context.ALARM_SERVICE
 import android.content.Intent
-import android.util.Log
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.messaging.FirebaseMessaging
 import com.mentalhealth.eifie.data.local.database.EDatabase
 import com.mentalhealth.eifie.data.local.database.entities.LocalNotification
 import com.mentalhealth.eifie.data.local.preferences.EPreferences
 import com.mentalhealth.eifie.data.models.request.NotificationRequest
+import com.mentalhealth.eifie.data.network.DataAccess
 import com.mentalhealth.eifie.data.network.apidi.ApiService
-import com.mentalhealth.eifie.data.network.performApiCall
 import com.mentalhealth.eifie.service.NotificationReceiver
 import com.mentalhealth.eifie.domain.entities.EResult
 import com.mentalhealth.eifie.domain.entities.Notification
@@ -40,6 +37,7 @@ import kotlin.Exception
 class NotificationDefaultRepository @Inject constructor(
     private val context: Context,
     private val api: ApiService,
+    private val dataAccess: DataAccess,
     private val preferences: EPreferences,
     private val database: EDatabase,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
@@ -67,7 +65,7 @@ class NotificationDefaultRepository @Inject constructor(
         title: String,
         message: String): EResult<Boolean, Exception> = withContext(dispatcher) {
         val token = preferences.readPreference(tokenPreferences) ?: emptyString()
-        performApiCall(
+        dataAccess.performApiCall(
             { api.sendNotification(token.formatToken(), NotificationRequest(message, title, user)) },
             { response -> response?.data }
         )

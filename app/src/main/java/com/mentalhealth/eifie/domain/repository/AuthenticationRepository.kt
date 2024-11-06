@@ -5,6 +5,7 @@ import com.mentalhealth.eifie.domain.entities.PatientParams
 import com.mentalhealth.eifie.domain.entities.PsychologistParams
 import com.mentalhealth.eifie.domain.entities.Patient
 import com.mentalhealth.eifie.domain.entities.Psychologist
+import com.mentalhealth.eifie.domain.entities.UpdatePasswordRequest
 import com.mentalhealth.eifie.domain.entities.User
 
 interface AuthenticationRepository {
@@ -12,6 +13,10 @@ interface AuthenticationRepository {
     suspend fun registerPatient(request: PatientParams): EResult<Patient, Exception>
     suspend fun registerPsychologist(request: PsychologistParams): EResult<Psychologist, Exception>
     suspend fun generatePsychologistCode(psychologistId: Long): EResult<String, Exception>
+    suspend fun generateEmailCode(email: String): EResult<String, Exception>
     suspend fun validatePsychologistCode(accessCode: String): EResult<Psychologist, Exception>
+    suspend fun validateEmailCode(accessCode: String): EResult<Boolean, Exception>
     suspend fun assignPsychologist(patientId: Long, psychologistId: Long): EResult<Patient, Exception>
+    suspend fun recoverPassword(email: String): EResult<String, Exception>
+    suspend fun updatePassword(request: UpdatePasswordRequest): EResult<Boolean, Exception>
 }

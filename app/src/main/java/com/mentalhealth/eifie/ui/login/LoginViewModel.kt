@@ -80,8 +80,8 @@ class LoginViewModel @Inject constructor(
             }.launchIn(viewModelScope)
     }
 
-    private fun saveUserSession(user: User) = viewModelScope.launch {
-        saveUserUseCase.invoke(user).onEach {
+    private fun saveUserSession(data: User) = viewModelScope.launch {
+        saveUserUseCase.invoke(data, user.password).onEach {
             when(it) {
                 is EResult.Success -> {
                     viewState.value = ViewState.Success

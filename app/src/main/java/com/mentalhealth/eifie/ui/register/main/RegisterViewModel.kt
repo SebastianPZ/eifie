@@ -8,9 +8,11 @@ import com.mentalhealth.eifie.data.models.response.HospitalResponse
 import com.mentalhealth.eifie.domain.entities.PersonalData
 import com.mentalhealth.eifie.domain.entities.Role
 import com.mentalhealth.eifie.domain.entities.UserData
+import com.mentalhealth.eifie.domain.usecases.GenerateEmailCodeUseCase
 import com.mentalhealth.eifie.domain.usecases.ListHospitalsUseCase
 import com.mentalhealth.eifie.domain.usecases.RegisterPsychologistUseCase
 import com.mentalhealth.eifie.domain.usecases.RegisterPatientUseCase
+import com.mentalhealth.eifie.domain.usecases.ValidateEmailCodeUseCase
 import com.mentalhealth.eifie.ui.common.LazyViewModel
 import com.mentalhealth.eifie.ui.common.ViewState
 import com.mentalhealth.eifie.ui.common.dropdown.DropdownItem
@@ -35,15 +37,18 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
+    private val generateEmailCode: GenerateEmailCodeUseCase,
     private val registerPatientUseCase: RegisterPatientUseCase,
     private val registerPsychologistUseCase: RegisterPsychologistUseCase,
-    private val listHospitalsUseCase: ListHospitalsUseCase
+    private val listHospitalsUseCase: ListHospitalsUseCase,
+    private val validateEmailCode: ValidateEmailCodeUseCase
 ): LazyViewModel() {
 
     private val steps = listOf(
         Step(order = Step.FIRST, title = "Rol"),
         Step(order = Step.SECOND, title = "Datos"),
-        Step(order = Step.THIRD, title = "Usuario")
+        Step(order = Step.THIRD, title = "Usuario"),
+        Step(order = Step.FOURTH, title = "Validación de correo")
     )
 
     lateinit var registeredUser: Number
@@ -96,6 +101,8 @@ class RegisterViewModel @Inject constructor(
 
     val stepsSize get() = steps.size
     private var registerJob: Job? = null
+    private var generateCodeJob: Job? = null
+    private var validateCodeJob: Job? = null
 
     init {
         setViewInitialStatus()
@@ -203,6 +210,25 @@ class RegisterViewModel @Inject constructor(
             }.launchIn(viewModelScope)
     }
 
+    fun sendEmailCodeUseCase() = viewModelScope.launch {
+        generateCodeJob?.cancelAndJoin()
+        generateCodeJob = generateEmailCode.invoke(user.email).launchIn(viewModelScope)
+    }
+
+    fun validateEmailCodeUseCase(code: String) = viewModelScope.launch {
+        validateCodeJob?.cancelAndJoin()
+        validateCodeJob = validateEmailCode.invoke(code)
+            .onStart { viewState.value = ViewState.Loading }
+            .onEach {
+                when(it) {
+                    is EResult.Error -> { viewState.value = ViewState.Error(it.error.message ?: "Error en validación de código.") }
+                    is EResult.Success -> { registerUser() }
+                }
+            }.catch {
+                viewState.value = ViewState.Error("Error en validación de código.")
+            }
+            .launchIn(viewModelScope)
+    }
 
     fun setPersonalData(personalData: PersonalData) {
         _personalData.value = personalData

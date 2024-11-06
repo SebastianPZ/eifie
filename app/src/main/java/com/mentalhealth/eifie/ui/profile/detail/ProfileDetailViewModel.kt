@@ -22,6 +22,7 @@ import com.mentalhealth.eifie.util.FIRSTNAME_TITLE
 import com.mentalhealth.eifie.util.LASTNAME_TITLE
 import com.mentalhealth.eifie.util.PSYCHOLOGIST_ASSIGN
 import com.mentalhealth.eifie.util.PSYCHOLOGIST_CODE
+import com.mentalhealth.eifie.util.UPDATE_PASSWORD
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -105,11 +106,15 @@ class ProfileDetailViewModel @Inject constructor(
     private fun handleUserOptions(user: User): List<ProfileItem> {
         return when(user.role) {
             Role.PATIENT -> listOf(
-                ProfileItem(R.drawable.ic_profile_doctor_code, PSYCHOLOGIST_ASSIGN,
-                    "${Router.PSYCHOLOGIST_DETAIL.route}${user.psychologistAssigned}")
+                ProfileItem(R.drawable.ic_doctor_code, PSYCHOLOGIST_ASSIGN,
+                    "${Router.PSYCHOLOGIST_DETAIL.route}${user.psychologistAssigned}"),
+                ProfileItem(R.drawable.ic_update_password, UPDATE_PASSWORD,
+                    Router.UPDATE_PASSWORD.route)
             )
             Role.PSYCHOLOGIST -> listOf(
-                ProfileItem(R.drawable.ic_profile_doctor_code, PSYCHOLOGIST_CODE, Router.PSYCHOLOGIST_CODE.route)
+                ProfileItem(R.drawable.ic_doctor_code, PSYCHOLOGIST_CODE, Router.PSYCHOLOGIST_CODE.route),
+                ProfileItem(R.drawable.ic_update_password, UPDATE_PASSWORD,
+                    Router.UPDATE_PASSWORD.route)
             )
         }
     }

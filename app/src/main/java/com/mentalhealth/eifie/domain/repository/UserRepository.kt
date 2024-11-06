@@ -5,7 +5,7 @@ import com.mentalhealth.eifie.domain.entities.EResult
 import com.mentalhealth.eifie.domain.entities.User
 
 interface UserRepository {
-    suspend fun saveUser(user: User): EResult<Boolean, Exception>
+    suspend fun saveUser(user: User, password: String): EResult<Boolean, Exception>
     suspend fun updateUser(user: User): EResult<Boolean, Exception>
     suspend fun getUser(): EResult<User, Exception>
     suspend fun logoutUser(): EResult<Boolean, Exception>

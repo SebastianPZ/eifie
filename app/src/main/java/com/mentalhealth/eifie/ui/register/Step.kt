@@ -8,5 +8,6 @@ class Step(
         const val FIRST: Int = 0
         const val SECOND = 1
         const val THIRD = 2
+        const val FOURTH = 3
     }
 }

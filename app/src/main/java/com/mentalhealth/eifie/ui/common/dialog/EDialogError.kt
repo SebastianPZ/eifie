@@ -30,8 +30,10 @@ import com.mentalhealth.eifie.ui.theme.White90
 
 @Composable
 fun EDialogError(
+    animation: Int = R.raw.error_animation,
     title: String,
     message: String,
+    buttonText: String = stringResource(id = R.string.retry),
     onDismissRequest: () -> Unit
 ) {
 
@@ -53,7 +55,7 @@ fun EDialogError(
                     .wrapContentHeight()
             ) {
                 EAnimation(
-                    resource = R.raw.error_animation,
+                    resource = animation,
                     animationModifier = Modifier
                         .size(120.dp)
                         .padding(top = 20.dp, bottom = 10.dp)
@@ -84,7 +86,7 @@ fun EDialogError(
                         .fillMaxWidth()
                 ) {
                     Text(
-                        text = stringResource(id = R.string.retry),
+                        text = buttonText,
                         modifier = Modifier
                             .padding(5.dp)
                     )

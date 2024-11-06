@@ -136,7 +136,7 @@ fun RegisterUserComponent(
             }
             AcceptButtonView(
                 enabled = isValid.value,
-                text = stringResource(id = R.string.register_button)
+                text = "Continuar"
             ) {
                 onContinue(userData.apply { this.password = password.value })
             }

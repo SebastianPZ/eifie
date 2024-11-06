@@ -9,6 +9,8 @@ import androidx.navigation.compose.rememberNavController
 import com.mentalhealth.eifie.ui.init.InitScreen
 import com.mentalhealth.eifie.ui.login.LoginView
 import com.mentalhealth.eifie.ui.login.LoginViewModel
+import com.mentalhealth.eifie.ui.login.RecoverPasswordView
+import com.mentalhealth.eifie.ui.login.RecoverPasswordViewModel
 
 @Composable
 fun AuthNavigation(
@@ -31,6 +33,14 @@ fun AuthNavigation(
                     navController = navController,
                     viewModel = hiltViewModel<LoginViewModel>(),
                     navigateToHome = navigateToHome,
+                )
+            }
+            composable(
+                route = Router.RECOVER_PASSWORD.route,
+            ) {
+                RecoverPasswordView(
+                    navController = navController,
+                    viewModel = hiltViewModel<RecoverPasswordViewModel>()
                 )
             }
         }

@@ -17,6 +17,8 @@ import com.mentalhealth.eifie.data.models.response.ProfileResponse
 import com.mentalhealth.eifie.data.models.response.QuestionResponse
 import com.mentalhealth.eifie.data.models.response.UserPsychologistResponse
 import com.mentalhealth.eifie.data.models.response.UserResponse
+import com.mentalhealth.eifie.data.models.response.ValidationCode
+import com.mentalhealth.eifie.domain.entities.UpdatePasswordRequest
 import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.Body
@@ -76,6 +78,14 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Query("psychologistId") psychologistId: Long): Response<BaseResponse<String>>
 
+    @POST("/user/generateCodeEmail")
+    suspend fun generateEmailCode(
+        @Query("email", encoded = true) email: String): Response<BaseResponse<String>>
+
+    @POST("/user/validateCodeEmail")
+    suspend fun validateEmailCode(
+        @Query("code", encoded = true) code: String): Response<BaseResponse<ValidationCode>>
+
     @GET("/patient/validateAccessCode")
     suspend fun validatePsychologistCode(
         @Header("Authorization") token: String,
@@ -86,6 +96,17 @@ interface ApiService {
         @Query("patientId") patientId: Long,
         @Query("psychologistId") psychologistId: Long
     ): Response<BaseResponse<UserPatientResponse>>
+
+    @POST("/user/recoverPassword")
+    suspend fun recoverPassword(
+        @Query("email", encoded = true) email: String
+    ): Response<BaseResponse<String>>
+
+    @POST("/user/updatePassword")
+    suspend fun updatePassword(
+        @Header("Authorization") token: String,
+        @Body recoverPasswordRequestDTO: UpdatePasswordRequest
+    ): Response<BaseResponse<String>>
 
     @GET("/psychologist/patients")
     suspend fun listPatientByPsychologist(

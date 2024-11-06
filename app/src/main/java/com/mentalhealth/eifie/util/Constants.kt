@@ -7,6 +7,7 @@ import java.util.regex.Pattern
 
 
 const val ERR_LOGIN = "Error de inicio de sesión."
+const val ERR_RECOVER_PASSWORD = "Error en envío de correo."
 const val ERR_REGISTER = "Error de registro."
 const val ERR_SURVEY = "Error en envío de formulario."
 const val ERR_SURVEY_DONE = "Formulario completo."
@@ -35,11 +36,16 @@ const val BIRTHDATE_TITLE = "Fecha de nacimiento"
 const val EMAIL_TITLE = "Correo"
 const val PSYCHOLOGIST_CODE = "Código de psicólogo"
 const val PSYCHOLOGIST_ASSIGN = "Asignación de psicólogo"
+const val UPDATE_PASSWORD = "Actualizar contraseña"
 
 
 const val TOKEN_KEY = "token"
 const val USER_KEY = "user"
 const val USER_ROLE_KEY = "user_role"
+const val USER_MAIL_KEY = "user_mail"
+const val USER_PWD_KEY = "user_pwd"
 val tokenPreferences = stringPreferencesKey(TOKEN_KEY)
 val userPreferences = longPreferencesKey(USER_KEY)
 val userRolePreferences = longPreferencesKey(USER_ROLE_KEY)
+val userMailPreferences = stringPreferencesKey(USER_MAIL_KEY)
+val userPwdPreferences = stringPreferencesKey(USER_PWD_KEY)

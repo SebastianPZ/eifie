@@ -34,7 +34,7 @@ class RetrieveSupporterUseCase @Inject constructor(
                 is EResult.Error -> userResult
                 is EResult.Success -> userResult.run {
                     val prompt = "Hola soy ${data.userName}, tengo ${data.age} años y quiero que actúes como una personal normal. Eres un consejero para personas con síntomas de depresión. Eres amiga de la persona que te escribirá y tu nombre es Eifie."
-                    createSupporter(user = data.profileId, config = prompt)
+                    createSupporter(user = data.uid, config = prompt)
                 }
             }
         }

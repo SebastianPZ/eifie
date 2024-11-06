@@ -16,11 +16,14 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -28,6 +31,7 @@ import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -36,6 +40,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.mentalhealth.eifie.R
@@ -48,6 +53,7 @@ import com.mentalhealth.eifie.ui.common.textfield.ETextField
 import com.mentalhealth.eifie.ui.common.textfield.InputType
 import com.mentalhealth.eifie.ui.common.textfield.TextFieldValues
 import com.mentalhealth.eifie.ui.common.textfield.TextFieldType
+import com.mentalhealth.eifie.ui.navigation.Router
 import com.mentalhealth.eifie.ui.theme.BlackGreen
 import com.mentalhealth.eifie.ui.theme.CustomWhite
 import com.mentalhealth.eifie.ui.theme.DarkGreen
@@ -68,10 +74,12 @@ fun LoginView(
 
     val context = LocalContext.current
     val validForm = viewModel?.validForm?.collectAsStateWithLifecycle()
+    val state = viewModel?.state?.collectAsStateWithLifecycle()
 
     return Box(
         modifier = Modifier
-            .fillMaxSize().background(color = CustomWhite)
+            .fillMaxSize()
+            .background(color = CustomWhite)
     ) {
         IconButton(
             onClick = { navController?.popBackStack() },
@@ -91,7 +99,7 @@ fun LoginView(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 24.dp)
-                .imePadding()
+                .verticalScroll(rememberScrollState())
         ) {
             Image(painter = painterResource(id = R.drawable.eifi_logotype_h),
                 contentDescription = "MoodMinder",
@@ -112,7 +120,7 @@ fun LoginView(
                         }
                     },
                     modifier = Modifier
-                        .padding(top = 25.dp, start = 20.dp, end = 20.dp)
+                        .padding(top = 25.dp, start = 5.dp, end = 5.dp)
                         .fillMaxWidth()
                 )
             )
@@ -131,10 +139,26 @@ fun LoginView(
                         }
                     },
                     modifier = Modifier
-                        .padding(top = 20.dp, start = 20.dp, end = 20.dp)
+                        .padding(top = 20.dp, start = 5.dp, end = 5.dp)
                         .fillMaxWidth()
                 )
             )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.End,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 10.dp)
+            ) {
+                Text(
+                    text = "¿Olvidaste tu contraseña?",
+                    fontSize = 14.sp,
+                    color = BlackGreen,
+                    modifier = Modifier.clickable {
+                        navController?.navigate(Router.RECOVER_PASSWORD.route)
+                    }
+                )
+            }
             Button(
                 onClick = {
                     viewModel?.loginUser()
@@ -144,7 +168,7 @@ fun LoginView(
                     containerColor = BlackGreen
                 ),
                 modifier = Modifier
-                    .padding(vertical = 30.dp, horizontal = 20.dp)
+                    .padding(vertical = 10.dp, horizontal = 5.dp)
                     .fillMaxWidth()
             ) {
                 Text(
@@ -152,6 +176,21 @@ fun LoginView(
                     modifier = Modifier
                         .padding(8.dp)
                 )
+            }
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 30.dp)
+            ) {
+                HorizontalDivider(modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 20.dp))
+                Text(text = "o", color = Color.Gray)
+                HorizontalDivider(modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 20.dp))
             }
             Row (
                 verticalAlignment = Alignment.CenterVertically,
@@ -170,22 +209,29 @@ fun LoginView(
                 )
             }
         }
+
         Loading(
-            viewModel = viewModel,
-            navigateToHome = navigateToHome
-        )
+            state = state?.value,
+            successAnimation = R.raw.unlock_animation,
+            onSuccess = navigateToHome
+        ) {
+            EDialogError(
+                title = ERR_LOGIN,
+                message = it) {
+                viewModel?.setInitialLoginViewStatus()
+            }
+        }
     }
 }
 
 @Composable
 fun Loading(
-    viewModel: LoginViewModel?,
-    navigateToHome: () -> Unit,
+    state: ViewState?,
+    successAnimation: Int,
+    onSuccess: () -> Unit,
+    errorDialog: @Composable (message: String) -> Unit
 ) {
-
-    val state = viewModel?.state?.collectAsStateWithLifecycle()
-
-    when(state?.value) {
+    when(state) {
         ViewState.Loading -> {
             EAnimation(
                 resource = R.raw.loading_animation,
@@ -199,10 +245,10 @@ fun Loading(
         }
         is ViewState.Success -> {
             EAnimation(
-                resource = R.raw.unlock_animation,
+                resource = successAnimation,
                 iterations = 1,
                 actionOnEnd = {
-                    navigateToHome.invoke()
+                    onSuccess.invoke()
                 },
                 animationModifier = Modifier
                     .size(200.dp),
@@ -212,13 +258,7 @@ fun Loading(
                     .background(color = White90)
             )
         }
-        is ViewState.Error -> (state.value as ViewState.Error).run {
-            EDialogError(
-                title = ERR_LOGIN,
-                message = message) {
-                viewModel.setInitialLoginViewStatus()
-            }
-        }
+        is ViewState.Error -> errorDialog(state.message)
         else -> Unit
     }
 

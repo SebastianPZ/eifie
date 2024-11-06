@@ -5,6 +5,7 @@ import com.mentalhealth.eifie.data.network.apidi.ApiService
 import com.mentalhealth.eifie.data.local.database.EDatabase
 import com.mentalhealth.eifie.data.network.apiopenai.OpenAIService
 import com.mentalhealth.eifie.data.local.preferences.EPreferences
+import com.mentalhealth.eifie.data.network.DataAccess
 import com.mentalhealth.eifie.data.repository.AppDefaultRepository
 import com.mentalhealth.eifie.data.repository.AppointmentDefaultRepository
 import com.mentalhealth.eifie.data.repository.AuthenticationDefaultRepository
@@ -34,29 +35,30 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object RepositoryModule {
 
     @Provides
-    fun providesAuthenticationRepository(api: ApiService, preferences: EPreferences): AuthenticationRepository {
-        return AuthenticationDefaultRepository(api = api, preferences = preferences)
+    fun providesAuthenticationRepository(api: ApiService, preferences: EPreferences, dataAccess: DataAccess): AuthenticationRepository {
+        return AuthenticationDefaultRepository(api = api, preferences = preferences, dataAccess = dataAccess)
     }
 
     @Provides
-    fun providesHospitalRepository(api: ApiService): HospitalRepository {
-        return HospitalDefaultRepository(api = api)
+    fun providesHospitalRepository(api: ApiService, dataAccess: DataAccess): HospitalRepository {
+        return HospitalDefaultRepository(api = api, dataAccess = dataAccess)
     }
 
     @Provides
-    fun providesUserRepository(@ApplicationContext appContext: Context, api: ApiService, database: EDatabase, preferences: EPreferences): UserRepository {
-        return UserDefaultRepository(context = appContext, api = api, database = database, preferences = preferences)
+    fun providesUserRepository(@ApplicationContext appContext: Context, api: ApiService, database: EDatabase, preferences: EPreferences, dataAccess: DataAccess): UserRepository {
+        return UserDefaultRepository(context = appContext, api = api, database = database, preferences = preferences, dataAccess = dataAccess)
     }
 
     @Provides
-    fun providesAppointmentRepository(api: ApiService, preferences: EPreferences): AppointmentRepository {
-        return AppointmentDefaultRepository(api = api, preferences = preferences)
+    fun providesAppointmentRepository(api: ApiService, preferences: EPreferences, dataAccess: DataAccess): AppointmentRepository {
+        return AppointmentDefaultRepository(api = api, preferences = preferences, dataAccess = dataAccess)
     }
 
     @Provides
@@ -75,18 +77,18 @@ object RepositoryModule {
     }
 
     @Provides
-    fun providesPsychologistRepository(api: ApiService, preferences: EPreferences): PsychologistRepository {
-        return PsychologistDefaultRepository(api = api, preferences = preferences)
+    fun providesPsychologistRepository(api: ApiService, preferences: EPreferences, dataAccess: DataAccess): PsychologistRepository {
+        return PsychologistDefaultRepository(api = api, preferences = preferences, dataAccess = dataAccess)
     }
 
     @Provides
-    fun providesPatientRepository(api: ApiService, preferences: EPreferences): PatientRepository {
-        return PatientDefaultRepository(api = api, preferences = preferences)
+    fun providesPatientRepository(api: ApiService, preferences: EPreferences, dataAccess: DataAccess): PatientRepository {
+        return PatientDefaultRepository(api = api, preferences = preferences, dataAccess = dataAccess)
     }
 
     @Provides
-    fun providesSurveyRepository(api: ApiService, preferences: EPreferences): SurveyRepository {
-        return SurveyDefaultRepository(api = api, preferences = preferences)
+    fun providesSurveyRepository(api: ApiService, preferences: EPreferences, dataAccess: DataAccess): SurveyRepository {
+        return SurveyDefaultRepository(api = api, preferences = preferences, dataAccess = dataAccess)
     }
 
     @Provides
@@ -94,8 +96,16 @@ object RepositoryModule {
         @ApplicationContext context: Context,
         api: ApiService,
         preferences: EPreferences,
-        database: EDatabase): NotificationRepository {
-        return NotificationDefaultRepository(context = context, api, preferences, database)
+        database: EDatabase,
+        dataAccess: DataAccess
+    ): NotificationRepository {
+        return NotificationDefaultRepository(
+            context = context,
+            api = api,
+            preferences = preferences,
+            database = database,
+            dataAccess = dataAccess
+        )
     }
 
     @Provides

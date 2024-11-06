@@ -28,6 +28,7 @@ import com.mentalhealth.eifie.ui.theme.cutiveFontFamily
 @Composable
 fun HeaderComponent(
     title: String,
+    enableButton: Boolean = true,
     onBack: () -> Unit,
     subtitle: String = stringResource(id = R.string.configuration),
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
@@ -52,16 +53,18 @@ fun HeaderComponent(
                 fontWeight = FontWeight.Bold
             )
         }
-        IconButton(
-            onClick = onBack,
-            modifier = Modifier.align(Alignment.CenterVertically)
-        ) {
-            Icon(
-                imageVector = Icons.Filled.Clear,
-                tint = BlackGreen,
-                contentDescription = "",
-                modifier = Modifier.size(30.dp)
-            )
+        if(enableButton) {
+            IconButton(
+                onClick = onBack,
+                modifier = Modifier.align(Alignment.CenterVertically)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Clear,
+                    tint = BlackGreen,
+                    contentDescription = "",
+                    modifier = Modifier.size(30.dp)
+                )
+            }
         }
     }
 }
