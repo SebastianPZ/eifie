@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import androidx.activity.ComponentActivity
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 import kotlin.reflect.KFunction1
 
 internal fun emptyString(): String {
@@ -93,4 +95,10 @@ fun Context.findActivity(): Activity {
         context = context.baseContext
     }
     throw IllegalStateException("no activity")
+}
+
+@OptIn(ExperimentalEncodingApi::class)
+fun decode(encodedString: String): String {
+    val decodedBytes = Base64.decode(encodedString)
+    return String(decodedBytes)
 }
