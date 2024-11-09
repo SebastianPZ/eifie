@@ -30,7 +30,7 @@ class MessageDefaultRepository @Inject constructor(
     private val TAG = MessageDefaultRepository::class.java.simpleName
     private val messageDao = database.messageDao()
     private val supportDao = database.supporterDao()
-    val apiKey = decode("c2stcHJvai1za1YwTUZlV3lxSHE4dVlOOFlPUS12eWdNZXBKVWQ0c1JkbDNValhrR0MzblVUd0xiQW9IQUZKWUlUY3dtRm9ncnItTGhfOFNTcVQzQmxia0ZKVjNkaHBPbG9qemxDSXp4SDhuY21TX1cyQUVxdmVlYnZFVHhaS1RHUERaZEdGR25KREtiSU83c2oyM0s2VjgzZnNHWWU2NFJKSUE=")
+    private val apiKey = decode("c2stcHJvai1za1YwTUZlV3lxSHE4dVlOOFlPUS12eWdNZXBKVWQ0c1JkbDNValhrR0MzblVUd0xiQW9IQUZKWUlUY3dtRm9ncnItTGhfOFNTcVQzQmxia0ZKVjNkaHBPbG9qemxDSXp4SDhuY21TX1cyQUVxdmVlYnZFVHhaS1RHUERaZEdGR25KREtiSU83c2oyM0s2VjgzZnNHWWU2NFJKSUE=")
 
     override suspend fun saveMessage(message: Message): EResult<Message, Exception> = withContext(dispatcher)  {
         try {
