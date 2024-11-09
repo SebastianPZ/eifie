@@ -13,6 +13,7 @@ import com.mentalhealth.eifie.data.network.apiopenai.OpenAIService
 import com.mentalhealth.eifie.data.network.performOpenAICall
 import com.mentalhealth.eifie.domain.entities.Message
 import com.mentalhealth.eifie.domain.repository.MessageRepository
+import com.mentalhealth.eifie.util.decode
 import com.mentalhealth.eifie.util.userPreferences
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -29,6 +30,8 @@ class MessageDefaultRepository @Inject constructor(
     private val TAG = MessageDefaultRepository::class.java.simpleName
     private val messageDao = database.messageDao()
     private val supportDao = database.supporterDao()
+    val apiKey = decode("c2stcHJvai1za1YwTUZlV3lxSHE4dVlOOFlPUS12eWdNZXBKVWQ0c1JkbDNValhrR0MzblVUd0xiQW9IQUZKWUlUY3dtRm9ncnItTGhfOFNTcVQzQmxia0ZKVjNkaHBPbG9qemxDSXp4SDhuY21TX1cyQUVxdmVlYnZFVHhaS1RHUERaZEdGR25KREtiSU83c2oyM0s2VjgzZnNHWWU2NFJKSUE=")
+
     override suspend fun saveMessage(message: Message): EResult<Message, Exception> = withContext(dispatcher)  {
         try {
             messageDao.insertAll(MessageMapper.mapFromEntity(message))
@@ -58,7 +61,8 @@ class MessageDefaultRepository @Inject constructor(
                             role = it.role,
                             content = it.text
                         )
-                    })
+                    }),
+                    "Bearer $apiKey"
                 )
             },
             { answer -> Message(
